@@ -6,11 +6,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import kong.unirest.Unirest;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static org.testng.Assert.assertTrue;
 
@@ -49,9 +52,6 @@ public class youtrip_android_regression {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         System.out.println("SETUP: Android Emulator ready");
 
-        //WebDriverWait wait = new WebDriverWait(driver, 20);
-        //wait.until(ExpectedConditions.(By.xpath("//android.widget.TextView[@text='Where do you live?']"), "Where do you live?"));
-        //System.out.println("TEST STEP: Country Selection Page - on page");
     }
 
     @Test
@@ -59,7 +59,6 @@ public class youtrip_android_regression {
         WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.xpath("//android.widget.TextView[@text='Where do you live?']"))), "Where do you live?"));
         System.out.println("TEST STEP: Country Page - on page");
-        //driver.findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.widget.LinearLayout[@index='1']")).click();
         driver.findElement(By.id("co.you.youapp.dev:id/layoutSelectCountry")).click();
         System.out.println("TEST STEP: Country Selection - on page");
         driver.findElement(By.xpath("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='1']")).click();
@@ -72,7 +71,6 @@ public class youtrip_android_regression {
         WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.xpath("//android.widget.TextView[@text='Where do you live?']"))), "Where do you live?"));
         System.out.println("TEST STEP: Country Page - on page");
-        //driver.findElement(By.xpath("//android.support.v7.widget.RecyclerView/android.widget.LinearLayout[@index='1']")).click();
         driver.findElement(By.id("co.you.youapp.dev:id/layoutSelectCountry")).click();
         System.out.println("TEST STEP: Country Selection - on page");
         driver.findElement(By.xpath("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='0']")).click();
@@ -97,10 +95,13 @@ public class youtrip_android_regression {
         System.out.println("TEST STEP: Mobile Number Page - on page");
         driver.findElement(By.xpath("//android.widget.EditText[contains(@resource-id,'inputPrefix')]")).clear();
 
-        //TODO - need to randomise the phone number
-        String mprefix, mnumber;
-        mprefix = "123";
-        mnumber = "2220001";
+        //generate unique mobile number
+        SimpleDateFormat formatter= new SimpleDateFormat("YYMMDDHHmmssSS");
+        Date date = new Date(System.currentTimeMillis());
+        System.out.println(formatter.format(date));
+        String mprefix = "123";
+        String mnumber = formatter.format(date);
+        System.out.println("TEST DATA: Mobile Number is " +mprefix+ " " +mnumber);
 
         driver.findElement(By.xpath("//android.widget.EditText[contains(@resource-id,'inputPrefix')]")).sendKeys(mprefix);
         System.out.println("TEST STEP: Mobile Number Page - inputted mobile number prefix");
@@ -110,12 +111,41 @@ public class youtrip_android_regression {
         driver.findElement(By.xpath("//android.widget.FrameLayout[contains(@resource-id,'buttonGetSMS')]")).click();
         System.out.println("TEST STEP: Mobile Number Page - clicked Next button");
 
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.xpath("//android.widget.TextView[@text='Enter Code from SMS']"))), "Enter Code from SMS"));
+        System.out.println("TEST STEP: OTP Page - on page");
+
         //get OTP from backdoor and input otp
-        //TODO - parameterise the mcc + phone
-        driver.get("http://backdoor.internal.sg.sit.you.co/onboarding/otp/123/2220001");
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        //String body = Unirest.get("http://backdoor.internal.sg.sit.you.co/onboarding/otp/123/2220001")
+        String backdoorOTP = ("http://backdoor.internal.sg.sit.you.co/onboarding/otp/"+mprefix+"/"+mnumber);
+        System.out.println("API CALL: " +backdoorOTP);
 
+        String body = Unirest.get(backdoorOTP)
+                .asJson()
+                .getBody()
+                .getObject()
+                .getString("password");
 
+        System.out.println(body);
+        String otp1 = body.substring(0);
+        String otp2 = body.substring(1);
+        String otp3 = body.substring(2);
+        String otp4 = body.substring(3);
+        String otp5 = body.substring(4);
+        String otp6 = body.substring(5);
 
+        driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[1]/android.widget.EditText")).sendKeys(otp1);
+        driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[2]/android.widget.EditText")).sendKeys(otp2);
+        driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[3]/android.widget.EditText")).sendKeys(otp3);
+        driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[4]/android.widget.EditText")).sendKeys(otp4);
+        driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[5]/android.widget.EditText")).sendKeys(otp5);
+        driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[6]/android.widget.EditText")).sendKeys(otp6);
+        System.out.println("TEST STEP: OTP Page - entered OTP");
+
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.xpath("//android.widget.TextView[@resource-id, 'textTitle]"))), "Enter Email Address"));
+        System.out.println("TEST STEP: Enter Email Page - on page");
 
 
     }
