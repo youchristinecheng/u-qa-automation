@@ -95,7 +95,7 @@ public class youtrip_android_regression {
         System.out.println("TEST STEP: Mobile Number Page - on page");
         driver.findElement(By.xpath("//android.widget.EditText[contains(@resource-id,'inputPrefix')]")).clear();
 
-        //generate unique mobile number
+        //generate new mobile number
         SimpleDateFormat formatter= new SimpleDateFormat("YYMMDDHHmmssSS");
         Date date = new Date(System.currentTimeMillis());
         System.out.println(formatter.format(date));
@@ -144,14 +144,108 @@ public class youtrip_android_regression {
         driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[6]/android.widget.EditText")).sendKeys(otp6);
         System.out.println("TEST STEP: OTP Page - entered OTP");
 
-        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.xpath("//android.widget.TextView[@resource-id, 'textTitle]"))), "Enter Email Address"));
+
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Enter Email Address"));
         System.out.println("TEST STEP: Enter Email Page - on page");
 
+        //generate new email address
+        String email = ("qa+sg"+formatter.format(date)+".com");
+        System.out.println("TEST DATA: Email address is " +email);
+
+        //input email and continue to welcome screen
+        driver.findElement(By.id("co.you.youapp.dev:id/inputEmail")).sendKeys(email);
+        System.out.println("TEST STEP: Enter Email Page - entered email");
+        driver.findElement(By.id("co.you.youapp.dev:id/buttonNext")).click();
+        System.out.println("TEST STEP: Enter Email Page - click Next button");
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Welcome"));
+        System.out.println("TEST STEP: Welcome Page - on page");
+        assertTrue(driver.findElement(By.id("co.you.youapp.dev:id/textTitle")).getText().equals("Welcome"));
 
     }
 
     @Test
     public void regTC04_submit_PC_KYC_NRIC() {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        //click get youtrip card for free
+        driver.findElement(By.id("co.you.youapp.dev:id/buttonOrder")).click();
+        System.out.println("TEST STEP: Welcome Page - click Get a YouTrip Card for Free button");
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Identity Verification"));
+        System.out.println("TEST STEP: Identity Verification Page - on page");
+
+        //click Singaporean and PR
+        driver.findElement(By.xpath("//android.widget.FrameLayout[contains(@resource-id,'contentFrame')]/android.widget.LinearLayout[1]/android.widget.LinearLayout")).click();
+        System.out.println("TEST STEP: Identity Verification Page - click Singaporean/PR button");
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.className("android.widget.TextView"))), "Singaporean / PR"));
+        System.out.println("TEST STEP: Singaporean/PR Page - on page");
+
+        //click submit manually
+        driver.findElement(By.id("co.you.youapp.dev:id/textManual")).click();
+        System.out.println("TEST STEP: Singaporean/PR Page - click submit manually link");
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Just a Few Steps"));
+        System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - on page");
+
+        //start KYC - front NRIC photo
+        driver.findElement(By.id("co.you.youapp.dev:id/buttonStart")).click();
+        System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click start now button");
+        driver.findElement(By.id("com.android.packageinstaller:id/permission_allow_button")).click();
+        System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click allow YouTrip access to camera button");
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Step 1: FRONT of NRIC"));
+        System.out.println("TEST STEP: KYC step 1 front of NRIC - on page");
+
+        //take front NRIC photo, confirm and submit
+        driver.findElement(By.id("co.you.youapp.dev:id/buttonShutter")).click();
+        System.out.println("TEST STEP: KYC step 1 front of NRIC - click take photo button");
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.className("android.widget.TextView"))), "Please make sure all data is readable"));
+        System.out.println("TEST STEP: KYC step 1 front of NRIC - photo taken, ready to confirm");
+        driver.findElement(By.id("co.you.youapp.dev:id/layoutBackground")).click();
+        System.out.println("TEST STEP: KYC step 1 front of NRIC - click all data is readable button");
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textDesc"))), "Now turn to the back of your NRIC and take a photo again."));
+        System.out.println("TEST STEP: KYC step 2 back of NRIC - on page");
+
+        //take back NRIC photo, confirm and submit
+        driver.findElement(By.id("co.you.youapp.dev:id/layoutBackground")).click();
+        System.out.println("TEST STEP: KYC step 2 back of NRIC - click on got it button from ID reminder dialog");
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Step 2: BACK of NRIC"));
+        System.out.println("TEST STEP: KYC step 2 back of NRIC - on page");
+        driver.findElement(By.id("co.you.youapp.dev:id/buttonShutter")).click();
+        System.out.println("TEST STEP: KYC step 2 back of NRIC - click take photo button");
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.className("android.widget.TextView"))), "Please make sure all data is readable"));
+        System.out.println("TEST STEP: KYC step 2 back of NRIC - photo taken, ready to confirm");
+        driver.findElement(By.id("co.you.youapp.dev:id/layoutBackground")).click();
+        System.out.println("TEST STEP: KYC step 2 back of NRIC - click all data is readable button");
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Full Name (as per NRIC)"));
+        System.out.println("TEST STEP: Full Name (as per NRIC) page - on page");
+
+        //complete surname, given name and submit
+        String surname  = "Tester";
+        String firstname = "Auto";
+        driver.findElement(By.id("co.you.youapp.dev:id/inputLastName")).sendKeys(surname);
+        System.out.println("TEST STEP: Full Name (as per NRIC) page - input surname");
+        driver.findElement(By.id("co.you.youapp.dev:id/inputGivenName")).sendKeys(firstname);
+        System.out.println("TEST STEP: Full Name (as per NRIC) page - input firstname");
+        driver.findElement(By.id("co.you.youapp.dev:id/layoutBackground")).click();
+        System.out.println("TEST STEP: Full Name (as per NRIC) page - click Next button");
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Check and Confirm"));
+        System.out.println("TEST STEP: Full Name (as per NRIC) page - check and confirm dialog appeared");
+        driver.findElement(By.id("co.you.youapp.dev:id/layoutBackground")).click();
+        System.out.println("TEST STEP: Full Name (as per NRIC) page - on check and confirm dialog click Confirm button");
+        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Preferred Name"));
+        System.out.println("TEST STEP: Preferred Name page - on page");
+
+        //check and edit name on card
+        String newSurname = "Test";
+        driver.findElement(By.id("co.you.youapp.dev:id/inputCardName")).sendKeys(newSurname+" "+firstname);
+        System.out.println("TEST STEP: Preferred Name page - change name on card");
+
+
+
+
+
+
+
+
+
 
     }
 
