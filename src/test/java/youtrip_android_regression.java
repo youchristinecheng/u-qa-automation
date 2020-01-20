@@ -45,7 +45,7 @@ public class youtrip_android_regression {
 
         File filePath = new File(System.getProperty("user.dir"));
         File appDir = new File(filePath, "/apps/Android/");
-        File app = new File(appDir, "app-sit-release-master-pre-3.2.0.1137.apk");
+        File app = new File(appDir, "app-sit-release-master-3.3.0.1140.apk");
         capabilities.setCapability("app", app.getAbsolutePath());
 
         driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
@@ -149,7 +149,7 @@ public class youtrip_android_regression {
         System.out.println("TEST STEP: Enter Email Page - on page");
 
         //generate new email address
-        String email = ("qa+sg"+formatter.format(date)+".com");
+        String email = ("qa+sg"+formatter.format(date)+"@you.co");
         System.out.println("TEST DATA: Email address is " +email);
 
         //input email and continue to welcome screen
