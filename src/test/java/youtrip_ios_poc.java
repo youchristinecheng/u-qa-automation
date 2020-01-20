@@ -1,7 +1,10 @@
 import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -13,16 +16,17 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.expectThrows;
 
 public class youtrip_ios_poc {
 
     IOSDriver driver;
 
+
     @BeforeTest
     public void setUp() throws MalformedURLException {
         // Created object of DesiredCapabilities class.
         DesiredCapabilities capabilities = new DesiredCapabilities();
-
         // setup the capabilities for ios emulator
         //capabilities.setCapability("deviceName", "iPhone Simulator");
         //capabilities.setCapability(CapabilityType.VERSION, "11.4.1");
@@ -30,16 +34,20 @@ public class youtrip_ios_poc {
         //capabilities.setCapability("platformName", "iOS");
 
         // setup the capabilities for real iphone
-        capabilities.setCapability("deviceName", "iPhone 6s");
-        capabilities.setCapability(CapabilityType.VERSION, "11.4.1");
+        capabilities.setCapability("deviceName", "iPhone XS Max");
+        capabilities.setCapability(CapabilityType.VERSION, "12.1.1");
+        capabilities.setCapability("udid", "00008020-00026C2E3A46002E");
         capabilities.setCapability("automationName", "XCUITest");
         capabilities.setCapability("platformName", "iOS");
         capabilities.setCapability("bundleId", "co.you.youapp");
 
         File filePath = new File(System.getProperty("user.dir"));
         File appDir = new File(filePath, "/apps");
-        File app = new File(appDir, "YOUTrip.app");
+        File app = new File(appDir, "YouTrip-TH_SIT--pre-3.4.0.1358(616e0ab).ipa");
         capabilities.setCapability("app", app.getAbsolutePath());
+
+        capabilities.setCapability("xcodeOrgId", "2HWNYH89R4");
+        capabilities.setCapability("xcodeSigningId", "iPhone Developer");
 
         //capabilities.setCapability("app", "apps/app-dev_sim-release-1.1.1.730.apk");
         // Set android appPackage desired capability.
@@ -64,15 +72,30 @@ public class youtrip_ios_poc {
     public void firstTest() {
         System.out.println("DC: starting firstTest");
 
-        //handle the ios DEV alert
+        // Handle the ios DEV alert By Force Logout
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        //wait.until(ExpectedConditions.textToBePresentInElement(By.xpath("//XCUIElementTypeStaticText[@name='This is DEV Version']")), "This is DEV Version");
         System.out.println("DEV ALERT: dev version alert displayed");
-        driver.findElement(By.xpath("//XCUIElementTypeButton[@name='Submit']")).click();
-        System.out.println("DEV ALERT: clicked the submit button ");
+        driver.findElement(By.xpath("//XCUIElementTypeButton[@name=\"Force logout\"]")).click();
+
+        // Handle Country Selection to SG
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        //System.out.println(driver.getPageSource());
+
+        IOSElement el;
+        try{
+            el = (IOSElement) driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name=\"Singapore\"]"));
+        }catch(Exception e){
+            // Route Handling to go to Singapore
+            el = (IOSElement) driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name=\"Thailand\"]"));
+            el.click();
+        }
+        // Click Confirm Button
+        el = (IOSElement) driver.findElement(By.xpath("//XCUIElementTypeButton[@name=\"Confirm\"]"));
+        el.click();
+
+        //driver.findElement(By.xpath("//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[3]/XCUIElementTypeButton")).click();
 
         //wait for get started page and click the get started button
-        //wait.until(ExpectedConditions.presenceOfElementLocated(By.accessibilityId("Get Started")));
         System.out.println("GET STARTED: page displayed");
         driver.findElementByAccessibilityId("Get Started").click();
         System.out.println("GET STARTED: button clicked");
