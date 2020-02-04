@@ -1,11 +1,19 @@
 package TestBased;
 
+import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.ios.IOSElement;
+import net.bytebuddy.implementation.bytecode.Throw;
+import org.openqa.selenium.NotFoundException;
+import org.openqa.selenium.WebElement;
+
+import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class YouTripIosUIElementKey {
     public enum PageKey{
         DevAlertElementDict,
+        CameraAccessAlertElementDict,
         CountryPageElementDict,
         CountrySelectionElementDict,
         GetStartedPageElementDict,
@@ -15,15 +23,16 @@ public class YouTripIosUIElementKey {
         WelcomePageElementDict
     }
 
-    private HashMap<String, String> DevAlertElementDict;
-    private HashMap<String, String> CountryPageElementDict;
-    private HashMap<String, String> CountrySelectionElementDict;
-    private HashMap<String, String> GetStartedPageElementDict;
-    private HashMap<String, String> MobileNumberPageElementDict;
-    private HashMap<String, String> OTPPageElementDict;
-    private HashMap<String, String> EmailPageElementDict;
-    private HashMap<String, String> WelcomePageElementDict;
-    private ArrayList<HashMap<String, String>> Container;
+    private HashMap<String, UIElementKey> DevAlertElementDict;
+    private HashMap<String, UIElementKey> CameraAccessAlertElementDict;
+    private HashMap<String, UIElementKey> CountryPageElementDict;
+    private HashMap<String, UIElementKey> CountrySelectionElementDict;
+    private HashMap<String, UIElementKey> GetStartedPageElementDict;
+    private HashMap<String, UIElementKey> MobileNumberPageElementDict;
+    private HashMap<String, UIElementKey> OTPPageElementDict;
+    private HashMap<String, UIElementKey> EmailPageElementDict;
+    private HashMap<String, UIElementKey> WelcomePageElementDict;
+    private ArrayList<HashMap<String, UIElementKey>> Container;
 
     public YouTripIosUIElementKey(){
 
@@ -42,85 +51,67 @@ public class YouTripIosUIElementKey {
     }
 
     private void build(){
-        this.DevAlertElementDict.put("Force Logout", "//XCUIElementTypeButton[@name=\"Force logout\"]");
-        this.DevAlertElementDict.put("Download logs", "//XCUIElementTypeButton[@name=\"Download logs\"]");
-        this.DevAlertElementDict.put("Continue", "//XCUIElementTypeButton[@name=\"Continue\"]");
+
+        this.DevAlertElementDict.put("Force Logout", new UIElementKey("//XCUIElementTypeButton[@name=\"Force logout\"]", UIElementKey.FindMethod.XPATH));
+        this.DevAlertElementDict.put("Download logs", new UIElementKey("//XCUIElementTypeButton[@name=\"Download logs\"]", UIElementKey.FindMethod.XPATH));
+        this.DevAlertElementDict.put("Continue", new UIElementKey("//XCUIElementTypeButton[@name=\"Continue\"]", UIElementKey.FindMethod.XPATH));
         this.Container.add(this.DevAlertElementDict);
 
-        this.CountryPageElementDict.put("HeaderText", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeStaticText[1]");
-        this.CountryPageElementDict.put("HeadingImg", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeImage[1]");
-        this.CountryPageElementDict.put("CountryText", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeStaticText[1]");
-        this.CountryPageElementDict.put("CountryDescText", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeStaticText[2]");
-        this.CountryPageElementDict.put("ConfirmBtn", "//XCUIElementTypeButton[@name=\"Confirm\"]");
+        this.CountryPageElementDict.put("lblTitle", new UIElementKey("lblTitle", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.CountryPageElementDict.put("optionCountry", new UIElementKey("optionCountry", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.CountryPageElementDict.put("lblDesc", new UIElementKey("lblDesc", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.CountryPageElementDict.put("btnNext", new UIElementKey("btnNext", UIElementKey.FindMethod.ACCESSIBILITYID));
         this.Container.add(this.CountryPageElementDict);
 
-        this.CountrySelectionElementDict.put("CloseButton", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeButton[1]");
-        this.CountrySelectionElementDict.put("Singapore", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeTable[1]/XCUIElementTypeCell[1]/XCUIElementTypeStaticText[1]");
-        this.CountrySelectionElementDict.put("Thailand", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeTable[1]/XCUIElementTypeCell[2]/XCUIElementTypeStaticText[1]");
+        this.CountrySelectionElementDict.put("btnClose", new UIElementKey("btnClose", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.CountrySelectionElementDict.put("Singapore", new UIElementKey("Singapore", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.CountrySelectionElementDict.put("Thailand", new UIElementKey("Thailand", UIElementKey.FindMethod.ACCESSIBILITYID));
         this.Container.add(this.CountrySelectionElementDict);
 
-        this.GetStartedPageElementDict.put("BackBtn", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeButton[1]");
-        this.GetStartedPageElementDict.put("GetStarted", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeButton[2]");
+        this.GetStartedPageElementDict.put("btnBack", new UIElementKey("btnBack", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.GetStartedPageElementDict.put("btnGetStarted", new UIElementKey("btnGetStarted", UIElementKey.FindMethod.ACCESSIBILITYID));
         this.Container.add(this.GetStartedPageElementDict);
 
-        this.MobileNumberPageElementDict.put("BackBtn", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeButton[1]");
-        this.MobileNumberPageElementDict.put("HeaderText", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeStaticText[1]");
-        this.MobileNumberPageElementDict.put("MCC", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeTextField[1]");
-        this.MobileNumberPageElementDict.put("PhoneNumber", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeTextField[2]");
-        // Clear Text Button ONLY retrieve by ID ["icClose"] due to xPath is changed after phone number enetered with additional element
-        // Next Button ONLY retrieve by ID ["Next"] due to xPath is changed after phone number enetered with additional element
+        this.MobileNumberPageElementDict.put("btnBack", new UIElementKey("btnBack", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.MobileNumberPageElementDict.put("lblTitle", new UIElementKey("lblTitle", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.MobileNumberPageElementDict.put("txtPrefix", new UIElementKey("txtPrefixxx", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.MobileNumberPageElementDict.put("txtPhoneNumber", new UIElementKey("txtPhonenumber", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.MobileNumberPageElementDict.put("btnNext", new UIElementKey("btnNext", UIElementKey.FindMethod.ACCESSIBILITYID));
         this.Container.add(this.MobileNumberPageElementDict);
 
-        this.OTPPageElementDict.put("BackBtn", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeButton[1]");
-        this.OTPPageElementDict.put("HeaderText", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeStaticText[1]");
-        this.OTPPageElementDict.put("OTPDigit1", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[2]/XCUIElementTypeStaticText[1]");
-        this.OTPPageElementDict.put("OTPDigit2", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[2]/XCUIElementTypeStaticText[2]");
-        this.OTPPageElementDict.put("OTPDigit3", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[2]/XCUIElementTypeStaticText[3]");
-        this.OTPPageElementDict.put("OTPDigit4", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[2]/XCUIElementTypeStaticText[4]");
-        this.OTPPageElementDict.put("OTPDigit5", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[2]/XCUIElementTypeStaticText[5]");
-        this.OTPPageElementDict.put("OTPDigit6", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[2]/XCUIElementTypeStaticText[6]");
+        this.OTPPageElementDict.put("btnBack", new UIElementKey("btnBack", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("lblTitle", new UIElementKey("lblTitle", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("OTPDigit1", new UIElementKey("passcodeDigit1", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("OTPDigit2", new UIElementKey("passcodeDigit2", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("OTPDigit3", new UIElementKey("passcodeDigit3", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("OTPDigit4", new UIElementKey("passcodeDigit4", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("OTPDigit5", new UIElementKey("passcodeDigit5", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("OTPDigit6", new UIElementKey("passcodeDigit6", UIElementKey.FindMethod.ACCESSIBILITYID));
         this.Container.add(this.OTPPageElementDict);
 
-        this.EmailPageElementDict.put("BackBtn", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeButton[1]");
-        this.EmailPageElementDict.put("EmailLbl", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]//XCUIElementTypeStaticText[1]");
-        this.EmailPageElementDict.put("Email", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]//XCUIElementTypeTextField[1]");
-        // Clear Text Button ONLY retrieve by ID ["icClose"] due to xPath is changed after phone number enetered with additional element
-        // Next Button ONLY retrieve by ID ["Next"] due to xPath is changed after phone number enetered with additional element
+        this.EmailPageElementDict.put("btnBack", new UIElementKey("btnBack", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.EmailPageElementDict.put("lblTitle", new UIElementKey("lblTitle", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.EmailPageElementDict.put("UserEmail", new UIElementKey("txtUserEmail", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.EmailPageElementDict.put("btnNext", new UIElementKey("btnNext", UIElementKey.FindMethod.ACCESSIBILITYID));
         this.Container.add(this.EmailPageElementDict);
 
-        this.WelcomePageElementDict.put("HeaderText", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[4]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeStaticText[1]");
-        this.WelcomePageElementDict.put("PCRegisterBtn", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[4]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeButton[1]");
-        this.WelcomePageElementDict.put("NPCRegisterBtn", "//XCUIElementTypeApplication[@name=\"YouTrip\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[4]/XCUIElementTypeOther[1]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeButton[2]");
+        this.WelcomePageElementDict.put("lblWelcome", new UIElementKey("lblWelcome", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.WelcomePageElementDict.put("btnPCRegister", new UIElementKey("txtUserEmail", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.WelcomePageElementDict.put("btnNPCRegister", new UIElementKey("txtUserEmail", UIElementKey.FindMethod.ACCESSIBILITYID));
         // Menu Button and its sub-menu item ONLY retrieve by ID ["icMenu"] and corresponding sub-menu ID due to dynamic rendering
-        this.Container.add(this.EmailPageElementDict);
+        this.Container.add(this.WelcomePageElementDict);
+
+        this.CameraAccessAlertElementDict.put("btnOK", new UIElementKey("//XCUIElementTypeButton[@name=\"OK\"]", UIElementKey.FindMethod.XPATH));
+        this.Container.add(this.WelcomePageElementDict);
     }
 
-    public String getElementXPath(PageKey page, String elementKey){
-        String result = "";
+    public WebElement getElement(PageKey page, String elementKey, IOSDriver driver){
+        UIElementKey result = null;
         result = (this.Container.get(page.ordinal())).get(elementKey);
-        /*
-        switch (page){
-            case DevAlertElementDict:
-                result = this.DevAlertElementDict.get(elementKey);
-                break;
-            case GetStartedPageElementDict:
-                result =  this.GetStartedPageElementDict.get(elementKey);
-                break;
-            case CountryPageElementDict:
-                result = this.CountryPageElementDict.get(elementKey);
-                break;
-            case CountrySelectionElementDict:
-                result = this.CountrySelectionElementDict.get(elementKey);
-                break;
-            case MobileNumberPageElementDict:
-                result = this.MobileNumberPageElementDict.get(elementKey);
-                break;
-            case OTPPageElementDict:
-                result = this.OTPPageElementDict.get(elementKey);
-                break;
-            default:
-                break;
-        }*/
-        return result ==  null ? "" : result;
+        if (result ==  null){
+            throw new NotFoundException("Element Not Declared");
+        }else{
+            return result.getIOSElement(driver);
+        }
     }
 }
