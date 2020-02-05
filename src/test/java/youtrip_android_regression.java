@@ -248,7 +248,7 @@ public class youtrip_android_regression {
         System.out.println("TEST STEP: Preferred Name page - click next button");
 
         //TODO test data - nric number is S1234567L need to randomise it
-        String nricNum  = "S1234567A";
+        String nricNum  = utils.getNRIC();
         String dob = "01-01-1980";
         String nationality = "Singaporean";
 
@@ -310,10 +310,8 @@ public class youtrip_android_regression {
         //get and store the KYC reference number
         String kycRefNo = driver.findElement(By.id("co.you.youapp.dev:id/textRefNumber")).getText();
         System.out.println("TEST DATA: KYC submission reference number is " +kycRefNo);
-
         //call YP full reject with Ref Number
         api.yp_fullReject(kycRefNo);
-
         //back to the app - wait for reject to be updated
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("co.you.youapp.dev:id/textButtonName"))));
