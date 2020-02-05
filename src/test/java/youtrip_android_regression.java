@@ -1,8 +1,6 @@
+import TestBased.YouAPI;
+import TestBased.Utils;
 import io.appium.java_client.android.AndroidDriver;
-import kong.unirest.HttpResponse;
-import kong.unirest.JsonNode;
-import kong.unirest.json.JSONArray;
-import kong.unirest.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -10,25 +8,24 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import kong.unirest.Unirest;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-
 public class youtrip_android_regression {
 
     AndroidDriver driver;
+    YouAPI api;
+    Utils utils;
 
     @BeforeTest
     public void setUp() throws MalformedURLException {
 
+        api = new YouAPI();
+        utils = new Utils();
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
         // setup the capabilities for real device
@@ -109,14 +106,9 @@ public class youtrip_android_regression {
         wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.xpath("//android.widget.TextView[@text='Enter Mobile Number']"))), "Enter Mobile Number"));
         System.out.println("TEST STEP: Mobile Number Page - on page");
 
-
-        //TODO separate below function
         //generate new mobile number
-        SimpleDateFormat formatter= new SimpleDateFormat("YYMMDDHHmmssSS");
-        Date date = new Date(System.currentTimeMillis());
-        System.out.println(formatter.format(date));
         String mprefix = "123";
-        String mnumber = formatter.format(date);
+        String mnumber = utils.getTimestamp();
         System.out.println("TEST DATA: Mobile Number is " +mprefix+ " " +mnumber);
         //clear mobile prefix field and enter mobile prefix
         driver.findElement(By.id("co.you.youapp.dev:id/inputPrefix")).clear();
@@ -133,28 +125,19 @@ public class youtrip_android_regression {
         wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.xpath("//android.widget.TextView[@text='Enter Code from SMS']"))), "Enter Code from SMS"));
         System.out.println("TEST STEP: OTP Page - on page");
 
-        //TODO separate below function
         //get OTP from backdoor and input otp
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        //String body = Unirest.get("http://backdoor.internal.sg.sit.you.co/onboarding/otp/123/2220001")
-        String backdoorOTP = ("http://backdoor.internal.sg.sit.you.co/onboarding/otp/"+mprefix+"/"+mnumber);
-        System.out.println("API CALL: " +backdoorOTP);
+        String otpCode = api.getOTP(mprefix, mnumber);
 
-        String body = Unirest.get(backdoorOTP)
-                .asJson()
-                .getBody()
-                .getObject()
-                .getString("password");
-
-        System.out.println(body);
-        String otp1 = body.substring(0);
-        String otp2 = body.substring(1);
-        String otp3 = body.substring(2);
-        String otp4 = body.substring(3);
-        String otp5 = body.substring(4);
-        String otp6 = body.substring(5);
+        System.out.println("TEST DATA: OTP Code is " +otpCode);
+        String otp1 = otpCode.substring(0);
+        String otp2 = otpCode.substring(1);
+        String otp3 = otpCode.substring(2);
+        String otp4 = otpCode.substring(3);
+        String otp5 = otpCode.substring(4);
+        String otp6 = otpCode.substring(5);
 
         //enter OTP - note: need to enter each digit separately
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[1]/android.widget.EditText")).sendKeys(otp1);
         driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[2]/android.widget.EditText")).sendKeys(otp2);
         driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[3]/android.widget.EditText")).sendKeys(otp3);
@@ -166,9 +149,8 @@ public class youtrip_android_regression {
         wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Enter Email Address"));
         System.out.println("TEST STEP: Enter Email Page - on page");
 
-        //TODO separate below function
         //generate new email address
-        String email = ("qa+sg"+formatter.format(date)+"@you.co");
+        String email = ("qa+sg"+mnumber+"@you.co");
         System.out.println("TEST DATA: Email address is " +email);
 
         //input email
@@ -329,59 +311,8 @@ public class youtrip_android_regression {
         String kycRefNo = driver.findElement(By.id("co.you.youapp.dev:id/textRefNumber")).getText();
         System.out.println("TEST DATA: KYC submission reference number is " +kycRefNo);
 
-        //TODO separate below function (already duplicated in above test)
-        SimpleDateFormat formatter= new SimpleDateFormat("YYMMDDHHmmssSS");
-        Date date = new Date(System.currentTimeMillis());
-        System.out.println(formatter.format(date));
-        String timestamp = formatter.format(date);
-
-        //TODO separate API call
-        //login to YP and get token using backdoor
-        String url_backdoorYP = ("http://backdoor.internal.sg.sit.you.co/youportal/token?scopes=https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile,openid");
-        System.out.println("API CALL: " +url_backdoorYP);
-
-        String ypToken = Unirest.get(url_backdoorYP)
-                .header("x-request-id", "token"+timestamp)
-                .asJson()
-                .getBody()
-                .getObject()
-                .getString("token");
-        System.out.println("TEST DATA: YP token is " +ypToken);
-
-        //TODO separate API call
-        //get KYC record using reference number from app
-        String url_getKYC = ("http://yp.internal.sg.sit.you.co/api/kyc?ReferenceIDs="+kycRefNo);
-        System.out.println("API CALL: " +url_getKYC);
-
-        HttpResponse<JsonNode> getKYCjsonResponse = Unirest.get(url_getKYC)
-                .header("Authorization", "Bearer "+ypToken)
-                .header("x-request-id", "getKYC"+timestamp)
-                .header("x-yp-role", "Singapore Admin")
-                .asJson();
-
-        //get full JSON response body
-        JSONObject responseJson = getKYCjsonResponse.getBody().getObject();
-        //get necessary array data and get KYC ID
-        JSONArray responseArray = responseJson.getJSONArray("FirstPageResults");
-        JSONObject arrayObj = responseArray.getJSONObject(0);
-        String ypKycID = arrayObj.getString("ID");
-
-        System.out.println("TEST DATA: KYC ID is " +ypKycID);
-
-        //TODO separate API call and test data for reject reason
-        //full reject KYC record using KYC ID
-        String url_fullRejectKYC = ("http://yp.internal.sg.sit.you.co/api/kyc/"+ypKycID+"/reject");
-        System.out.println("API CALL: " +url_fullRejectKYC);
-
-        HttpResponse<JsonNode> rejectKYCjsonResponse = Unirest.put(url_fullRejectKYC)
-                .header("Authorization", "Bearer "+ypToken)
-                .header("x-request-id", "fullRejectKYC"+timestamp)
-                .header("x-yp-role", "Singapore Admin")
-                .header("Content-Type", "application/json")
-                .body("{\"Reason\":\"[AUTO TEST: full KYC rejection testing\"}")
-                .asJson();
-
-        assertEquals(200, rejectKYCjsonResponse.getStatus());
+        //call YP full reject with Ref Number
+        api.yp_fullReject(kycRefNo);
 
         //back to the app - wait for reject to be updated
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
