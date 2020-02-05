@@ -13,6 +13,7 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
+
 # Generated files
 .idea/**/contentModel.xml
 
@@ -121,4 +122,6 @@ buildNumber.properties
 # End of https://www.gitignore.io/api/java,maven,intellij
 
 ### Project ###
-screenshot/
+.screenshot/
+/.apps/
+/.idea/
