@@ -29,6 +29,11 @@ public class youtrip_ios_poc {
     @BeforeTest
     public void setUp() throws MalformedURLException {
 
+
+
+
+
+
         UIElementKeyDict = new YouTripIosUIElementKey();
         // Created object of DesiredCapabilities class.
         DesiredCapabilities capabilities = new DesiredCapabilities();
@@ -75,7 +80,6 @@ public class youtrip_ios_poc {
 
     @Test
     public void regTC01_selectTH() {
-
         IOSElement el;
         // Handle the ios DEV alert By Force Logout
         WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -379,16 +383,75 @@ public class youtrip_ios_poc {
         String firstname = "Auto";
         System.out.println("TEST STEP: KYC Process - Enter User Name");
         System.out.println("TEST DATA: Surname - " + surname + ";Firstname - " + firstname + ";");
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblTitle", driver), "Your Full Name"));
-        el = (IOSElement) UIElementKeyDict.getElement(PageKey.TurnBackPopUpPageElementDict, "txtSurname", driver);
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblTitle", driver), "Full Name (as per NRIC)"));
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "txtSurname", driver);
         el.sendKeys(surname);
-        el.click();
-        el = (IOSElement) UIElementKeyDict.getElement(PageKey.TurnBackPopUpPageElementDict, "txtGivenName", driver);
-        el.click();
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "txtGivenName", driver);
         el.sendKeys(firstname);
-        el = (IOSElement) UIElementKeyDict.getElement(PageKey.TurnBackPopUpPageElementDict, "btnOK", driver);
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnNext", driver);
         el.click();
+        Thread.sleep(500);
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblTitle", driver), "Check and Confirm"));
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnCheckAndConfirmConfirm", driver);
+        el.click();
+        Thread.sleep(2000);
 
+        System.out.println("TEST STEP: KYC Process - Enter NameOnCard");
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "lblTitle", driver), "Preferred Name"));
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "txtCardName", driver), surname + " " + firstname));
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnNext", driver);
+        el.click();
+        Thread.sleep(2000);
+
+        System.out.println("TEST STEP: KYC Process - Enter Personal Information");
+        String nricNum = "S1234567A";
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.YEAR, -10);
+        Date dateOfBirth = c.getTime();
+        SimpleDateFormat dateOfBirthFormatter = new SimpleDateFormat("DDMMYYYY");
+        String dateOfBirthVal = dateOfBirthFormatter.format(dateOfBirth);
+        System.out.println("TEST DATA: NRIC Number: " + nricNum + "DateOfBirth:" + dateOfBirthVal);
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "lblTitle", driver), "Personal Information"));
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "txtIdCardNumber", driver);
+        el.sendKeys(nricNum);
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "txtDateOfBirth", driver);
+        el.sendKeys(dateOfBirthVal);
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "btnNationality", driver);
+        el.click();
+        Thread.sleep(500);
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.KYCNationalityElementDict, "Singaporean", driver);
+        el.click();
+        Thread.sleep(500);
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "lblTitle", driver), "Personal Information"));
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "btnMale", driver);
+        el.click();
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "btnNext", driver);
+        el.click();
+        Thread.sleep(2000);
+
+        System.out.println("TEST STEP: KYC Process - Enter Residential Address");
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "lblTitle", driver), "Residential Address"));
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "txtAddressLine1", driver);
+        el.sendKeys("1");
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "txtAddressLine2", driver);
+        el.sendKeys("2");
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "txtAddressPostalCode", driver);
+        el.sendKeys("000000");
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "btnNext", driver);
+        el.click();
+        Thread.sleep(2000);
+
+        System.out.println("TEST STEP: KYC Process - Submit KYC");
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "lblTitle", driver), "Final Step"));
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "txtAddressLine1", driver);
+        el.click();
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "txtAddressLine2", driver);
+        el.click();
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnAgree", driver);
+        el.click();
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnSubmit", driver);
+        el.click();
 //        el = driver.findElementByXPath()
 
         System.out.println("debug");

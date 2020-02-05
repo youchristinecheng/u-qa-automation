@@ -1,15 +1,11 @@
 package TestBased;
 
 import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.ios.IOSElement;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
-import sun.jvm.hotspot.debugger.Page;
 
-import java.rmi.server.ExportException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import TestBased.UIElementData.*;
 
 public class YouTripIosUIElementKey {
     public enum PageKey{
@@ -28,27 +24,37 @@ public class YouTripIosUIElementKey {
         CameraPageElementDict,
         PhotoConfirmPageElementDict,
         TurnBackPopUpPageElementDict,
-        NamePageElementDict
+        NamePageElementDict,
+        NameOnCardElementDict,
+        PersonalInformationElementDict,
+        KYCNationalityElementDict,
+        ResidentialAddressElementDict,
+        KYCFinalStepElementDict
     }
 
-    private HashMap<String, UIElementKey> DevAlertElementDict;
-    private HashMap<String, UIElementKey> CountryPageElementDict;
-    private HashMap<String, UIElementKey> CountrySelectionElementDict;
-    private HashMap<String, UIElementKey> GetStartedPageElementDict;
-    private HashMap<String, UIElementKey> MobileNumberPageElementDict;
-    private HashMap<String, UIElementKey> OTPPageElementDict;
-    private HashMap<String, UIElementKey> EmailPageElementDict;
-    private HashMap<String, UIElementKey> WelcomePageElementDict;
-    private HashMap<String, UIElementKey> IdentityVerificationElementDict;
-    private HashMap<String, UIElementKey> PRRegistrationElementDict;
-    private HashMap<String, UIElementKey> CameraAccessAlertElementDict;
-    private HashMap<String, UIElementKey> StepsPageElementDict;
-    private HashMap<String, UIElementKey> CameraPageElementDict;
-    private HashMap<String, UIElementKey> PhotoConfirmPageElementDict;
-    private HashMap<String, UIElementKey> TurnBackPopUpPageElementDict;
-    private HashMap<String, UIElementKey> NamePageElementDict;
+    private HashMap<String, UIElementData> DevAlertElementDict;
+    private HashMap<String, UIElementData> CountryPageElementDict;
+    private HashMap<String, UIElementData> CountrySelectionElementDict;
+    private HashMap<String, UIElementData> GetStartedPageElementDict;
+    private HashMap<String, UIElementData> MobileNumberPageElementDict;
+    private HashMap<String, UIElementData> OTPPageElementDict;
+    private HashMap<String, UIElementData> EmailPageElementDict;
+    private HashMap<String, UIElementData> WelcomePageElementDict;
+    private HashMap<String, UIElementData> IdentityVerificationElementDict;
+    private HashMap<String, UIElementData> PRRegistrationElementDict;
+    private HashMap<String, UIElementData> CameraAccessAlertElementDict;
+    private HashMap<String, UIElementData> StepsPageElementDict;
+    private HashMap<String, UIElementData> CameraPageElementDict;
+    private HashMap<String, UIElementData> PhotoConfirmPageElementDict;
+    private HashMap<String, UIElementData> TurnBackPopUpPageElementDict;
+    private HashMap<String, UIElementData> NamePageElementDict;
+    private HashMap<String, UIElementData> NameOnCardElementDict;
+    private HashMap<String, UIElementData> PersonalInformationElementDict;
+    private HashMap<String, UIElementData> ResidentialAddressElementDict;
+    private  HashMap<String, UIElementData> KYCNationalityElementDict;
+    private HashMap<String, UIElementData> KYCFinalStepElementDict;
 
-    private HashMap<Integer, HashMap<String, UIElementKey>> Container;
+    private HashMap<Integer, HashMap<String, UIElementData>> Container;
 
     public YouTripIosUIElementKey(){
 
@@ -68,6 +74,12 @@ public class YouTripIosUIElementKey {
         this.PhotoConfirmPageElementDict = new HashMap<>();
         this.TurnBackPopUpPageElementDict = new HashMap<>();
         this.NamePageElementDict = new HashMap<>();
+        this.NameOnCardElementDict = new HashMap<>();
+        this.PersonalInformationElementDict = new HashMap<>();
+        this.KYCNationalityElementDict = new HashMap<>();
+        this.ResidentialAddressElementDict = new HashMap<>();
+        this.KYCFinalStepElementDict = new HashMap<>();
+
 
         this.Container = new HashMap<>();
 
@@ -76,96 +88,133 @@ public class YouTripIosUIElementKey {
 
     private void build(){
 
-        this.DevAlertElementDict.put("Force Logout", new UIElementKey("//XCUIElementTypeButton[@name=\"Force logout\"]", UIElementKey.FindMethod.XPATH));
-        this.DevAlertElementDict.put("Download logs", new UIElementKey("//XCUIElementTypeButton[@name=\"Download logs\"]", UIElementKey.FindMethod.XPATH));
-        this.DevAlertElementDict.put("Continue", new UIElementKey("//XCUIElementTypeButton[@name=\"Continue\"]", UIElementKey.FindMethod.XPATH));
+        this.DevAlertElementDict.put("Force Logout", new UIElementData("//XCUIElementTypeButton[@name=\"Force logout\"]", FindMethod.XPATH));
+        this.DevAlertElementDict.put("Download logs", new UIElementData("//XCUIElementTypeButton[@name=\"Download logs\"]", FindMethod.XPATH));
+        this.DevAlertElementDict.put("Continue", new UIElementData("//XCUIElementTypeButton[@name=\"Continue\"]", FindMethod.XPATH));
         this.Container.put(PageKey.DevAlertElementDict.ordinal(), this.DevAlertElementDict);
 
-        this.CountryPageElementDict.put("lblTitle", new UIElementKey("lblTitle", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.CountryPageElementDict.put("optionCountry", new UIElementKey("optionCountry", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.CountryPageElementDict.put("lblDesc", new UIElementKey("lblDesc", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.CountryPageElementDict.put("btnNext", new UIElementKey("btnNext", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.CountryPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.CountryPageElementDict.put("optionCountry", new UIElementData("optionCountry", FindMethod.ACCESSIBILITYID));
+        this.CountryPageElementDict.put("lblDesc", new UIElementData("lblDesc", FindMethod.ACCESSIBILITYID));
+        this.CountryPageElementDict.put("btnNext", new UIElementData("btnNext", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.CountryPageElementDict.ordinal(), this.CountryPageElementDict);
 
-        this.CountrySelectionElementDict.put("btnClose", new UIElementKey("btnClose", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.CountrySelectionElementDict.put("Singapore", new UIElementKey("Singapore", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.CountrySelectionElementDict.put("Thailand", new UIElementKey("Thailand", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.CountrySelectionElementDict.put("btnClose", new UIElementData("btnClose", FindMethod.ACCESSIBILITYID));
+        this.CountrySelectionElementDict.put("Singapore", new UIElementData("Singapore", FindMethod.ACCESSIBILITYID));
+        this.CountrySelectionElementDict.put("Thailand", new UIElementData("Thailand", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.CountrySelectionElementDict.ordinal(), this.CountrySelectionElementDict);
 
-        this.GetStartedPageElementDict.put("btnBack", new UIElementKey("btnBack", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.GetStartedPageElementDict.put("btnGetStarted", new UIElementKey("btnGetStarted", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.GetStartedPageElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));
+        this.GetStartedPageElementDict.put("btnGetStarted", new UIElementData("btnGetStarted", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.GetStartedPageElementDict.ordinal(), this.GetStartedPageElementDict);
 
-        this.MobileNumberPageElementDict.put("btnBack", new UIElementKey("btnBack", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.MobileNumberPageElementDict.put("lblTitle", new UIElementKey("lblTitle", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.MobileNumberPageElementDict.put("txtPrefix", new UIElementKey("txtPrefixxx", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.MobileNumberPageElementDict.put("txtPhoneNumber", new UIElementKey("txtPhonenumber", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.MobileNumberPageElementDict.put("btnNext", new UIElementKey("btnNext", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.MobileNumberPageElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));
+        this.MobileNumberPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.MobileNumberPageElementDict.put("txtPrefix", new UIElementData("txtPrefixxx", FindMethod.ACCESSIBILITYID));
+        this.MobileNumberPageElementDict.put("txtPhoneNumber", new UIElementData("txtPhonenumber", FindMethod.ACCESSIBILITYID));
+        this.MobileNumberPageElementDict.put("btnNext", new UIElementData("btnNext", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.MobileNumberPageElementDict.ordinal(), this.MobileNumberPageElementDict);
 
-        this.OTPPageElementDict.put("btnBack", new UIElementKey("btnBack", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.OTPPageElementDict.put("lblTitle", new UIElementKey("lblTitle", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.OTPPageElementDict.put("OTPDigit1", new UIElementKey("passcodeDigit1", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.OTPPageElementDict.put("OTPDigit2", new UIElementKey("passcodeDigit2", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.OTPPageElementDict.put("OTPDigit3", new UIElementKey("passcodeDigit3", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.OTPPageElementDict.put("OTPDigit4", new UIElementKey("passcodeDigit4", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.OTPPageElementDict.put("OTPDigit5", new UIElementKey("passcodeDigit5", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.OTPPageElementDict.put("OTPDigit6", new UIElementKey("passcodeDigit6", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("OTPDigit1", new UIElementData("passcodeDigit1", FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("OTPDigit2", new UIElementData("passcodeDigit2", FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("OTPDigit3", new UIElementData("passcodeDigit3", FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("OTPDigit4", new UIElementData("passcodeDigit4", FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("OTPDigit5", new UIElementData("passcodeDigit5", FindMethod.ACCESSIBILITYID));
+        this.OTPPageElementDict.put("OTPDigit6", new UIElementData("passcodeDigit6", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.OTPPageElementDict.ordinal(), this.OTPPageElementDict);
 
-        this.EmailPageElementDict.put("btnBack", new UIElementKey("btnBack", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.EmailPageElementDict.put("lblTitle", new UIElementKey("lblTitle", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.EmailPageElementDict.put("UserEmail", new UIElementKey("txtUserEmail", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.EmailPageElementDict.put("btnNext", new UIElementKey("btnNext", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.EmailPageElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));
+        this.EmailPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.EmailPageElementDict.put("UserEmail", new UIElementData("txtUserEmail", FindMethod.ACCESSIBILITYID));
+        this.EmailPageElementDict.put("btnNext", new UIElementData("btnNext", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.EmailPageElementDict.ordinal(), this.EmailPageElementDict);
 
-        this.WelcomePageElementDict.put("lblWelcome", new UIElementKey("lblWelcome", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.WelcomePageElementDict.put("btnPCRegister", new UIElementKey("btnOrderPC", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.WelcomePageElementDict.put("btnNPCRegister", new UIElementKey("btnActiveNow", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.WelcomePageElementDict.put("lblWelcome", new UIElementData("lblWelcome", FindMethod.ACCESSIBILITYID));
+        this.WelcomePageElementDict.put("btnPCRegister", new UIElementData("btnOrderPC", FindMethod.ACCESSIBILITYID));
+        this.WelcomePageElementDict.put("btnNPCRegister", new UIElementData("btnActiveNow", FindMethod.ACCESSIBILITYID));
         // Menu Button and its sub-menu item ONLY retrieve by ID ["icMenu"] and corresponding sub-menu ID due to dynamic rendering
         this.Container.put(PageKey.WelcomePageElementDict.ordinal(), this.WelcomePageElementDict);
 
-        this.IdentityVerificationElementDict.put("lblTitle", new UIElementKey("lblTitle", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.IdentityVerificationElementDict.put("singaporeanPRRegister", new UIElementKey("//XCUIElementTypeStaticText[@name=\"For Singaporean / PR\"]", UIElementKey.FindMethod.XPATH));
-        this.IdentityVerificationElementDict.put("foreignerRegister", new UIElementKey("//XCUIElementTypeStaticText[@name=\"For Foreginer\"]", UIElementKey.FindMethod.XPATH));
+        this.IdentityVerificationElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.IdentityVerificationElementDict.put("singaporeanPRRegister", new UIElementData("//XCUIElementTypeStaticText[@name=\"For Singaporean / PR\"]", FindMethod.XPATH));
+        this.IdentityVerificationElementDict.put("foreignerRegister", new UIElementData("//XCUIElementTypeStaticText[@name=\"For Foreginer\"]", FindMethod.XPATH));
         this.Container.put(PageKey.IdentityVerificationElementDict.ordinal(), this.IdentityVerificationElementDict);
 
-        this.PRRegistrationElementDict.put("btnBack", new UIElementKey("btnBack", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.PRRegistrationElementDict.put("lblTitle", new UIElementKey("lblTitle", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.PRRegistrationElementDict.put("btnMyInfo", new UIElementKey("btnMyInfo", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.PRRegistrationElementDict.put("btnSubmit", new UIElementKey("btnSubmit", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.PRRegistrationElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));
+        this.PRRegistrationElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.PRRegistrationElementDict.put("btnMyInfo", new UIElementData("btnMyInfo", FindMethod.ACCESSIBILITYID));
+        this.PRRegistrationElementDict.put("btnSubmit", new UIElementData("btnSubmit", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.PRRegistrationElementDict.ordinal(), this.PRRegistrationElementDict);
 
-        this.StepsPageElementDict.put("btnBack", new UIElementKey("btnBack", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.StepsPageElementDict.put("lblTitle", new UIElementKey("lblTitle", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.StepsPageElementDict.put("btnStart", new UIElementKey("btnStart", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.StepsPageElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));
+        this.StepsPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.StepsPageElementDict.put("btnStart", new UIElementData("btnStart", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.StepsPageElementDict.ordinal(), this.StepsPageElementDict);
 
-        this.CameraAccessAlertElementDict.put("btnOK", new UIElementKey("//XCUIElementTypeButton[@name=\"OK\"]", UIElementKey.FindMethod.XPATH));
+        this.CameraAccessAlertElementDict.put("btnOK", new UIElementData("//XCUIElementTypeButton[@name=\"OK\"]", FindMethod.XPATH));
         this.Container.put(PageKey.CameraAccessAlertElementDict.ordinal(), this.CameraAccessAlertElementDict);
 
-        this.CameraPageElementDict.put("lblDesc", new UIElementKey("lblDesc", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.CameraPageElementDict.put("btnShutter", new UIElementKey("btnShoot", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.CameraPageElementDict.put("lblDesc", new UIElementData("lblDesc", FindMethod.ACCESSIBILITYID));
+        this.CameraPageElementDict.put("btnShutter", new UIElementData("btnShoot", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.CameraPageElementDict.ordinal(), this.CameraPageElementDict);
 
-        this.PhotoConfirmPageElementDict.put("lblDesc", new UIElementKey("lblDesc", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.PhotoConfirmPageElementDict.put("btnAllDataIsReadable", new UIElementKey("btnOK", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.PhotoConfirmPageElementDict.put("lblDesc", new UIElementData("lblDesc", FindMethod.ACCESSIBILITYID));
+        this.PhotoConfirmPageElementDict.put("btnAllDataIsReadable", new UIElementData("btnOK", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.PhotoConfirmPageElementDict.ordinal(), this.PhotoConfirmPageElementDict);
 
-        this.TurnBackPopUpPageElementDict.put("lblDesc", new UIElementKey("lblTurnBackPopUpDesc", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.TurnBackPopUpPageElementDict.put("btnOK", new UIElementKey("btnOK", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.TurnBackPopUpPageElementDict.put("lblDesc", new UIElementData("lblTurnBackPopUpDesc", FindMethod.ACCESSIBILITYID));
+        this.TurnBackPopUpPageElementDict.put("btnOK", new UIElementData("btnOK", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.TurnBackPopUpPageElementDict.ordinal(), this.TurnBackPopUpPageElementDict);
 
-        this.NamePageElementDict.put("btnClose", new UIElementKey("btnClose", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.NamePageElementDict.put("lblTitle", new UIElementKey("lblTitle", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.NamePageElementDict.put("txtSurname", new UIElementKey("txtSurname", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.NamePageElementDict.put("txtGivenName", new UIElementKey("txtGivenName", UIElementKey.FindMethod.ACCESSIBILITYID));
-        this.NamePageElementDict.put("btnNext", new UIElementKey("btnNext", UIElementKey.FindMethod.ACCESSIBILITYID));
+        this.NamePageElementDict.put("btnClose", new UIElementData("btnClose", FindMethod.ACCESSIBILITYID));
+        this.NamePageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.NamePageElementDict.put("txtSurname", new UIElementData("txtSurname", FindMethod.ACCESSIBILITYID));
+        this.NamePageElementDict.put("txtGivenName", new UIElementData("txtGivenName", FindMethod.ACCESSIBILITYID));
+        this.NamePageElementDict.put("btnNext", new UIElementData("btnNext", FindMethod.ACCESSIBILITYID));
+        this.NamePageElementDict.put("lblCheckAndConfirmTitle", new UIElementData("lblNameConfirmTitle", FindMethod.ACCESSIBILITYID));
+        this.NamePageElementDict.put("btnCheckAndConfirmConfirm", new UIElementData("btnConfirm", FindMethod.ACCESSIBILITYID));
+        this.NamePageElementDict.put("btnCheckAndConfirmChangeInput", new UIElementData("btnNo", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.NamePageElementDict.ordinal(), this.NamePageElementDict);
+
+        this.NameOnCardElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));
+        this.NameOnCardElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.NameOnCardElementDict.put("txtCardName", new UIElementData("txtCardName" , FindMethod.ACCESSIBILITYID));
+        this.NameOnCardElementDict.put("btnNext", new UIElementData("btnNext", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.NameOnCardElementDict.ordinal(), this.NameOnCardElementDict);
+
+        this.PersonalInformationElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));
+        this.PersonalInformationElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.PersonalInformationElementDict.put("txtIdCardNumber", new UIElementData("txtIdCardNumber" , FindMethod.ACCESSIBILITYID));
+        this.PersonalInformationElementDict.put("txtDateOfBirth", new UIElementData("txtDateOfBirth" , FindMethod.ACCESSIBILITYID));
+        this.PersonalInformationElementDict.put("btnNationality", new UIElementData("btnNationality" , FindMethod.ACCESSIBILITYID));
+        this.PersonalInformationElementDict.put("btnMale", new UIElementData("btnMale" , FindMethod.ACCESSIBILITYID));
+        this.PersonalInformationElementDict.put("btnFemale", new UIElementData("btnFemale" , FindMethod.ACCESSIBILITYID));
+        this.PersonalInformationElementDict.put("btnNext", new UIElementData("btnNext", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.PersonalInformationElementDict.ordinal(), this.PersonalInformationElementDict);
+
+        this.KYCNationalityElementDict.put("btnClose", new UIElementData("btnClose", FindMethod.ACCESSIBILITYID));
+        this.KYCNationalityElementDict.put("Singaporean", new UIElementData("Singaporean", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.KYCNationalityElementDict.ordinal(), this.KYCNationalityElementDict);
+
+        this.ResidentialAddressElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));
+        this.ResidentialAddressElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.ResidentialAddressElementDict.put("txtAddressLine1", new UIElementData("txtAddressLine1" , FindMethod.ACCESSIBILITYID));
+        this.ResidentialAddressElementDict.put("txtAddressLine2", new UIElementData("txtAddressLine2" , FindMethod.ACCESSIBILITYID));
+        this.ResidentialAddressElementDict.put("txtAddressPostalCode", new UIElementData("txtAddressPostalCode" , FindMethod.ACCESSIBILITYID));
+        this.ResidentialAddressElementDict.put("btnNext", new UIElementData("btnNext", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.ResidentialAddressElementDict.ordinal(), this.ResidentialAddressElementDict);
+
+        this.KYCFinalStepElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));
+        this.KYCFinalStepElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.KYCFinalStepElementDict.put("btnAgree", new UIElementData("btnAgree" , FindMethod.ACCESSIBILITYID));
+        this.KYCFinalStepElementDict.put("btnSubmit", new UIElementData("btnSubmit", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.KYCFinalStepElementDict.ordinal(), this.KYCFinalStepElementDict);
     }
 
     public WebElement getElement(PageKey page, String elementKey, IOSDriver driver){
-        UIElementKey result = null;
+        UIElementData result = null;
         result = (this.Container.get(page.ordinal())).get(elementKey);
         if (result ==  null){
             throw new NotFoundException("Element Not Declared");

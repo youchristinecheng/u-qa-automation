@@ -8,7 +8,7 @@ import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 import sun.reflect.annotation.ExceptionProxy;
 
-public class UIElementKey {
+public class UIElementData {
     public enum FindMethod{
         ID,
         ACCESSIBILITYID,
@@ -19,7 +19,7 @@ public class UIElementKey {
     private String keyId;
     private FindMethod findBy;
 
-    public UIElementKey(String keyId, FindMethod findBy){
+    public UIElementData(String keyId, FindMethod findBy){
         this.keyId = keyId;
         this.findBy = findBy;
     }
