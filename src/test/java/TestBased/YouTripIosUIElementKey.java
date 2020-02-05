@@ -29,7 +29,8 @@ public class YouTripIosUIElementKey {
         PersonalInformationElementDict,
         KYCNationalityElementDict,
         ResidentialAddressElementDict,
-        KYCFinalStepElementDict
+        KYCFinalStepElementDict,
+        KYCKeepUpdatePopUpElementDict
     }
 
     private HashMap<String, UIElementData> DevAlertElementDict;
@@ -51,8 +52,9 @@ public class YouTripIosUIElementKey {
     private HashMap<String, UIElementData> NameOnCardElementDict;
     private HashMap<String, UIElementData> PersonalInformationElementDict;
     private HashMap<String, UIElementData> ResidentialAddressElementDict;
-    private  HashMap<String, UIElementData> KYCNationalityElementDict;
+    private HashMap<String, UIElementData> KYCNationalityElementDict;
     private HashMap<String, UIElementData> KYCFinalStepElementDict;
+    private HashMap<String, UIElementData> KYCKeepUpdatePopUpElementDict;
 
     private HashMap<Integer, HashMap<String, UIElementData>> Container;
 
@@ -79,6 +81,7 @@ public class YouTripIosUIElementKey {
         this.KYCNationalityElementDict = new HashMap<>();
         this.ResidentialAddressElementDict = new HashMap<>();
         this.KYCFinalStepElementDict = new HashMap<>();
+        this.KYCKeepUpdatePopUpElementDict = new HashMap();
 
 
         this.Container = new HashMap<>();
@@ -195,7 +198,7 @@ public class YouTripIosUIElementKey {
         this.Container.put(PageKey.PersonalInformationElementDict.ordinal(), this.PersonalInformationElementDict);
 
         this.KYCNationalityElementDict.put("btnClose", new UIElementData("btnClose", FindMethod.ACCESSIBILITYID));
-        this.KYCNationalityElementDict.put("Singaporean", new UIElementData("Singaporean", FindMethod.ACCESSIBILITYID));
+        this.KYCNationalityElementDict.put("Singaporean", new UIElementData("//XCUIElementTypeStaticText[@name=\"    Singaporean\"]", FindMethod.XPATH));
         this.Container.put(PageKey.KYCNationalityElementDict.ordinal(), this.KYCNationalityElementDict);
 
         this.ResidentialAddressElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));
@@ -211,6 +214,10 @@ public class YouTripIosUIElementKey {
         this.KYCFinalStepElementDict.put("btnAgree", new UIElementData("btnAgree" , FindMethod.ACCESSIBILITYID));
         this.KYCFinalStepElementDict.put("btnSubmit", new UIElementData("btnSubmit", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.KYCFinalStepElementDict.ordinal(), this.KYCFinalStepElementDict);
+
+        this.KYCKeepUpdatePopUpElementDict.put("btnAccept", new UIElementData("//XCUIElementTypeStaticText[@name=\"Keep Me Updated\"]", FindMethod.XPATH));
+        this.KYCKeepUpdatePopUpElementDict.put("btnReject", new UIElementData("//XCUIElementTypeStaticText[@name=\"Do not send me updates\"]", FindMethod.XPATH));
+        this.Container.put(PageKey.KYCKeepUpdatePopUpElementDict.ordinal(), this.KYCKeepUpdatePopUpElementDict);
     }
 
     public WebElement getElement(PageKey page, String elementKey, IOSDriver driver){

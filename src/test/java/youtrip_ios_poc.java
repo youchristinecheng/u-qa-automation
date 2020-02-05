@@ -28,12 +28,6 @@ public class youtrip_ios_poc {
 
     @BeforeTest
     public void setUp() throws MalformedURLException {
-
-
-
-
-
-
         UIElementKeyDict = new YouTripIosUIElementKey();
         // Created object of DesiredCapabilities class.
         DesiredCapabilities capabilities = new DesiredCapabilities();
@@ -379,10 +373,13 @@ public class youtrip_ios_poc {
         el.click();
 
         Thread.sleep(2000);
-        String surname  = "Tester";
-        String firstname = "Auto";
-        System.out.println("TEST STEP: KYC Process - Enter User Name");
+        String surname  = "TESTER";
+        surname = surname.toUpperCase();
+        String firstname = "AUTO";
+        firstname = firstname.toUpperCase();
         System.out.println("TEST DATA: Surname - " + surname + ";Firstname - " + firstname + ";");
+
+        System.out.println("TEST STEP: KYC Process - Enter User Name");
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblTitle", driver), "Full Name (as per NRIC)"));
         el = (IOSElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "txtSurname", driver);
         el.sendKeys(surname);
@@ -391,7 +388,7 @@ public class youtrip_ios_poc {
         el = (IOSElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnNext", driver);
         el.click();
         Thread.sleep(500);
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblTitle", driver), "Check and Confirm"));
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblCheckAndConfirmTitle", driver), "Check and Confirm"));
         el = (IOSElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnCheckAndConfirmConfirm", driver);
         el.click();
         Thread.sleep(2000);
@@ -407,12 +404,12 @@ public class youtrip_ios_poc {
         String nricNum = "S1234567A";
         Calendar c = Calendar.getInstance();
         c.setTime(date);
-        c.add(Calendar.YEAR, -10);
+        c.add(Calendar.YEAR, -20);
         Date dateOfBirth = c.getTime();
-        SimpleDateFormat dateOfBirthFormatter = new SimpleDateFormat("DDMMYYYY");
+        SimpleDateFormat dateOfBirthFormatter = new SimpleDateFormat("ddMMYYYY");
         String dateOfBirthVal = dateOfBirthFormatter.format(dateOfBirth);
         System.out.println("TEST DATA: NRIC Number: " + nricNum + "DateOfBirth:" + dateOfBirthVal);
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "lblTitle", driver), "Personal Information"));
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "lblTitle", driver), "Personal Information"));
         el = (IOSElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "txtIdCardNumber", driver);
         el.sendKeys(nricNum);
         el = (IOSElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "txtDateOfBirth", driver);
@@ -423,7 +420,7 @@ public class youtrip_ios_poc {
         el = (IOSElement) UIElementKeyDict.getElement(PageKey.KYCNationalityElementDict, "Singaporean", driver);
         el.click();
         Thread.sleep(500);
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "lblTitle", driver), "Personal Information"));
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "lblTitle", driver), "Personal Information"));
         el = (IOSElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "btnMale", driver);
         el.click();
         el = (IOSElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "btnNext", driver);
@@ -444,14 +441,16 @@ public class youtrip_ios_poc {
 
         System.out.println("TEST STEP: KYC Process - Submit KYC");
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "lblTitle", driver), "Final Step"));
-        el = (IOSElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "txtAddressLine1", driver);
-        el.click();
-        el = (IOSElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "txtAddressLine2", driver);
-        el.click();
         el = (IOSElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnAgree", driver);
         el.click();
         el = (IOSElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnSubmit", driver);
         el.click();
+        Thread.sleep(2000);
+        el = (IOSElement) UIElementKeyDict.getElement(PageKey.KYCKeepUpdatePopUpElementDict, "btnAccept", driver);
+        el.click();
+
+        Thread.sleep(10000);
+        System.out.println("TEST STEP: Verify Back to Limited Home Page");
 //        el = driver.findElementByXPath()
 
         System.out.println("debug");
