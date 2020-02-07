@@ -1,6 +1,9 @@
 import TestBased.YouAPI;
 import TestBased.Utils;
+import TestBased.YouTripAndroidUIElementKey;
+import TestBased.YouTripAndroidUIElementKey.PageKey;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.AndroidElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -13,6 +16,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
+import java.lang.*;
 
 import static org.testng.Assert.assertEquals;
 public class youtrip_android_regression {
@@ -20,12 +24,14 @@ public class youtrip_android_regression {
     AndroidDriver driver;
     YouAPI api;
     Utils utils;
+    YouTripAndroidUIElementKey UIElementKeyDict;
 
     @BeforeTest
     public void setUp() throws MalformedURLException {
 
         api = new YouAPI();
         utils = new Utils();
+        UIElementKeyDict = new YouTripAndroidUIElementKey();
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
         // setup the capabilities for real device
@@ -57,77 +63,93 @@ public class youtrip_android_regression {
     }
 
     @Test
-    public void regTC01_selectTH() {
-        //wait till on country page
+    public void regTC01_selectTH() throws InterruptedException {
+        AndroidElement el;
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.xpath("//android.widget.TextView[@text='Where do you live?']"))), "Where do you live?"));
+
+        //wait till on country page and click country select
+        Thread.sleep(2000);
+        wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.CountryPageElementDict, "lblTitle", driver)));
         System.out.println("TEST STEP: Country Page - on page");
-        //click country selection button
-        driver.findElement(By.id("co.you.youapp.dev:id/layoutSelectCountry")).click();
-        System.out.println("TEST STEP: Country Selection - on page");
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CountryPageElementDict, "optionCountry", driver);
+        el.click();
+        System.out.println("TEST STEP: Country Page - clicked select country");
         //click TH option
-        driver.findElement(By.xpath("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='1']")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CountrySelectionElementDict, "Thailand", driver);
+        el.click();
         System.out.println("TEST STEP: Country Selection Page - click TH button");
         //check returned back to country page with TH selected
-        assertEquals(driver.findElement(By.id("co.you.youapp.dev:id/textDesc")).getText(), "You must have a Thailand ID to apply for a Thailand YouTrip account (powered by KBank).");
+        assertEquals((UIElementKeyDict.getElement(PageKey.CountryPageElementDict, "countryDesc", driver)).getText(), "You must have a Thailand ID to apply for a Thailand YouTrip account (powered by KBank).");
     }
 
     @Test
-    public void regTC02_selectSG() {
+    public void regTC02_selectSG() throws InterruptedException {
+        AndroidElement el;
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        //wait till on country page
-        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.xpath("//android.widget.TextView[@text='Where do you live?']"))), "Where do you live?"));
+
+        //wait till on country page and click country select
+        wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.CountryPageElementDict, "lblTitle", driver)));
         System.out.println("TEST STEP: Country Page - on page");
-        //click country selection button
-        driver.findElement(By.id("co.you.youapp.dev:id/layoutSelectCountry")).click();
-        System.out.println("TEST STEP: Country Selection - on page");
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CountryPageElementDict, "optionCountry", driver);
+        el.click();
+        System.out.println("TEST STEP: Country Page - clicked select country");
         //click SG option
-        driver.findElement(By.xpath("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='0']")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CountrySelectionElementDict, "Singapore", driver);
+        el.click();
         System.out.println("TEST STEP: Country Selection Page - click SG button");
+        Thread.sleep(2000);
         //wait until returned back to country page with SG selected
-        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textDesc"))), "You must have a NRIC or FIN to apply for a Singapore YouTrip account."));
+
+        wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.CountryPageElementDict, "countryDesc", driver)), "You must have a NRIC or FIN to apply for a Singapore YouTrip account."));
         //click confirm country
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonConfirm")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CountryPageElementDict, "btnConfirm", driver);
+        el.click();
         System.out.println("TEST STEP: Country Page - continue as SG");
+        Thread.sleep(2000);
         //wait till on get started page
-        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath("//android.widget.FrameLayout[contains(@resource-id,'buttonGetStarted')]"))));
+        wait.until(ExpectedConditions.elementToBeClickable((UIElementKeyDict.getElement(PageKey.GetStartedPageElementDict, "btnGetStarted", driver))));
         System.out.println("TEST STEP: Get Started SG Page - on page");
-        assertEquals(driver.findElement(By.id("co.you.youapp.dev:id/textButtonName")).getText(), "Get Started");
+        assertEquals((UIElementKeyDict.getElement(PageKey.GetStartedPageElementDict, "btnGetStarted", driver)).getText(), "Get Started");
     }
 
     @Test
-    public void regTC03_login_new_user_OTP() {
+    public void regTC03_login_new_user_OTP() throws InterruptedException {
+        AndroidElement el;
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        //click get started button from start screen
-        driver.findElement(By.id("co.you.youapp.dev:id/layoutBackground")).click();
-        System.out.println("TEST STEP: Get Started SG Page - click Get Started Button");
 
+        //click get started button from start screen
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.GetStartedPageElementDict, "btnGetStarted", driver);
+        el.click();
+        System.out.println("TEST STEP: Get Started SG Page - click Get Started Button");
+        Thread.sleep(2000);
         //wait till on enter mobile number page
-        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.xpath("//android.widget.TextView[@text='Enter Mobile Number']"))), "Enter Mobile Number"));
+        wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.MobileNumberPageElementDict, "lblTitle", driver)), "Enter Mobile Number"));
         System.out.println("TEST STEP: Mobile Number Page - on page");
 
-        //generate new mobile number
+        //TODO separate test data
         String mprefix = "123";
         String mnumber = utils.getTimestamp();
         System.out.println("TEST DATA: Mobile Number is " +mprefix+ " " +mnumber);
-        //clear mobile prefix field and enter mobile prefix
-        driver.findElement(By.id("co.you.youapp.dev:id/inputPrefix")).clear();
-        driver.findElement(By.id("co.you.youapp.dev:id/inputPrefix")).sendKeys(mprefix);
-        System.out.println("TEST STEP: Mobile Number Page - inputted mobile number prefix");
-        //enter mobile number
-        driver.findElement(By.id("co.you.youapp.dev:id/inputEditText")).click();
-        driver.findElement(By.id("co.you.youapp.dev:id/inputEditText")).sendKeys(mnumber);
-        System.out.println("TEST STEP: Mobile Number Page - inputted mobile number");
-        //click next button
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonGetSMS")).click();
-        System.out.println("TEST STEP: Mobile Number Page - clicked Next button");
-        //wait till on enter SMS page
-        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.xpath("//android.widget.TextView[@text='Enter Code from SMS']"))), "Enter Code from SMS"));
-        System.out.println("TEST STEP: OTP Page - on page");
 
+        //clear mobile prefix field, enter mobile prefix and number and click next
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.MobileNumberPageElementDict, "txtPrefix", driver);
+        el.clear();
+        el.sendKeys(mprefix);
+        System.out.println("TEST STEP: Mobile Number Page - inputted mobile number prefix");
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.MobileNumberPageElementDict, "txtPhoneNumber", driver);
+        el.click();
+        el.sendKeys(mnumber);
+        System.out.println("TEST STEP: Mobile Number Page - inputted mobile number");
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.MobileNumberPageElementDict, "btnNext", driver);
+        el.click();
+        System.out.println("TEST STEP: Mobile Number Page - clicked Next button");
+        Thread.sleep(2000);
+
+        //wait till on enter SMS page
+        wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.OTPPageElementDict, "lblTitle", driver)), "Enter Code from SMS"));
+        System.out.println("TEST STEP: OTP Page - on page");
         //get OTP from backdoor and input otp
         String otpCode = api.getOTP(mprefix, mnumber);
-
         System.out.println("TEST DATA: OTP Code is " +otpCode);
         String otp1 = otpCode.substring(0);
         String otp2 = otpCode.substring(1);
@@ -135,141 +157,190 @@ public class youtrip_android_regression {
         String otp4 = otpCode.substring(3);
         String otp5 = otpCode.substring(4);
         String otp6 = otpCode.substring(5);
-
         //enter OTP - note: need to enter each digit separately
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[1]/android.widget.EditText")).sendKeys(otp1);
-        driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[2]/android.widget.EditText")).sendKeys(otp2);
-        driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[3]/android.widget.EditText")).sendKeys(otp3);
-        driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[4]/android.widget.EditText")).sendKeys(otp4);
-        driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[5]/android.widget.EditText")).sendKeys(otp5);
-        driver.findElement(By.xpath("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[6]/android.widget.EditText")).sendKeys(otp6);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.OTPPageElementDict, "OTPDigit1", driver);
+        el.sendKeys(otp1);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.OTPPageElementDict, "OTPDigit2", driver);
+        el.sendKeys(otp2);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.OTPPageElementDict, "OTPDigit3", driver);
+        el.sendKeys(otp3);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.OTPPageElementDict, "OTPDigit4", driver);
+        el.sendKeys(otp4);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.OTPPageElementDict, "OTPDigit5", driver);
+        el.sendKeys(otp5);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.OTPPageElementDict, "OTPDigit6", driver);
+        el.sendKeys(otp6);
         System.out.println("TEST STEP: OTP Page - entered OTP");
+        Thread.sleep(2000);
+
         //wait till on enter email page
-        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Enter Email Address"));
+        wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.EmailPageElementDict, "lblTitle", driver)), "Enter Email Address"));
         System.out.println("TEST STEP: Enter Email Page - on page");
 
-        //generate new email address
+        //TODO separate test data
         String email = ("qa+sg"+mnumber+"@you.co");
         System.out.println("TEST DATA: Email address is " +email);
 
-        //input email
-        driver.findElement(By.id("co.you.youapp.dev:id/inputEmail")).sendKeys(email);
-        System.out.println("TEST STEP: Enter Email Page - entered email");
-        //click next button
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonNext")).click();
+        //input email and click next button
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.EmailPageElementDict, "txtUserEmail", driver);
+        el.sendKeys(email);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.EmailPageElementDict, "btnNext", driver);
+        el.click();
         System.out.println("TEST STEP: Enter Email Page - click Next button");
-        //wait till on welcome page
-        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Welcome"));
-        System.out.println("TEST STEP: Welcome Page - on page");
-        assertEquals(driver.findElement(By.id("co.you.youapp.dev:id/textTitle")).getText(), "Welcome");
+        Thread.sleep(2000);
 
+        //wait till on welcome page
+        wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver)));
+        System.out.println("TEST STEP: Welcome Page - on page");
+        assertEquals((UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver)).getText(), "Welcome");
     }
 
     @Test
-    public void regTC04_submit_PC_KYC_NRIC() {
+    public void regTC04_submit_PC_KYC_NRIC() throws InterruptedException {
+        AndroidElement el;
         WebDriverWait wait = new WebDriverWait(driver, 10);
+
         //click get youtrip card for free
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonOrder")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "btnPCRegister", driver);
+        el.click();
         System.out.println("TEST STEP: Welcome Page - click Get a YouTrip Card for Free button");
+        Thread.sleep(2000);
+
         //wait till on identity verification page
-        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.xpath("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='0']/android.widget.TextView"))), "Identity Verification"));
+        wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.IdentityVerificationElementDict, "lblTitle", driver)), "Identity Verification"));
         System.out.println("TEST STEP: Identity Verification Page - on page");
         //click Singaporean and PR
-        driver.findElement(By.xpath("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='1']")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.IdentityVerificationElementDict, "btnSG", driver);
+        el.click();
         System.out.println("TEST STEP: Identity Verification Page - click Singaporean/PR button");
+        Thread.sleep(2000);
+
         //wait till on Singaporean and PR page
-        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.xpath("//android.widget.ScrollView/android.widget.LinearLayout/android.widget.TextView[@index='0']"))), "Singaporean / PR"));
+        wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.PRRegistrationElementDict, "lblTitle", driver)), "Singaporean / PR"));
         System.out.println("TEST STEP: Singaporean/PR Page - on page");
         //click submit manually
-        driver.findElement(By.id("co.you.youapp.dev:id/textManual")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PRRegistrationElementDict, "btnManualSubmit", driver);
+        el.click();
         System.out.println("TEST STEP: Singaporean/PR Page - click submit manually link");
+        Thread.sleep(2000);
+
         //wait till on start of KYC page (just a few steps page)
-        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Just a Few Steps"));
+        wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.StepsPageElementDict, "lblTitle", driver)), "Just a Few Steps"));
         System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - on page");
         //click start KYC
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonStart")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.StepsPageElementDict, "btnStart", driver);
+        el.click();
         System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click start now button");
+        Thread.sleep(3000);
+
         //accept the Android camera permission
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.findElement(By.id("com.android.packageinstaller:id/permission_allow_button")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CameraAccessAlertElementDict, "btnAccept", driver);
+        el.click();
         System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click allow YouTrip access to camera button");
+        Thread.sleep(3000);
+
         //wait till on page and take front NRIC photo
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonShutter")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CameraPageElementDict, "btnShutter", driver);
+        el.click();
         System.out.println("TEST STEP: KYC step 1 front of NRIC - click take photo button");
+        Thread.sleep(3000);
+
         //confirm front NRIC photo
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonConfirm")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PhotoConfirmPageElementDict, "btnAllDataIsReadable", driver);
+        el.click();
         System.out.println("TEST STEP: KYC step 1 front of NRIC - click all data is readable button");
+        Thread.sleep(2000);
+
         //wait till on back of NRIC information pop up appears and confirm it
-        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Back of NRIC"));
+        wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.TurnBackPopUpPageElementDict, "lblDesc", driver)), "Back of NRIC"));
         System.out.println("TEST STEP: KYC step 2 back of NRIC - on page");
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonOK")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.TurnBackPopUpPageElementDict, "btnOK", driver);
+        el.click();
         System.out.println("TEST STEP: KYC step 2 back of NRIC - click on got it button from ID reminder dialog");
+        Thread.sleep(3000);
+
         //wait till on page and take back NRIC photo
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonShutter")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CameraPageElementDict, "btnShutter", driver);
+        el.click();
         System.out.println("TEST STEP: KYC step 2 back of NRIC - click take photo button");
+        Thread.sleep(3000);
+
         //confirm back NRIC photo
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonConfirm")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PhotoConfirmPageElementDict, "btnAllDataIsReadable", driver);
+        el.click();
         System.out.println("TEST STEP: KYC step 2 back of NRIC - click all data is readable button");
+        Thread.sleep(3000);
 
         //TODO test data to separate
         String surname  = "Tester";
         String firstname = "Auto";
 
         //wait till on page, enter name and confirm
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.findElement(By.id("co.you.youapp.dev:id/inputLastName")).sendKeys(surname);
-        System.out.println("TEST STEP: Full Name (as per NRIC) page - input surname");
-        driver.findElement(By.id("co.you.youapp.dev:id/inputGivenName")).sendKeys(firstname);
-        System.out.println("TEST STEP: Full Name (as per NRIC) page - input firstname");
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonNext")).click();
-        System.out.println("TEST STEP: Full Name (as per NRIC) page - click Next button");
+        //wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblTitle", driver), "Full Name (as per NRIC)"));
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "txtSurname", driver);
+        el.sendKeys(surname);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "txtGivenName", driver);
+        el.sendKeys(firstname);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnNext", driver);
+        el.click();
         //wait till check and confirm dialog appear and confirm
-        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Check and Confirm"));
+        Thread.sleep(2000);
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblCheckAndConfirmTitle", driver), "Check and Confirm"));
         System.out.println("TEST STEP: Full Name (as per NRIC) page - check and confirm dialog appeared");
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonPositive")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnCheckAndConfirmConfirm", driver);
+        el.click();
         System.out.println("TEST STEP: Full Name (as per NRIC) page - on check and confirm dialog click Confirm button");
+        Thread.sleep(3000);
 
         //TODO test data to separate
         String newSurname = "Test";
 
         //wait till on page, clear name on card and enter new name
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "lblTitle", driver), "Preferred Name"));
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.findElement(By.id("co.you.youapp.dev:id/inputCardName")).clear();
-        driver.findElement(By.id("co.you.youapp.dev:id/inputCardName")).sendKeys(newSurname+" "+firstname);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "txtCardName", driver);
+        el.clear();
+        el.sendKeys(newSurname+" "+firstname);
         System.out.println("TEST STEP: Preferred Name page - change name on card");
         //confirm new name
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonNext")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "btnNext", driver);
+        el.click();
         System.out.println("TEST STEP: Preferred Name page - click next button");
+        Thread.sleep(3000);
 
-        //TODO test data - nric number is S1234567L need to randomise it
+        //TODO test data to separate
         String nricNum  = utils.getNRIC();
         String dob = "01-01-1980";
         String nationality = "Singaporean";
 
         //wait till on page and enter personal information
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.findElement(By.id("co.you.youapp.dev:id/inputIDNumber")).sendKeys(nricNum);
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "lblTitle", driver), "Personal Information"));
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "txtIdCardNumber", driver);
+        el.sendKeys(nricNum);
         System.out.println("TEST STEP: Personal Information page - input NRIC number");
-        driver.findElement(By.id("co.you.youapp.dev:id/inputDOB")).sendKeys(dob);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "txtDateOfBirth", driver);
+        el.sendKeys(dob);
         System.out.println("TEST STEP: Personal Information page - input Date Of Birth");
         //click nationality option, which opens new page with drop down
-        driver.findElement(By.id("co.you.youapp.dev:id/inputNationality")).click();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "btnNationality", driver);
+        el.click();
         //search for nationality and click the first option
-        driver.findElement(By.id("co.you.youapp.dev:id/inputSearch")).sendKeys(nationality);
-        driver.findElement(By.xpath("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCNationalityElementDict, "txtInputSearch", driver);
+        el.sendKeys(nationality);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCNationalityElementDict, "btnFirstSearchOption", driver);
+        el.click();
         System.out.println("TEST STEP: Personal Information page - searched and selected a nationality");
-        driver.findElement(By.id("co.you.youapp.dev:id/radioMale")).click();
         //select sex and continue
+        Thread.sleep(2000);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "btnMale", driver);
+        el.click();
         System.out.println("TEST STEP: Personal Information page - click sex as male");
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonNext")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "btnNext", driver);
+        el.click();
         System.out.println("TEST STEP: Personal Information page - click next button");
+        Thread.sleep(3000);
 
         //TODO test data to separate
         String addLine1  = "Auto Test Address Line 1";
@@ -277,56 +348,198 @@ public class youtrip_android_regression {
         String postalCode = "123456";
 
         //wait till on page and enter residential address
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.findElement(By.id("co.you.youapp.dev:id/inputAddress1")).sendKeys(addLine1);
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "lblTitle", driver), "Residential Address"));
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "txtAddressLine1", driver);
+        el.sendKeys(addLine1);
         System.out.println("TEST STEP: Residential Address page - input address line 1");
-        driver.findElement(By.id("co.you.youapp.dev:id/inputAddress2")).sendKeys(addLine2);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "txtAddressLine2", driver);
+        el.sendKeys(addLine2);
         System.out.println("TEST STEP: Residential Address page - input address line 2");
-        driver.findElement(By.id("co.you.youapp.dev:id/inputPostal")).sendKeys(postalCode);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "txtAddressPostalCode", driver);
+        el.sendKeys(postalCode);
         System.out.println("TEST STEP: Residential Address page - input postal code");
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonNext")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "btnNext", driver);
+        el.click();
         System.out.println("TEST STEP: Residential Address page - click next button");
+        Thread.sleep(3000);
 
         //wait till on page, confirm final steps and submit kyc
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.findElement(By.id("co.you.youapp.dev:id/checkbox")).click();
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "lblTitle", driver), "Final Step"));
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnAgree", driver);
+        el.click();
         System.out.println("TEST STEP: Final Step page - click confirm TnC checkbox");
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonSubmit")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnSubmit", driver);
+        el.click();
         System.out.println("TEST STEP: Final Step page - click submit button");
+        Thread.sleep(2000);
+
         //wait for marketing consent dialog and accept
-        wait.until(ExpectedConditions.textToBePresentInElement((driver.findElement(By.id("co.you.youapp.dev:id/textTitle"))), "Be the First to Know"));
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.KYCKeepUpdatePopUpElementDict, "lblTitle", driver), "Be the First to Know"));
         System.out.println("TEST STEP: Marketing consent popup - on page");
-        driver.findElement(By.id("co.you.youapp.dev:id/buttonPositive")).click();
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCKeepUpdatePopUpElementDict, "btnAccept", driver);
+        el.click();
         System.out.println("TEST STEP: Final Step page - click Keep Me Updated button");
+        Thread.sleep(3000);
+
         //wait for thank you page and confirm
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        assertEquals(driver.findElement(By.id("co.you.youapp.dev:id/textTitle")).getText(), "Thank You for Your Application");
+        assertEquals((UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)).getText(), "Thank You for Your Application");
         System.out.println("TEST STEP: KYC submitted successfully");
     }
 
     @Test
-    public void regTC05_fullreject_PC_KYC_NRIC() {
+    public void regTC05_fullreject_PC_KYC_NRIC() throws InterruptedException {
+        AndroidElement el;
         WebDriverWait wait = new WebDriverWait(driver, 10);
+
         //get and store the KYC reference number
-        String kycRefNo = driver.findElement(By.id("co.you.youapp.dev:id/textRefNumber")).getText();
+        String kycRefNo = (UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "referenceNum", driver)).getText();
         System.out.println("TEST DATA: KYC submission reference number is " +kycRefNo);
+
         //call YP full reject with Ref Number
         api.yp_fullReject(kycRefNo);
+
         //back to the app - wait for reject to be updated
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("co.you.youapp.dev:id/textButtonName"))));
+        Thread.sleep(10000);
+        wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
         System.out.println("TEST STEP: KYC rejection received");
-        assertEquals(driver.findElement(By.id("co.you.youapp.dev:id/textTitle")).getText(), "Attention");
+        assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Attention");
     }
 
     @Test
-    public void regTC06_resubmit_fullreject_PC_KYC_NRIC() {
+    public void regTC06_resubmit_fullreject_PC_KYC_NRIC() throws InterruptedException {
 
-        //WebDriverWait wait = new WebDriverWait(driver, 10);
-        //driver.findElement(By.id("co.you.youapp.dev:id/button")).click();
-        //System.out.println("TEST STEP: Attention page - click retry button");
+        AndroidElement el;
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnRetry", driver);
+        el.click();
+        System.out.println("TEST STEP: Attention page - click retry button");
+        Thread.sleep(2000);
 
         //repeat steps from identity verification
+        //wait till on identity verification page
+        wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.IdentityVerificationElementDict, "lblTitle", driver)), "Identity Verification"));
+        System.out.println("TEST STEP: Identity Verification Page - on page");
+        //click Singaporean and PR
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.IdentityVerificationElementDict, "btnSG", driver);
+        el.click();
+        System.out.println("TEST STEP: Identity Verification Page - click Singaporean/PR button");
+        Thread.sleep(2000);
+
+        //wait till on Singaporean and PR page
+        wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.PRRegistrationElementDict, "lblTitle", driver)), "Singaporean / PR"));
+        System.out.println("TEST STEP: Singaporean/PR Page - on page");
+        //click submit manually
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PRRegistrationElementDict, "btnManualSubmit", driver);
+        el.click();
+        System.out.println("TEST STEP: Singaporean/PR Page - click submit manually link");
+        Thread.sleep(2000);
+
+        //wait till on start of KYC page (just a few steps page)
+        wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.StepsPageElementDict, "lblTitle", driver)), "Just a Few Steps"));
+        System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - on page");
+        //click start KYC
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.StepsPageElementDict, "btnStart", driver);
+        el.click();
+        System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click start now button");
+        Thread.sleep(3000);
+
+        //accept the Android camera permission
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CameraAccessAlertElementDict, "btnAccept", driver);
+        el.click();
+        System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click allow YouTrip access to camera button");
+        Thread.sleep(3000);
+
+        //wait till on page and take front NRIC photo
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CameraPageElementDict, "btnShutter", driver);
+        el.click();
+        System.out.println("TEST STEP: KYC step 1 front of NRIC - click take photo button");
+        Thread.sleep(3000);
+
+        //confirm front NRIC photo
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PhotoConfirmPageElementDict, "btnAllDataIsReadable", driver);
+        el.click();
+        System.out.println("TEST STEP: KYC step 1 front of NRIC - click all data is readable button");
+        Thread.sleep(2000);
+
+        //wait till on back of NRIC information pop up appears and confirm it
+        wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.TurnBackPopUpPageElementDict, "lblDesc", driver)), "Back of NRIC"));
+        System.out.println("TEST STEP: KYC step 2 back of NRIC - on page");
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.TurnBackPopUpPageElementDict, "btnOK", driver);
+        el.click();
+        System.out.println("TEST STEP: KYC step 2 back of NRIC - click on got it button from ID reminder dialog");
+        Thread.sleep(3000);
+
+        //wait till on page and take back NRIC photo
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CameraPageElementDict, "btnShutter", driver);
+        el.click();
+        System.out.println("TEST STEP: KYC step 2 back of NRIC - click take photo button");
+        Thread.sleep(3000);
+
+        //confirm back NRIC photo
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PhotoConfirmPageElementDict, "btnAllDataIsReadable", driver);
+        el.click();
+        System.out.println("TEST STEP: KYC step 2 back of NRIC - click all data is readable button");
+        Thread.sleep(3000);
+
+        //TODO test data to separate
+        String surname  = "Tester";
+        String firstname = "Auto FullReject";
+
+        //wait till on page, enter name and confirm
+        //wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblTitle", driver), "Full Name (as per NRIC)"));
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "txtGivenName", driver);
+        el.clear();
+        el.sendKeys(firstname);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnNext", driver);
+        el.click();
+        //wait till check and confirm dialog appear and confirm
+        Thread.sleep(2000);
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblCheckAndConfirmTitle", driver), "Check and Confirm"));
+        System.out.println("TEST STEP: Full Name (as per NRIC) page - check and confirm dialog appeared");
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnCheckAndConfirmConfirm", driver);
+        el.click();
+        System.out.println("TEST STEP: Full Name (as per NRIC) page - on check and confirm dialog click Confirm button");
+        Thread.sleep(3000);
+
+        //wait till on page, clear name on card and enter new name
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "lblTitle", driver), "Preferred Name"));
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "btnNext", driver);
+        el.click();
+        System.out.println("TEST STEP: Preferred Name page - click next button");
+        Thread.sleep(3000);
+
+        //wait till on page and click next on personal information
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "lblTitle", driver), "Personal Information"));
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "btnNext", driver);
+        el.click();
+        System.out.println("TEST STEP: Personal Information page - click next button");
+        Thread.sleep(3000);
+
+        //wait till on page and enter residential address
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "lblTitle", driver), "Residential Address"));
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "btnNext", driver);
+        el.click();
+        System.out.println("TEST STEP: Residential Address page - click next button");
+        Thread.sleep(3000);
+
+        //wait till on page, confirm final steps and submit kyc
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "lblTitle", driver), "Final Step"));
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnAgree", driver);
+        el.click();
+        System.out.println("TEST STEP: Final Step page - click confirm TnC checkbox");
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnSubmit", driver);
+        el.click();
+        System.out.println("TEST STEP: Final Step page - click submit button");
+        Thread.sleep(3000);
+
+        //wait for thank you page and confirm
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        assertEquals((UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)).getText(), "Thank You for Your Application");
+        System.out.println("TEST STEP: KYC submitted successfully");
     }
 
     @Test
