@@ -77,10 +77,96 @@ public class YouAPI {
                 .header("x-request-id", "fullRejectKYC"+util.getTimestamp())
                 .header("x-yp-role", "Singapore Admin")
                 .header("Content-Type", "application/json")
-                .body("{\"Reason\":\"[AUTO TEST: full KYC rejection testing\"}")
+                .body("{\"Reason\":\"AUTO TEST: full KYC rejection testing\"}")
                 .asJson();
 
         assertEquals(200, rejectKYCjsonResponse.getStatus());
+    }
+
+    public void yp_partialReject(String kycRefNo) {
+        //notes: for partial reject you must pass all personal, residental information even if it is not editted
+        //approach is to call get kyc first, store the data and past it into partial reject api
+        String token = yp_getToken();
+        String kycID = yp_getKYC(kycRefNo);
+        String ypKycID;
+        String addLine1;
+        String addLine2;
+        String postalCode;
+        String firstName;
+        String lastName;
+        String nameOnCard;
+        String gender;
+        String idNum;
+        String dob;
+        String nationality;
+
+        //call get KYC details
+        String url_getKYCDetails  = ("http://yp.internal.sg.sit.you.co/api/kyc/"+kycID);
+        System.out.println("API CALL: " +url_getKYCDetails);
+
+        HttpResponse<JsonNode> getKYCjsonResponse = Unirest.get(url_getKYCDetails)
+                .header("Authorization", "Bearer "+token)
+                .header("x-request-id", "getKYC"+util.getTimestamp())
+                .header("x-yp-role", "Singapore Admin")
+                .asJson();
+
+        //get full JSON response body
+        JSONObject responseJson = getKYCjsonResponse.getBody().getObject();
+        //store data
+        firstName = responseJson.getString("FirstName");
+        System.out.println("get kyc: First Name is " +firstName);
+        lastName = responseJson.getString("LastName");
+        System.out.println("get kyc: Last Name is " +lastName);
+        nameOnCard = responseJson.getString("NameOnCard");
+        System.out.println("get kyc: Name On Card  is " +nameOnCard);
+        idNum = responseJson.getString("IDNum");
+        System.out.println("get kyc: ID Number is " +idNum);
+        dob = responseJson.getString("DateOfBirth");
+        System.out.println("get kyc: Date of Birth is " +dob);
+        nationality = responseJson.getString("Nationality");
+        System.out.println("get kyc: Nationality is " +nationality);
+        gender = responseJson.getString("Gender");
+        System.out.println("get kyc: Gender is " +gender);
+
+        //address to handle separately
+        JSONObject addJson = responseJson.getJSONObject("Address");
+        addLine1 = addJson.getString("AddressLine1");
+        System.out.println("get kyc: Address Line 1 is " +addLine1);
+        addLine2 = addJson.getString("AddressLine2");
+        System.out.println("get kyc: Address Line 2 is " +addLine2);
+        postalCode = addJson.getString("PostalCode");
+        System.out.println("get kyc: Postal Code is " +postalCode);
+
+        //call partial reject
+        String url_partialRejectKYC = ("http://yp.internal.sg.sit.you.co/api/kyc/"+kycID+"/partially_reject");
+        System.out.println("API CALL: " +url_partialRejectKYC);
+
+        HttpResponse<JsonNode> partialrejectKYCjsonResponse = Unirest.put(url_partialRejectKYC)
+                .header("Authorization", "Bearer "+yp_getToken())
+                .header("x-request-id", "fullPartialKYC"+util.getTimestamp())
+                .header("x-yp-role", "Singapore Admin")
+                .header("Content-Type", "application/json")
+                .body("{\n" +
+                        "  \"Reason\": \"AUTO TEST: partial KYC rejection testing - changed address line 2 and first name\",\n" +
+                        "  \"EditedKYC\": {\n" +
+                        "    \"Address\": {\n" +
+                        "      \"AddressLine1\": \""+addLine1+"\",\n" +
+                        "      \"AddressLine2\": \"PARTIAL EDIT TEST\",\n" +
+                        "      \"PostalCode\": \""+postalCode+"\"\n" +
+                        "    },\n" +
+                        "    \"FirstName\": \"Auto YP Edti\",\n" +
+                        "    \"LastName\": \""+lastName+"\",\n" +
+                        "    \"NameOnCard\": \""+nameOnCard+"\",\n" +
+                        "    \"Gender\": \""+gender+"\",\n" +
+                        "    \"IDNum\": \""+idNum+"\",\n" +
+                        "    \"DateOfBirth\": \""+dob+"\",\n" +
+                        "    \"Nationality\": \""+nationality+"\"\n" +
+                        "  }\n" +
+                        "}")
+                .asJson();
+
+        assertEquals(200, partialrejectKYCjsonResponse.getStatus());
+
     }
 
 }
