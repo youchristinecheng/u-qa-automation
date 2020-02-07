@@ -24,7 +24,7 @@ public class UIElementData {
         this.findBy = findBy;
     }
 
-    public WebElement getIOSElement(IOSDriver driver) throws NotFoundException {
+    public WebElement getIOSElement(IOSDriver driver, boolean isNullable) throws NotFoundException {
         try {
             switch (this.findBy) {
                 case ACCESSIBILITYID:
@@ -32,10 +32,18 @@ public class UIElementData {
                 case XPATH:
                     return driver.findElementByXPath(this.keyId);
                 default:
-                    throw new NotFoundException("element not found");
+                    if (isNullable) {
+                        return null;
+                    } else {
+                        throw new NotFoundException("element not found");
+                    }
             }
-        }catch(Exception e){
-            throw new NotFoundException("element not found");
+        } catch (Exception e) {
+            if (isNullable) {
+                return null;
+            } else {
+                throw new NotFoundException("element not found");
+            }
         }
     }
 

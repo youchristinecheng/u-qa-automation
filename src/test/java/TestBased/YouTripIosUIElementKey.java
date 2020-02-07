@@ -8,6 +8,11 @@ import java.util.HashMap;
 import TestBased.UIElementData.*;
 
 public class YouTripIosUIElementKey {
+    public enum Market{
+        Singapore,
+        Thailand
+    }
+
     public enum PageKey{
         DevAlertElementDict,
         CountryPageElementDict,
@@ -30,7 +35,9 @@ public class YouTripIosUIElementKey {
         KYCNationalityElementDict,
         ResidentialAddressElementDict,
         KYCFinalStepElementDict,
-        KYCKeepUpdatePopUpElementDict
+        KYCKeepUpdatePopUpElementDict,
+        NotificationAlertElementDict,
+        LimitedHomePageElementDict
     }
 
     private HashMap<String, UIElementData> DevAlertElementDict;
@@ -55,6 +62,8 @@ public class YouTripIosUIElementKey {
     private HashMap<String, UIElementData> KYCNationalityElementDict;
     private HashMap<String, UIElementData> KYCFinalStepElementDict;
     private HashMap<String, UIElementData> KYCKeepUpdatePopUpElementDict;
+    private HashMap<String, UIElementData> NotificationAlertElementDict;
+    private HashMap<String, UIElementData> LimitedHomePageElementDict;
 
     private HashMap<Integer, HashMap<String, UIElementData>> Container;
 
@@ -81,7 +90,9 @@ public class YouTripIosUIElementKey {
         this.KYCNationalityElementDict = new HashMap<>();
         this.ResidentialAddressElementDict = new HashMap<>();
         this.KYCFinalStepElementDict = new HashMap<>();
-        this.KYCKeepUpdatePopUpElementDict = new HashMap();
+        this.KYCKeepUpdatePopUpElementDict = new HashMap<>();
+        this.NotificationAlertElementDict =  new HashMap<>();
+        this.LimitedHomePageElementDict = new HashMap<>();
 
 
         this.Container = new HashMap<>();
@@ -103,8 +114,8 @@ public class YouTripIosUIElementKey {
         this.Container.put(PageKey.CountryPageElementDict.ordinal(), this.CountryPageElementDict);
 
         this.CountrySelectionElementDict.put("btnClose", new UIElementData("btnClose", FindMethod.ACCESSIBILITYID));
-        this.CountrySelectionElementDict.put("Singapore", new UIElementData("Singapore", FindMethod.ACCESSIBILITYID));
-        this.CountrySelectionElementDict.put("Thailand", new UIElementData("Thailand", FindMethod.ACCESSIBILITYID));
+        this.CountrySelectionElementDict.put(Market.Singapore.toString(), new UIElementData("Singapore", FindMethod.ACCESSIBILITYID));
+        this.CountrySelectionElementDict.put(Market.Thailand.toString(), new UIElementData("Thailand", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.CountrySelectionElementDict.ordinal(), this.CountrySelectionElementDict);
 
         this.GetStartedPageElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));
@@ -218,15 +229,32 @@ public class YouTripIosUIElementKey {
         this.KYCKeepUpdatePopUpElementDict.put("btnAccept", new UIElementData("//XCUIElementTypeStaticText[@name=\"Keep Me Updated\"]", FindMethod.XPATH));
         this.KYCKeepUpdatePopUpElementDict.put("btnReject", new UIElementData("//XCUIElementTypeStaticText[@name=\"Do not send me updates\"]", FindMethod.XPATH));
         this.Container.put(PageKey.KYCKeepUpdatePopUpElementDict.ordinal(), this.KYCKeepUpdatePopUpElementDict);
+
+        this.NotificationAlertElementDict.put("lblTitle", new UIElementData("//XCUIElementTypeStaticText[@name=\"“YouTrip” Would Like to Send You Notifications\"]", FindMethod.XPATH));
+        this.NotificationAlertElementDict.put("btnDeny", new UIElementData("//XCUIElementTypeButton[@name=\"Don’t Allow\"]", FindMethod.XPATH));
+        this.NotificationAlertElementDict.put("btnAllow", new UIElementData("//XCUIElementTypeButton[@name=\"Allow\"]", FindMethod.XPATH));
+        this.Container.put(PageKey.NotificationAlertElementDict.ordinal(), this.NotificationAlertElementDict);
+
+        this.LimitedHomePageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.LimitedHomePageElementDict.put("btnNext", new UIElementData("btnNext", FindMethod.ACCESSIBILITYID));
+        this.LimitedHomePageElementDict.put("lblReferenceNumVal", new UIElementData("Reference NumberVal", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.LimitedHomePageElementDict.ordinal(), this.LimitedHomePageElementDict);
     }
 
-    public WebElement getElement(PageKey page, String elementKey, IOSDriver driver){
+    public WebElement getElement(PageKey page, String elementKey, IOSDriver driver) throws NotFoundException{
+        return getElement(page, elementKey, driver, false);
+    }
+
+    public WebElement getElement(PageKey page, String elementKey, IOSDriver driver, boolean isNullable){
         UIElementData result = null;
         result = (this.Container.get(page.ordinal())).get(elementKey);
         if (result ==  null){
-            throw new NotFoundException("Element Not Declared");
+            if (isNullable)
+                return null;
+            else
+                throw new NotFoundException("Element Not Declared");
         }else{
-            return result.getIOSElement(driver);
+            return result.getIOSElement(driver, isNullable);
         }
     }
 }
