@@ -543,8 +543,23 @@ public class youtrip_android_regression {
     }
 
     @Test
-    public void regTC07_partialreject_PC_KYC_NRIC() {
+    public void regTC07_partialreject_PC_KYC_NRIC() throws InterruptedException {
 
+        AndroidElement el;
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        //get and store the KYC reference number
+        String kycRefNo = (UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "referenceNum", driver)).getText();
+        System.out.println("TEST DATA: KYC submission reference number is " +kycRefNo);
+
+        //call YP full reject with Ref Number
+        api.yp_partialReject(kycRefNo);
+
+        //back to the app - wait for reject to be updated
+        Thread.sleep(10000);
+        wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
+        System.out.println("TEST STEP: KYC rejection received");
+        assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Attention");
     }
 
     @Test
