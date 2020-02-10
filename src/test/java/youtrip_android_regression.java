@@ -444,12 +444,13 @@ public class youtrip_android_regression {
         System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click start now button");
         Thread.sleep(3000);
 
+        //TODO not needed if already accepted
         //accept the Android camera permission
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CameraAccessAlertElementDict, "btnAccept", driver);
-        el.click();
-        System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click allow YouTrip access to camera button");
-        Thread.sleep(3000);
+        //driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        //el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CameraAccessAlertElementDict, "btnAccept", driver);
+        //el.click();
+        //System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click allow YouTrip access to camera button");
+        //Thread.sleep(3000);
 
         //wait till on page and take front NRIC photo
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -563,12 +564,91 @@ public class youtrip_android_regression {
     }
 
     @Test
-    public void regTC08_resubmit_partialreject_PC_KYC_NRIC() {
+    public void regTC08_resubmit_partialreject_PC_KYC_NRIC() throws InterruptedException {
 
+        AndroidElement el;
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnRetry", driver);
+        el.click();
+        System.out.println("TEST STEP: Attention page - click retry button");
+        Thread.sleep(2000);
+
+        //repeat steps from full name page
+
+        //wait till on page, enter name and confirm
+        //wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblTitle", driver), "Full Name (as per NRIC)"));
+
+        //assert changes to given name from YouPortal
+        assertEquals(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "txtGivenName", driver).getText(), "AUTO YP EDIT");
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnNext", driver);
+        el.click();
+        //wait till check and confirm dialog appear and confirm
+        Thread.sleep(2000);
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblCheckAndConfirmTitle", driver), "Check and Confirm"));
+        System.out.println("TEST STEP: Full Name (as per NRIC) page - check and confirm dialog appeared");
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnCheckAndConfirmConfirm", driver);
+        el.click();
+        System.out.println("TEST STEP: Full Name (as per NRIC) page - on check and confirm dialog click Confirm button");
+        Thread.sleep(3000);
+
+        //wait till on page, clear name on card and enter new name
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "lblTitle", driver), "Preferred Name"));
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "btnNext", driver);
+        el.click();
+        System.out.println("TEST STEP: Preferred Name page - click next button");
+        Thread.sleep(3000);
+
+        //wait till on page and click next on personal information
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "lblTitle", driver), "Personal Information"));
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "btnNext", driver);
+        el.click();
+        System.out.println("TEST STEP: Personal Information page - click next button");
+        Thread.sleep(3000);
+
+        //wait till on page and enter residential address
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "lblTitle", driver), "Residential Address"));
+        //assert changes to given name from YouPortal
+        assertEquals(UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "txtAddressLine2", driver).getText(), "PARTIAL EDIT TEST");
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "btnNext", driver);
+        el.click();
+        System.out.println("TEST STEP: Residential Address page - click next button");
+        Thread.sleep(3000);
+
+        //wait till on page, confirm final steps and submit kyc
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "lblTitle", driver), "Final Step"));
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnAgree", driver);
+        el.click();
+        System.out.println("TEST STEP: Final Step page - click confirm TnC checkbox");
+        el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnSubmit", driver);
+        el.click();
+        System.out.println("TEST STEP: Final Step page - click submit button");
+        Thread.sleep(3000);
+
+        //wait for thank you page and confirm
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        assertEquals((UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)).getText(), "Thank You for Your Application");
+        System.out.println("TEST STEP: KYC submitted successfully");
     }
 
     @Test
-    public void regTC09_approved_PC_KYC_NRIC() {
+    public void regTC09_approved_PC_KYC_NRIC() throws InterruptedException {
+
+        AndroidElement el;
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        //get and store the KYC reference number
+        String kycRefNo = (UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "referenceNum", driver)).getText();
+        System.out.println("TEST DATA: KYC submission reference number is " +kycRefNo);
+
+        //call YP full reject with Ref Number
+        api.yp_approve(kycRefNo);
+
+        //back to the app - wait for reject to be updated
+        Thread.sleep(10000);
+        wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
+        System.out.println("TEST STEP: KYC rejection received");
+        assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Your Card is On Its Way");
 
     }
 
