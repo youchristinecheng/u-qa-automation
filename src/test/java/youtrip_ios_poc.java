@@ -1,5 +1,6 @@
 import TestBased.TestAccountData;
 import TestBased.TestAccountData.*;
+import TestBased.Utils;
 import TestBased.YoutripIosSubRoutine;
 import TestBased.YouTripIosUIElementKey;
 import TestBased.YouTripIosUIElementKey.Market;
@@ -14,6 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import javax.rmi.CORBA.Util;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,13 +30,11 @@ public class youtrip_ios_poc {
     IOSDriver driver;
     YouTripIosUIElementKey UIElementKeyDict;
     YoutripIosSubRoutine subProc;
-    TestBased.Utils tool;
     WebDriverWait wait;
 
     @BeforeTest
     public void setUp() throws MalformedURLException {
         UIElementKeyDict = new YouTripIosUIElementKey();
-        tool = new TestBased.Utils();
         // Created object of DesiredCapabilities class.
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
@@ -153,7 +153,7 @@ public class youtrip_ios_poc {
             newUserData.surname = "TESTER";;
             newUserData.givenName = "AUTO";;
             newUserData.nameOnCard = newUserData.surname + " " + newUserData.givenName;
-            newUserData.nricNumber = "S1234567A";
+            newUserData.nricNumber = subProc.api.util.getNRIC();
             newUserData.dateOfBirth = dateOfBirthFormatter.format(dateOfBirth);
             newUserData.addressLine1 = "1";
             newUserData.addressLine2 = "2";
@@ -172,11 +172,15 @@ public class youtrip_ios_poc {
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "btnPCRegister", driver);
             el.click();
 
-            subProc.procSubmitSGPCNRICKYC(false, newUserData.surname, newUserData.givenName, newUserData.nameOnCard,
+            subProc.procSubmitSGPCNRICKYC(false, false, newUserData.surname, newUserData.givenName, newUserData.nameOnCard,
                     newUserData.dateOfBirth, newUserData.nricNumber,
                     newUserData.addressLine1, newUserData.addressLine2, newUserData.postoalCode);
 
-            tool.exportAccountTestData(newUserData);
+            subProc.api.util.exportAccountTestData(newUserData);
+            Thread.sleep(25000);
+            System.out.println("TEST STEP: Verify Back to Limited Home Page");
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver), "Thank You for Your Application"));
+
         }catch (Exception e){
             e.printStackTrace();
             fail();
@@ -186,12 +190,14 @@ public class youtrip_ios_poc {
     }
 
     @Test
-    public void regTC05_fullreject_PC_KYC_NRIC() {
+    public void regTC05_fullreject_and_resubmit_PC_KYC_NRIC() {
         IOSElement el;
+        String actualText;
+        String kycRefNo;
         try {
             HashMap<String, String> searchCriteria = new HashMap<>();
             searchCriteria.put("kycstatus", KYCStatus.SUBMIT.toString());
-            TestAccountData loadedData = tool.searchFromPoolBy(searchCriteria);
+            TestAccountData loadedData = subProc.api.util.searchFromPoolBy(searchCriteria);
 
             subProc.procSelectCountry(Market.Singapore);
             subProc.procOTPLogin(loadedData.mprefix, loadedData.mnumber, loadedData.emailAddress, false);
@@ -203,23 +209,170 @@ public class youtrip_ios_poc {
             // Limited Home Page
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver), "Thank You for Your Application"));
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
-            String kycRefNo = el.getText();
+            kycRefNo = el.getText();
 
             subProc.api.yp_fullReject(kycRefNo);
             Thread.sleep(15000);
+            System.out.println("TEST STEP: KYC rejection received");
+
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
+            actualText = el.getText();
+            assertEquals("Attention", actualText);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblKycResultDesc", driver);
+            assertTrue(el.isDisplayed());
+            actualText = el.getText();
+            assertEquals("Sorry, we were unable to process your application due to the following reasons: \n\n" + subProc.api.getKycRejectReason() + "\n\nYou’ll also be required to take photos of your ID again to verify your identity.", actualText);
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver);
             el.click();
             Thread.sleep(2000);
 
-            subProc.procSubmitSGPCNRICKYC(true, loadedData.surname, loadedData.givenName, loadedData.nameOnCard,
+            subProc.procSubmitSGPCNRICKYC(true, false, loadedData.surname, loadedData.givenName, loadedData.nameOnCard,
                     loadedData.dateOfBirth, loadedData.nricNumber,
                     loadedData.addressLine1, loadedData.addressLine2, loadedData.postoalCode);
 
+            Thread.sleep(25000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             String newKycRefNo = el.getText();
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
         }catch (Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void regTC07_partialreject_and_resubmit_PC_KYC_NRIC() throws InterruptedException {
+        IOSElement el;
+        String actualText;
+        String kycRefNo;
+        try {
+            HashMap<String, String> searchCriteria = new HashMap<>();
+            searchCriteria.put("kycstatus", KYCStatus.SUBMIT.toString());
+            TestAccountData loadedData = subProc.api.util.searchFromPoolBy(searchCriteria);
+
+            subProc.procSelectCountry(Market.Singapore);
+            subProc.procOTPLogin(loadedData.mprefix, loadedData.mnumber, loadedData.emailAddress, false);
+
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+            if(el != null)
+                el.click();
+
+            // Limited Home Page
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver), "Thank You for Your Application"));
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
+            kycRefNo = el.getText();
+
+            subProc.api.yp_partialReject(kycRefNo);
+            Thread.sleep(15000);
+            System.out.println("TEST STEP: KYC Partial rejection received");
+
+            loadedData.givenName = "Auto YP Edit";
+            loadedData.addressLine2 = "PARTIAL EDIT TEST";
+
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
+            actualText = el.getText();
+            assertEquals("Attention", actualText);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblKycResultDesc", driver);
+            assertTrue(el.isDisplayed());
+            actualText = el.getText();
+            assertEquals("We have noticed errors in your application and have edited it for you. These are the following errors:\n\n" + subProc.api.getKycRejectReason() + "\n\nPlease check all the data to make sure they are accurate and submit again.", actualText);
+
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver);
+            el.click();
+            Thread.sleep(2000);
+
+            subProc.procSubmitSGPCNRICKYC(false, true, loadedData.surname, loadedData.givenName, loadedData.nameOnCard,
+                    loadedData.dateOfBirth, loadedData.nricNumber,
+                    loadedData.addressLine1, loadedData.addressLine2, loadedData.postoalCode);
+
+            Thread.sleep(25000);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
+            String newKycRefNo = el.getText();
+            Assert.assertNotEquals(newKycRefNo, kycRefNo);
+
+            subProc.api.util.updateData(loadedData);
+        }catch (Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void regTC09_approved_PC_KYC_NRIC() throws InterruptedException {
+
+        IOSElement el;
+        try {
+            HashMap<String, String> searchCriteria = new HashMap<>();
+            searchCriteria.put("kycstatus", KYCStatus.SUBMIT.toString());
+            TestAccountData loadedData = subProc.api.util.searchFromPoolBy(searchCriteria);
+
+            subProc.procSelectCountry(Market.Singapore);
+            subProc.procOTPLogin(loadedData.mprefix, loadedData.mnumber, loadedData.emailAddress, false);
+
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+            if(el != null)
+                el.click();
+
+            //get and store the KYC reference number
+            String kycRefNo = (UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
+            System.out.println("TEST DATA: KYC submission reference number is " + kycRefNo);
+
+            //call YP full reject with Ref Number
+            subProc.api.yp_approve(kycRefNo);
+
+            //back to the app - wait for reject to be updated
+            Thread.sleep(10000);
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
+            System.out.println("TEST STEP: KYC approval received");
+            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Your Card is On Its Way");
+            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver).getText(), "My Card Arrived");
+
+            loadedData.kycStatus = KYCStatus.CLEAR;
+            subProc.api.util.updateData(loadedData);
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void test(){
+        try {
+            TestAccountData newUserData = new TestAccountData();
+            SimpleDateFormat formatter = new SimpleDateFormat("YYMMDDHHmmssSS");
+            Date date = new Date(System.currentTimeMillis());
+            System.out.println(formatter.format(date));
+            String mprefix = "123";
+            String mnumber = formatter.format(date);
+            String email = ("qa+sg" + mnumber + "@you.co");
+
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.YEAR, -20);
+            Date dateOfBirth = c.getTime();
+            SimpleDateFormat dateOfBirthFormatter = new SimpleDateFormat("ddMMYYYY");
+
+            newUserData.market = Market.Singapore;
+            newUserData.mnumber = mnumber;
+            newUserData.mprefix = mprefix;
+            newUserData.emailAddress = email;
+            newUserData.kycStatus = KYCStatus.SUBMIT;
+            newUserData.cardId = null;
+            newUserData.youId = null;
+            newUserData.cardStatus = null;
+            newUserData.surname = "TESTER";;
+            newUserData.givenName = "AUTO";;
+            newUserData.nameOnCard = newUserData.surname + " " + newUserData.givenName;
+            newUserData.nricNumber = subProc.api.util.getNRIC();
+            newUserData.dateOfBirth = dateOfBirthFormatter.format(dateOfBirth);
+            newUserData.addressLine1 = "1";
+            newUserData.addressLine2 = "2";
+            newUserData.postoalCode = "000000";
+
+            Utils util = new Utils();
+            util.exportAccountTestData(newUserData);
+        }catch(Exception e ){
             e.printStackTrace();
             fail();
         }

@@ -14,7 +14,12 @@ import java.util.Map;
 
 public class YouAPI {
 
-    Utils util = new Utils();
+    private String kycRejectReason;
+
+    public Utils util = new Utils();
+
+    public String getKycRejectReason(){return this.kycRejectReason;}
+    public void setKycRejectReason(String value){this.kycRejectReason = value;}
 
     public String getOTP(String mprefix, String mnumber) {
 
@@ -137,19 +142,19 @@ public class YouAPI {
     }
 
     public void yp_fullReject(String kycRefNo) {
-
+        this.setKycRejectReason("AUTO TEST: full KYC rejection testing");
         String token = yp_getToken();
         String kycID = yp_getKYC(kycRefNo);
 
-        String url_fullRejectKYC = ("http://yp.internal.sg.sit.you.co/api/kyc/"+kycID+"/reject");
-        System.out.println("API CALL: " +url_fullRejectKYC);
+        String url_fullRejectKYC = ("http://yp.internal.sg.sit.you.co/api/kyc/" + kycID + "/reject");
+        System.out.println("API CALL: " + url_fullRejectKYC);
 
         HttpResponse<JsonNode> rejectKYCjsonResponse = Unirest.put(url_fullRejectKYC)
-                .header("Authorization", "Bearer "+token)
-                .header("x-request-id", "fullRejectKYC"+util.getTimestamp())
+                .header("Authorization", "Bearer " + token)
+                .header("x-request-id", "fullRejectKYC" + util.getTimestamp())
                 .header("x-yp-role", "Singapore Admin")
                 .header("Content-Type", "application/json")
-                .body("{\"Reason\":\"AUTO TEST: full KYC rejection testing\"}")
+                .body("{\"Reason\":\"" + getKycRejectReason() + "\"}")
                 .asJson();
 
         assertEquals(200, rejectKYCjsonResponse.getStatus());
@@ -158,6 +163,7 @@ public class YouAPI {
     public void yp_partialReject(String kycRefNo) {
         //notes: for partial reject you must pass all personal, residental information even if it is not editted
         //approach is to call get kyc first, store the data and past it into partial reject api
+        this.setKycRejectReason("AUTO TEST: partial KYC rejection testing - changed address line 2 and first name");
         String token = yp_getToken();
         String kycID = yp_getKYC(kycRefNo);
         Map<String, String> kycDetails = yp_getKYCdetails(kycRefNo);
@@ -172,7 +178,7 @@ public class YouAPI {
                 .header("x-yp-role", "Singapore Admin")
                 .header("Content-Type", "application/json")
                 .body("{\n" +
-                        "  \"Reason\": \"AUTO TEST: partial KYC rejection testing - changed address line 2 and first name\",\n" +
+                        "  \"Reason\": \"" + this.getKycRejectReason() + "\",\n" +
                         "  \"EditedKYC\": {\n" +
                         "    \"Address\": {\n" +
                         "      \"AddressLine1\": \""+kycDetails.get("addLine1")+"\",\n" +

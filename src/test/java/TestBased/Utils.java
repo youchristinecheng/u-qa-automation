@@ -1,12 +1,15 @@
 package TestBased;
 
 import TestBased.TestAccountData.*;
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
+import net.bytebuddy.dynamic.loading.ClassInjector;
 import org.json.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.NotFoundException;
 import org.testng.annotations.Test;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -15,10 +18,16 @@ import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
 
 public class Utils {
 
@@ -32,8 +41,52 @@ public class Utils {
     return formatter.format(date);
     }
 
-    //create method for SG NRIC ID uniqueness - S1234567X
     public String getNRIC() {
+        try {
+            Pattern r = Pattern.compile("[A-Za-z]");
+
+            int randomNum = 1000000 + rand.nextInt(9999999);
+            String password = randomNum + getTimestamp();
+
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(password.getBytes());
+            byte[] digest = md.digest();
+            String myHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
+            System.out.println("myHash: " + myHash);
+
+            String nric = myHash.substring(0, 7).toUpperCase();
+            System.out.println("Candidate: " + nric);
+            Matcher m = r.matcher(nric);
+            while (m.find()) {
+                String found = m.group();
+                System.out.println(found + " " + m.start() + " " + m.end());
+                int modDigit = ((int) ((char) found.charAt(0))) % 65;
+                if (m.start() == 0) {
+                    nric = Integer.toString(modDigit) + nric.substring(1);
+                } else if (m.start() == 6) {
+                    nric = nric.substring(0, 6) + Integer.toString(modDigit);
+                } else {
+                    nric = nric.substring(0, m.start()) + Integer.toString(modDigit) + nric.substring(m.end());
+                }
+                System.out.println("WIP: " + nric);
+            }
+            m = r.matcher(myHash.substring(7, 9));
+            if (!m.find()) {
+                int i = ((Integer.parseInt(myHash.substring(7, 9))) % 26) + 65;
+                char c = (char) i;
+                nric = "S" + nric + String.valueOf(c);
+            } else {
+                String found = m.group();
+                nric = "S" + nric + found;
+            }
+            return nric;
+        }catch(NoSuchAlgorithmException nsae){
+            return null;
+        }
+    }
+
+    //create method for SG NRIC ID uniqueness - S1234567X
+/*    public String getNRIC() {
 
         String nric = "S";
 
@@ -46,23 +99,28 @@ public class Utils {
 
         System.out.println("TEST DATA: Random NRIC generated " +nric);
         return nric;
-    }
+    }*/
 
     public void exportAccountTestData(TestAccountData data) throws Exception {
         try {
-            Path srcFilePath = Paths.get(System.getProperty("user.dir"), "data", "ios_existing_data.json");
+            boolean isNewCreate = false;
+            Path srcFilePath = Paths.get(System.getProperty("user.dir"), "data");
+            if(!Files.exists(srcFilePath)){
+                Files.createDirectories(srcFilePath);
+            }
+            srcFilePath = Paths.get(System.getProperty("user.dir"), "data","ios_existing_data.json");
+            if(!Files.exists(srcFilePath)){
+                Files.createFile(srcFilePath);
+                isNewCreate = true;
+            }
             File dataFile= new File(srcFilePath.toUri());
             FileReader reader = new FileReader(dataFile);
             JSONArray jObjArray;
 
-            if (dataFile.exists()) {
+            if (!isNewCreate) {
                 JSONTokener tokener = new JSONTokener(reader);
                 jObjArray = new JSONArray(tokener);
             }else{
-
-                if(!dataFile.createNewFile()){
-                    throw new IOException("File disable to create");
-                }
                 jObjArray = new JSONArray();
             }
             reader.close();
@@ -90,6 +148,7 @@ public class Utils {
             writer.close();
 
         }catch(IOException ioe){
+            ioe.printStackTrace();
             throw new Exception(ioe.getMessage());
         }
     }

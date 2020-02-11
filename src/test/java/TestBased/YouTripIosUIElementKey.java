@@ -237,6 +237,7 @@ public class YouTripIosUIElementKey {
 
         this.LimitedHomePageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
         this.LimitedHomePageElementDict.put("btnNext", new UIElementData("btnNext", FindMethod.ACCESSIBILITYID));
+        this.LimitedHomePageElementDict.put("lblKycResultDesc", new UIElementData("lblKycResultDesc", FindMethod.ACCESSIBILITYID));
         this.LimitedHomePageElementDict.put("lblReferenceNumVal", new UIElementData("Reference NumberVal", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.LimitedHomePageElementDict.ordinal(), this.LimitedHomePageElementDict);
     }
