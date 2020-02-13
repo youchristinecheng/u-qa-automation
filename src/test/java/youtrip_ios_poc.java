@@ -8,6 +8,7 @@ import TestBased.YouTripIosUIElementKey.PageKey;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
 import kong.unirest.Unirest;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -27,7 +28,7 @@ import static org.testng.Assert.*;
 
 public class youtrip_ios_poc {
 
-    IOSDriver driver;
+    WebDriver driver;
     YouTripIosUIElementKey UIElementKeyDict;
     YoutripIosSubRoutine subProc;
     WebDriverWait wait;
@@ -336,47 +337,41 @@ public class youtrip_ios_poc {
         }
     }
 
-    @Test
+    /*@Test
     public void test(){
+        IOSElement el;
         try {
-            TestAccountData newUserData = new TestAccountData();
-            SimpleDateFormat formatter = new SimpleDateFormat("YYMMDDHHmmssSS");
-            Date date = new Date(System.currentTimeMillis());
-            System.out.println(formatter.format(date));
-            String mprefix = "123";
-            String mnumber = formatter.format(date);
-            String email = ("qa+sg" + mnumber + "@you.co");
+            HashMap<String, String> searchCriteria = new HashMap<>();
+            searchCriteria.put("kycstatus", KYCStatus.CLEAR.toString());
+            TestAccountData loadedData = subProc.api.util.searchFromPoolBy(searchCriteria);
 
-            Calendar c = Calendar.getInstance();
-            c.setTime(date);
-            c.add(Calendar.YEAR, -20);
-            Date dateOfBirth = c.getTime();
-            SimpleDateFormat dateOfBirthFormatter = new SimpleDateFormat("ddMMYYYY");
+            subProc.procSelectCountry(Market.Singapore);
+            subProc.procOTPLogin(loadedData.mprefix, loadedData.mnumber, loadedData.emailAddress, false);
 
-            newUserData.market = Market.Singapore;
-            newUserData.mnumber = mnumber;
-            newUserData.mprefix = mprefix;
-            newUserData.emailAddress = email;
-            newUserData.kycStatus = KYCStatus.SUBMIT;
-            newUserData.cardId = null;
-            newUserData.youId = null;
-            newUserData.cardStatus = null;
-            newUserData.surname = "TESTER";;
-            newUserData.givenName = "AUTO";;
-            newUserData.nameOnCard = newUserData.surname + " " + newUserData.givenName;
-            newUserData.nricNumber = subProc.api.util.getNRIC();
-            newUserData.dateOfBirth = dateOfBirthFormatter.format(dateOfBirth);
-            newUserData.addressLine1 = "1";
-            newUserData.addressLine2 = "2";
-            newUserData.postoalCode = "000000";
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+            if(el != null)
+                el.click();
 
-            Utils util = new Utils();
-            util.exportAccountTestData(newUserData);
-        }catch(Exception e ){
+            //get and store the KYC reference number
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
+            System.out.println("TEST STEP: KYC approval received");
+            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Your Card is On Its Way");
+            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver).getText(), "My Card Arrived");
+
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver);
+            el.click();
+            Thread.sleep(2000);
+            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Your Card is On Its Way");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "txtYouIdDigit1", driver);
+            el.sendKeys(loadedData.youId);
+
+
+            System.out.println("debug");
+        }catch(Exception e){
             e.printStackTrace();
             fail();
         }
-    }
+    }*/
 
     /*@AfterMethod
     public void TestMethodTeardown(){
@@ -386,7 +381,7 @@ public class youtrip_ios_poc {
     @AfterTest
     public void End() {
         //System.out.println(driver.getPageSource());
-        driver.closeApp();
+        ((IOSDriver)driver).closeApp();
         driver.quit();
     }
 }

@@ -3,6 +3,7 @@ package TestBased;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
 import kong.unirest.Unirest;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.text.SimpleDateFormat;
@@ -14,11 +15,11 @@ import static org.testng.Assert.assertEquals;
 public class YoutripIosSubRoutine {
 
     private YouTripIosUIElementKey UIElementKeyDict;
-    private IOSDriver driver;
+    private WebDriver driver;
     private WebDriverWait wait;
     public YouAPI api;
 
-    public YoutripIosSubRoutine(YouTripIosUIElementKey UIElementKeyDict, IOSDriver driver){
+    public YoutripIosSubRoutine(YouTripIosUIElementKey UIElementKeyDict, WebDriver driver){
         this.UIElementKeyDict = UIElementKeyDict;
         this.driver = driver;
         wait = new WebDriverWait(driver, 20);
@@ -28,8 +29,9 @@ public class YoutripIosSubRoutine {
     public WebDriverWait getDriverWait() { return this.wait; }
 
     public void procSelectCountry(Market country) throws Exception{
+        String expectedResult;
+        IOSElement el;
         try {
-            IOSElement el;
             // Handle the ios DEV alert By Force Logout
             WebDriverWait wait = new WebDriverWait(driver, 20);
             System.out.println("DEV ALERT: dev version alert displayed");
@@ -48,8 +50,8 @@ public class YoutripIosSubRoutine {
             el.click();
 
             System.out.println("TEST STEP: Verified Country Description - on page");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CountryPageElementDict, "lblDesc", driver),
-                    "You must have a NRIC or FIN to apply for a Singapore YouTrip account."));
+            expectedResult = country.equals(Market.Singapore) ? "You must have a NRIC or FIN to apply for a Singapore YouTrip account." : "You must have a Thailand ID to apply for a Thailand YouTrip account (powered by KBank).";
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CountryPageElementDict, "lblDesc", driver), expectedResult));
 
             System.out.println("TEST STEP: Country Page - continue as " + country);
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CountryPageElementDict, "btnNext", driver);

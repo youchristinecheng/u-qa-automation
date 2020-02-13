@@ -2,6 +2,7 @@ package TestBased;
 
 import io.appium.java_client.ios.IOSDriver;
 import org.openqa.selenium.NotFoundException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.util.HashMap;
@@ -37,7 +38,8 @@ public class YouTripIosUIElementKey {
         KYCFinalStepElementDict,
         KYCKeepUpdatePopUpElementDict,
         NotificationAlertElementDict,
-        LimitedHomePageElementDict
+        LimitedHomePageElementDict,
+        EnterYNumberPageElementDict
     }
 
     private HashMap<String, UIElementData> DevAlertElementDict;
@@ -64,6 +66,7 @@ public class YouTripIosUIElementKey {
     private HashMap<String, UIElementData> KYCKeepUpdatePopUpElementDict;
     private HashMap<String, UIElementData> NotificationAlertElementDict;
     private HashMap<String, UIElementData> LimitedHomePageElementDict;
+    private HashMap<String, UIElementData> EnterYNumberPageElementDict;
 
     private HashMap<Integer, HashMap<String, UIElementData>> Container;
 
@@ -93,6 +96,7 @@ public class YouTripIosUIElementKey {
         this.KYCKeepUpdatePopUpElementDict = new HashMap<>();
         this.NotificationAlertElementDict =  new HashMap<>();
         this.LimitedHomePageElementDict = new HashMap<>();
+        this.EnterYNumberPageElementDict = new HashMap<>();
 
 
         this.Container = new HashMap<>();
@@ -240,13 +244,26 @@ public class YouTripIosUIElementKey {
         this.LimitedHomePageElementDict.put("lblKycResultDesc", new UIElementData("lblKycResultDesc", FindMethod.ACCESSIBILITYID));
         this.LimitedHomePageElementDict.put("lblReferenceNumVal", new UIElementData("Reference NumberVal", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.LimitedHomePageElementDict.ordinal(), this.LimitedHomePageElementDict);
+
+        this.EnterYNumberPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.EnterYNumberPageElementDict.put("txtYouIdDigit1", new UIElementData("txtYouIdDigit1", FindMethod.ACCESSIBILITYID));
+        this.EnterYNumberPageElementDict.put("txtYouIdDigit2", new UIElementData("txtYouIdDigit2", FindMethod.ACCESSIBILITYID));
+        this.EnterYNumberPageElementDict.put("txtYouIdDigit3", new UIElementData("txtYouIdDigit3", FindMethod.ACCESSIBILITYID));
+        this.EnterYNumberPageElementDict.put("txtYouIdDigit4", new UIElementData("txtYouIdDigit4", FindMethod.ACCESSIBILITYID));
+        this.EnterYNumberPageElementDict.put("txtYouIdDigit5", new UIElementData("txtYouIdDigit5", FindMethod.ACCESSIBILITYID));
+        this.EnterYNumberPageElementDict.put("txtYouIdDigit6", new UIElementData("txtYouIdDigit6", FindMethod.ACCESSIBILITYID));
+        this.EnterYNumberPageElementDict.put("txtYouIdDigit7", new UIElementData("txtYouIdDigit7", FindMethod.ACCESSIBILITYID));
+        this.EnterYNumberPageElementDict.put("txtYouIdDigit8", new UIElementData("txtYouIdDigit8", FindMethod.ACCESSIBILITYID));
+        this.EnterYNumberPageElementDict.put("txtYouIdDigit9", new UIElementData("txtYouIdDigit9", FindMethod.ACCESSIBILITYID));
+        this.EnterYNumberPageElementDict.put("txtYouIdDigit10", new UIElementData("txtYouIdDigit10", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.EnterYNumberPageElementDict.ordinal(), this.EnterYNumberPageElementDict);
     }
 
-    public WebElement getElement(PageKey page, String elementKey, IOSDriver driver) throws NotFoundException{
+    public WebElement getElement(PageKey page, String elementKey, WebDriver driver) throws NotFoundException{
         return getElement(page, elementKey, driver, false);
     }
 
-    public WebElement getElement(PageKey page, String elementKey, IOSDriver driver, boolean isNullable){
+    public WebElement getElement(PageKey page, String elementKey, WebDriver driver, boolean isNullable){
         UIElementData result = null;
         result = (this.Container.get(page.ordinal())).get(elementKey);
         if (result ==  null){
@@ -255,7 +272,7 @@ public class YouTripIosUIElementKey {
             else
                 throw new NotFoundException("Element Not Declared");
         }else{
-            return result.getIOSElement(driver, isNullable);
+            return result.getIOSElement((IOSDriver)driver, isNullable);
         }
     }
 }
