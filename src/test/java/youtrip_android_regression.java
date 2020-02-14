@@ -654,6 +654,6 @@ public class youtrip_android_regression {
 
     @AfterClass
     public void end() {
-        driver.quit();
+        //driver.quit();
     }
 }
