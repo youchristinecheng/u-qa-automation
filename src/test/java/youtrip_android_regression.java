@@ -41,7 +41,7 @@ public class youtrip_android_regression {
         //capabilities.setCapability("platformName", "Android");
 
         // setup the capabilities for Android Emulator
-        capabilities.setCapability("deviceName", "Android Emulator");
+        /*capabilities.setCapability("deviceName", "Android Emulator");
         //capabilities.setCapability(CapabilityType.VERSION, "7.0.0");
         capabilities.setCapability("automationName", "UiAutomator2");
         capabilities.setCapability("platformName", "Android");
@@ -54,7 +54,7 @@ public class youtrip_android_regression {
         File filePath = new File(System.getProperty("user.dir"));
         File appDir = new File(filePath, "/apps");
         File app = new File(appDir, "app-sit-release-master-3.3.0.1140.apk");
-        capabilities.setCapability("app", app.getAbsolutePath());
+        capabilities.setCapability("app", app.getAbsolutePath());*/
 
         driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
