@@ -10,6 +10,11 @@
     <packaging>jar</packaging>
     <name>YouTripFrontEndAppTests</name>
     <build>
+        <testResources>
+            <testResource>
+                <directory>${project.basedir}/src/test/resources</directory>
+            </testResource>
+        </testResources>
         <plugins>
             <!-- Compiler plug-in -->
             <plugin>
