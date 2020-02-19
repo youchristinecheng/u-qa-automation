@@ -7,6 +7,9 @@ import org.json.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.NotFoundException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.DatatypeConverter;
@@ -100,6 +103,12 @@ public class Utils {
         System.out.println("TEST DATA: Random NRIC generated " +nric);
         return nric;
     }*/
+
+    public boolean takeScreenshot(String name, WebDriver driver) {
+        String screenshotDirectory = System.getProperty("appium.screenshots.dir");
+        File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        return screenshot.renameTo(new File(screenshotDirectory, String.format("%s.png", name)));
+    }
 
     public void exportAccountTestData(TestAccountData data) throws Exception {
         try {

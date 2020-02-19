@@ -2,7 +2,15 @@
 <suite name="Android Test Run">
     <test name="Regression">
         <classes>
-            <class name="youtrip_android_regression"/>
+            <class name="youtrip_android_regression">
+                <methods>
+                    <include name="regTC01_selectTH" />
+                    <include name="regTC02_selectSG" />
+                    <include name="regTC03_login_new_user_OTP" />
+                    <include name="regTC04_submit_PC_KYC_NRIC" />
+                    <include name="regTC05_fullreject_PC_KYC_NRIC" />
+                </methods>
+            </class>
         </classes>
     </test>
 </suite>
