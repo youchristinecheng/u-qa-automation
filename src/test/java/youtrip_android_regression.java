@@ -4,14 +4,12 @@ import TestBased.YouTripAndroidUIElementKey;
 import TestBased.YouTripAndroidUIElementKey.PageKey;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
-import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -30,12 +28,12 @@ public class youtrip_android_regression {
     YouTripAndroidUIElementKey UIElementKeyDict;
 
     public boolean takeScreenshot(final String name) {
-        String screenshotDirectory = System.getProperty("appium.screenshots.dir", System.getProperty("java.io.tmpdir", ""));
+        String screenshotDirectory = System.getProperty("appium.screenshots.dir");
         File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         return screenshot.renameTo(new File(screenshotDirectory, String.format("%s.png", name)));
     }
 
-    @BeforeMethod
+    @BeforeTest
     public void setUp() throws MalformedURLException {
 
         api = new YouAPI();
@@ -55,16 +53,13 @@ public class youtrip_android_regression {
         capabilities.setCapability("automationName", "UiAutomator2");
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("appWaitDuration", "40000");
-        capabilities.setCapability("appWaitPackage", "co.you.youapp.dev");
-        capabilities.setCapability("appWaitActivity", "co.you.youapp.ui.base.SingleFragmentActivity");
-
-
 
         File filePath = new File(System.getProperty("user.dir"));
         File appDir = new File(filePath, "/apps");
         File app = new File(appDir, "app-sit-release-master-3.3.0.1140.apk");
         capabilities.setCapability("app", app.getAbsolutePath());*/
 
+        //required for AWS device farm
         capabilities.setCapability("appWaitPackage", "co.you.youapp.dev");
         capabilities.setCapability("appWaitActivity", "co.you.youapp.ui.base.SingleFragmentActivity");
 
