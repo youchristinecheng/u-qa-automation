@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Android Test Run">
+<suite name="iOS Test Run">
     <test name="Regression">
         <classes>
             <class name="youtrip_android_regression">
@@ -11,6 +11,12 @@
                     <include name="regTC05_fullreject_PC_KYC_NRIC" />
                 </methods>
             </class>
+            <!--<class name="youtrip_ios_poc">
+                <methods>
+                    <include name="regTC01_selectTH" />
+                    <include name="regTC01_selectSG" />
+                </methods>
+            </class>-->
         </classes>
     </test>
 </suite>

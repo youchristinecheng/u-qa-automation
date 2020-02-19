@@ -41,27 +41,49 @@ public class youtrip_android_regression {
         UIElementKeyDict = new YouTripAndroidUIElementKey();
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        // setup the capabilities for real device
-        //capabilities.setCapability("deviceName", "Nexus 5");
-        //capabilities.setCapability(CapabilityType.VERSION, "6.0.1");
-        //capabilities.setCapability("automationName", "UiAutomator2");
-        //capabilities.setCapability("platformName", "Android");
+        /*
+         * ###### Desired Capabilities for Real Device ######
+         */
+        /*capabilities.setCapability("deviceName", "Nexus 5");
+        capabilities.setCapability(CapabilityType.VERSION, "6.0.1");
+        capabilities.setCapability("automationName", "UiAutomator2");
+        capabilities.setCapability("platformName", "Android");
+        File filePath = new File(System.getProperty("user.dir"));
+        File appDir = new File(filePath, "/apps");
+        File app = new File(appDir, "app-sit-release-master-3.3.0.1140.apk");
+        capabilities.setCapability("app", app.getAbsolutePath());
+        capabilities.setCapability("appWaitPackage", "co.you.youapp.dev");
+        capabilities.setCapability("appWaitActivity", "co.you.youapp.ui.base.SingleFragmentActivity");*/
+        /*
+         * ###### Desired Capabilities for Real Device ######
+         */
 
-        // setup the capabilities for Android Emulator
+        /*
+         * ###### Desired Capabilities for Android Emulator ######
+         */
         /*capabilities.setCapability("deviceName", "Android Emulator");
         //capabilities.setCapability(CapabilityType.VERSION, "7.0.0");
         capabilities.setCapability("automationName", "UiAutomator2");
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("appWaitDuration", "40000");
-
         File filePath = new File(System.getProperty("user.dir"));
         File appDir = new File(filePath, "/apps");
         File app = new File(appDir, "app-sit-release-master-3.3.0.1140.apk");
-        capabilities.setCapability("app", app.getAbsolutePath());*/
+        capabilities.setCapability("app", app.getAbsolutePath());
+        capabilities.setCapability("appWaitPackage", "co.you.youapp.dev");
+        capabilities.setCapability("appWaitActivity", "co.you.youapp.ui.base.SingleFragmentActivity");*/
+        /*
+         * ###### Desired Capabilities for Android Emulator ######
+         */
 
-        //required for AWS device farm
+        /*
+         * ###### Desired Capabilities for AWS Device Farm ######
+         */
         capabilities.setCapability("appWaitPackage", "co.you.youapp.dev");
         capabilities.setCapability("appWaitActivity", "co.you.youapp.ui.base.SingleFragmentActivity");
+        /*
+         * ###### Desired Capabilities for AWS Device Farm ######
+         */
 
         driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -225,7 +247,7 @@ public class youtrip_android_regression {
         wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver)));
         System.out.println("TEST STEP: Welcome Page - on page");
         String TC03_TS10 = null;
-        
+
         assertEquals((UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver)).getText(), "Welcome");
     }
 

@@ -39,35 +39,43 @@ public class youtrip_ios_poc {
         // Created object of DesiredCapabilities class.
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        // setup the capabilities for ios emulator
-        //capabilities.setCapability("deviceName", "iPhone Simulator");
-        //capabilities.setCapability(CapabilityType.VERSION, "11.4.1");
-        //capabilities.setCapability("automationName", "XCUITest");
-        //capabilities.setCapability("platformName", "iOS");
+        /*
+         * ###### Desired Capabilities for iOS Emulator ######
+         */
+        /*capabilities.setCapability("deviceName", "iPhone Simulator");
+        capabilities.setCapability(CapabilityType.VERSION, "11.4.1");
+        capabilities.setCapability("automationName", "XCUITest");
+        capabilities.setCapability("platformName", "iOS");*/
+        /*
+         * ###### Desired Capabilities for iOS Emulator ######
+         */
 
-        // setup the capabilities for real iphone
-        capabilities.setCapability("deviceName", "YouTech iPhone");
+        /*
+         * ###### Desired Capabilities for Real iPhone ######
+         */
+        /*capabilities.setCapability("deviceName", "YouTech iPhone");
         capabilities.setCapability(CapabilityType.VERSION, "13.1.2");
         capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
         capabilities.setCapability("automationName", "XCUITest");
         capabilities.setCapability("platformName", "iOS");
         capabilities.setCapability("bundleId", "co.you.youapp");
-
         File filePath = new File(System.getProperty("user.dir"));
         File appDir = new File(filePath, "/apps");
         File app = new File(appDir, "YOUTrip TH_SIT.ipa");
         capabilities.setCapability("app", app.getAbsolutePath());
-
         capabilities.setCapability("xcodeOrgId", "2HWNYH89R4");
-        capabilities.setCapability("xcodeSigningId", "iPhone Developer");
+        capabilities.setCapability("xcodeSigningId", "iPhone Developer");*/
+        /*
+         * ###### Desired Capabilities for Real Device ######
+         */
 
-        //capabilities.setCapability("app", "apps/app-dev_sim-release-1.1.1.730.apk");
-        // Set android appPackage desired capability.
-        //capabilities.setCapability("appPackage", "co.you.youapp.dev");
-        // Set android appActivity desired capability.
-        //capabilities.setCapability("appActivity", "co.you.youapp.ui.base.SingleFragmentActivity");
-        //capabilities.setCapability("intentAction", "android.intent.action.MAIN");
-        //capabilities.setCapability("intentCategory", "android.intent.category.LAUNCHER");
+        /*
+         * ###### Desired Capabilities for AWS Device Farm ######
+         * AWS Device Farm require setup as Default value.
+         * No Desired Capabilities configuration should be done.
+         * Reminded that this default setting ONLY allow with Appium 1.9.1 with iOS 12 on aws device farm
+         */
+
         //co.you.youapp.ui.home.HomeActivity
         //co.you.youapp.ui.home.limited.LimitedHomeActivity
         //co.you.youapp.ui.magiclink.MagicLinkActivity
@@ -373,10 +381,10 @@ public class youtrip_ios_poc {
         }
     }*/
 
-    /*@AfterMethod
+    @AfterMethod
     public void TestMethodTeardown(){
-        driver.resetApp();
-    }*/
+        ((IOSDriver)driver).resetApp();
+    }
 
     @AfterTest
     public void End() {
