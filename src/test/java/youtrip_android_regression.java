@@ -12,8 +12,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
@@ -26,12 +24,6 @@ public class youtrip_android_regression {
     YouAPI api;
     Utils utils;
     YouTripAndroidUIElementKey UIElementKeyDict;
-
-   /* public boolean takeScreenshot(final String name) {
-        String screenshotDirectory = System.getProperty("appium.screenshots.dir");
-        File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        return screenshot.renameTo(new File(screenshotDirectory, String.format("%s.png", name)));
-    }*/
 
     @BeforeTest
     public void setUp() throws MalformedURLException {
