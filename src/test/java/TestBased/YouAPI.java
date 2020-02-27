@@ -34,6 +34,66 @@ public class YouAPI {
         return otpCode;
     }
 
+    public Map<String, String> getUserId(String mprefix, String phoneNumber) {
+        HashMap<String, String> result = new HashMap<>();
+        String baseUri = "http://api.sg.sit.you.co/v2";
+        String req_uri = (baseUri + "/public/device");
+        HttpResponse<JsonNode> response = Unirest.post(req_uri)
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "register-device-" + util.getTimestamp())
+                .body("{\"device_id\": \"44vic4-20022716280914\"," +
+                        "\"device_name\": \"Samsung Note 9\"," +
+                        "\"platform\": \"Android\"," +
+                        "\"os_ver\": \"7.1.1\"," +
+                        "\"app_id\": \"YouTrip\"," +
+                        "\"app_ver\": \"1.2.7\"," +
+                        "\"language\": \"en-TH\"," +
+                        "\"timezone\": \"Asia/Hong_Kong\"}").asJson();
+
+        JSONObject responseJson = response.getBody().getObject();
+        String oauth_key = responseJson.getString("oauth_client_key");
+        String oauth_passpwd = responseJson.getString("oauth_client_secret");
+
+        req_uri = (baseUri + "/device/otp");
+        response = Unirest.post(req_uri)
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "request-otp-" + util.getTimestamp())
+                .basicAuth(oauth_key, oauth_passpwd)
+                .body("{\"mcc\": \"" + mprefix + "\"," +
+                        "\"phone_number\": \"" + phoneNumber + "\"," +
+                        "\"language\": \"en-US\"}").asJson();
+
+        responseJson = response.getBody().getObject();
+        String otp_key = responseJson.getString("id");
+
+        String otpCode = getOTP(mprefix, phoneNumber);
+        req_uri = (baseUri + "/device/otp/" + otp_key);
+        response = Unirest.post(req_uri)
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "verify-otp-" + util.getTimestamp())
+                .basicAuth(oauth_key, oauth_passpwd)
+                .body("{\"password\": \"" + otpCode + "\"," +
+                        "\"mcc\": \"" + mprefix + "\"," +
+                        "\"phone_number\": \"" + phoneNumber + "\"}").asJson();
+        responseJson = response.getBody().getObject();
+        String access_token = responseJson.getString("access_token");
+        String refresh_token = responseJson.getString("refresh_token");
+        result.put("access_token", access_token);
+        result.put("refresh_token", refresh_token);
+
+        req_uri = (baseUri + "/me");
+        response = Unirest.get(req_uri)
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "get-user-" + util.getTimestamp())
+                .header("Authorization", "Bearer " + access_token).asJson();
+        responseJson = response.getBody().getObject();
+        String user_id = responseJson.getString("id");
+        result.put("user_id", user_id);
+        
+        return result;
+    }
+
+
     public String yp_getToken() {
         String url_backdoorYP = ("http://backdoor.internal.sg.sit.you.co/youportal/token?scopes=https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile,openid");
         System.out.println("API CALL: " +url_backdoorYP);

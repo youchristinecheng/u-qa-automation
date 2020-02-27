@@ -79,12 +79,7 @@ public class YoutripIosSubRoutine {
         System.out.println("TEST STEP: Mobile Number Page - inputted mobile number prefix");
         el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.MobileNumberPageElementDict, "txtPrefix", driver);
         el.click();
-        int cnt = el.getText().length();
-        // Remove default preset MCC value
-        for (int i = 0; i < cnt; i++) {
-            // Remove default preset MCC value
-            el.sendKeys("\b");
-        }
+        el.clear();
         // Enter the test data value
         el.sendKeys(mprefix);
 

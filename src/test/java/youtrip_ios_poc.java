@@ -1,8 +1,5 @@
-import TestBased.TestAccountData;
+import TestBased.*;
 import TestBased.TestAccountData.*;
-import TestBased.Utils;
-import TestBased.YoutripIosSubRoutine;
-import TestBased.YouTripIosUIElementKey;
 import TestBased.YouTripIosUIElementKey.Market;
 import TestBased.YouTripIosUIElementKey.PageKey;
 import io.appium.java_client.ios.IOSDriver;
@@ -346,35 +343,38 @@ public class youtrip_ios_poc {
     }
 
     /*@Test
-    public void test(){
+    public void regTC10_TopUp() throws InterruptedException {
         IOSElement el;
         try {
-            HashMap<String, String> searchCriteria = new HashMap<>();
-            searchCriteria.put("kycstatus", KYCStatus.CLEAR.toString());
-            TestAccountData loadedData = subProc.api.util.searchFromPoolBy(searchCriteria);
-
             subProc.procSelectCountry(Market.Singapore);
-            subProc.procOTPLogin(loadedData.mprefix, loadedData.mnumber, loadedData.emailAddress, false);
+            subProc.procOTPLogin("123", "1110110", "", false);
+
+            ((IOSElement)UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "1", driver)).click();
+            ((IOSElement)UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "1", driver)).click();
+            ((IOSElement)UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "1", driver)).click();
+            ((IOSElement)UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "1", driver)).click();
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
             if(el != null)
                 el.click();
 
+            ((IOSDriver) driver).findElementByAccessibilityId("icon home topup").click();
+
             //get and store the KYC reference number
-            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
-            System.out.println("TEST STEP: KYC approval received");
-            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Your Card is On Its Way");
-            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver).getText(), "My Card Arrived");
-
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver);
-            el.click();
-            Thread.sleep(2000);
-            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Your Card is On Its Way");
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "txtYouIdDigit1", driver);
-            el.sendKeys(loadedData.youId);
-
-
             System.out.println("debug");
+
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }*/
+
+    /*@Test
+    public void test(){
+        IOSElement el;
+        try {
+            YouAPI api = new YouAPI();
+            api.getUserId("123", "1110110");
         }catch(Exception e){
             e.printStackTrace();
             fail();

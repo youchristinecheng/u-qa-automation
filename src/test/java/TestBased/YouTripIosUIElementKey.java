@@ -39,7 +39,8 @@ public class YouTripIosUIElementKey {
         KYCKeepUpdatePopUpElementDict,
         NotificationAlertElementDict,
         LimitedHomePageElementDict,
-        EnterYNumberPageElementDict
+        EnterYNumberPageElementDict,
+        APPPinCodePageElementDict
     }
 
     private HashMap<String, UIElementData> DevAlertElementDict;
@@ -67,7 +68,7 @@ public class YouTripIosUIElementKey {
     private HashMap<String, UIElementData> NotificationAlertElementDict;
     private HashMap<String, UIElementData> LimitedHomePageElementDict;
     private HashMap<String, UIElementData> EnterYNumberPageElementDict;
-
+    private HashMap<String, UIElementData> APPPinCodePageElementDict;
     private HashMap<Integer, HashMap<String, UIElementData>> Container;
 
     public YouTripIosUIElementKey(){
@@ -97,7 +98,7 @@ public class YouTripIosUIElementKey {
         this.NotificationAlertElementDict =  new HashMap<>();
         this.LimitedHomePageElementDict = new HashMap<>();
         this.EnterYNumberPageElementDict = new HashMap<>();
-
+        this.APPPinCodePageElementDict = new HashMap<>();
 
         this.Container = new HashMap<>();
 
@@ -257,6 +258,21 @@ public class YouTripIosUIElementKey {
         this.EnterYNumberPageElementDict.put("txtYouIdDigit9", new UIElementData("txtYouIdDigit9", FindMethod.ACCESSIBILITYID));
         this.EnterYNumberPageElementDict.put("txtYouIdDigit10", new UIElementData("txtYouIdDigit10", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.EnterYNumberPageElementDict.ordinal(), this.EnterYNumberPageElementDict);
+
+        this.APPPinCodePageElementDict.put("1", new UIElementData("1", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("2", new UIElementData("2", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("3", new UIElementData("3", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("4", new UIElementData("4", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("5", new UIElementData("5", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("6", new UIElementData("6", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("7", new UIElementData("7", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("8", new UIElementData("8", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("9", new UIElementData("9", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("0", new UIElementData("0", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("btnDelete", new UIElementData("icDelete", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("btnForgot", new UIElementData("Forgot?", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.EnterYNumberPageElementDict.ordinal(), this.EnterYNumberPageElementDict);
+
     }
 
     public WebElement getElement(PageKey page, String elementKey, WebDriver driver) throws NotFoundException{
