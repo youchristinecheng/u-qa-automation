@@ -259,6 +259,45 @@ public class YouAPI {
         assertEquals(200, partialrejectKYCjsonResponse.getStatus());
     }
 
+    //TODO - need to combine below with above - hacked it so far for NPC
+    public void yp_partialRejectNPC(String kycRefNo) {
+        //notes: for partial reject you must pass all personal, residental information even if it is not editted
+        //approach is to call get kyc first, store the data and past it into partial reject api
+        this.setKycRejectReason("AUTO TEST: partial KYC rejection testing - changed address line 2 and first name");
+        String token = yp_getToken();
+        String kycID = yp_getKYC(kycRefNo);
+        Map<String, String> kycDetails = yp_getKYCdetails(kycRefNo);
+
+        //call partial reject
+        String url_partialRejectKYC = ("http://yp.internal.sg.sit.you.co/api/kyc/"+kycID+"/partially_reject");
+        System.out.println("API CALL: " +url_partialRejectKYC);
+
+        HttpResponse<JsonNode> partialrejectKYCjsonResponse = Unirest.put(url_partialRejectKYC)
+                .header("Authorization", "Bearer "+token)
+                .header("x-request-id", "fullPartialKYC"+util.getTimestamp())
+                .header("x-yp-role", "Singapore Admin")
+                .header("Content-Type", "application/json")
+                .body("{\n" +
+                        "  \"Reason\": \"" + this.getKycRejectReason() + "\",\n" +
+                        "  \"EditedKYC\": {\n" +
+                        "    \"Address\": {\n" +
+                        "      \"AddressLine1\": \""+kycDetails.get("addLine1")+"\",\n" +
+                        "      \"AddressLine2\": \"PARTIAL EDIT TEST\",\n" +
+                        "      \"PostalCode\": \""+kycDetails.get("postalCode")+"\"\n" +
+                        "    },\n" +
+                        "    \"FirstName\": \"Auto YP Edit\",\n" +
+                        "    \"LastName\": \""+kycDetails.get("lastName")+"\",\n" +
+                        "    \"Gender\": \""+kycDetails.get("gender")+"\",\n" +
+                        "    \"IDNum\": \""+kycDetails.get("idNum")+"\",\n" +
+                        "    \"DateOfBirth\": \""+kycDetails.get("dob")+"\",\n" +
+                        "    \"Nationality\": \""+kycDetails.get("nationality")+"\"\n" +
+                        "  }\n" +
+                        "}")
+                .asJson();
+
+        assertEquals(200, partialrejectKYCjsonResponse.getStatus());
+    }
+
     public void yp_approve(String kycRefNo) {
         String token = yp_getToken();
         String kycID = yp_getKYC(kycRefNo);
@@ -267,7 +306,7 @@ public class YouAPI {
         String url_approveKYC = ("http://yp.internal.sg.sit.you.co/api/kyc/"+kycID+"/accept?SkipArtemis=true");
         System.out.println("API CALL: " +url_approveKYC);
 
-        HttpResponse<JsonNode> rejectKYCjsonResponse = Unirest.put(url_approveKYC)
+        HttpResponse<JsonNode> acceptKYCjsonResponse = Unirest.put(url_approveKYC)
                 .header("Authorization", "Bearer "+token)
                 .header("x-request-id", "acceptKYC"+util.getTimestamp())
                 .header("x-yp-role", "Singapore Admin")
@@ -278,7 +317,7 @@ public class YouAPI {
                         "}")
                 .asJson();
 
-        assertEquals(200, rejectKYCjsonResponse.getStatus());
+        assertEquals(200, acceptKYCjsonResponse.getStatus());
     }
 
 

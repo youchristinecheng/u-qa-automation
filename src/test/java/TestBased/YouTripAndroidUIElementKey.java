@@ -16,13 +16,16 @@ public class YouTripAndroidUIElementKey {
         OTPPageElementDict,
         EmailPageElementDict,
         WelcomePageElementDict,
+        YnumberPageElementDict,
         IdentityVerificationElementDict,
         PRRegistrationElementDict,
+        ForeignerRegistrationElementDict,
         CameraAccessAlertElementDict,
         StepsPageElementDict,
         CameraPageElementDict,
         PhotoConfirmPageElementDict,
         TurnBackPopUpPageElementDict,
+        ProofOfAddressPageElementDict,
         NamePageElementDict,
         NameOnCardElementDict,
         PersonalInformationElementDict,
@@ -30,7 +33,11 @@ public class YouTripAndroidUIElementKey {
         ResidentialAddressElementDict,
         KYCFinalStepElementDict,
         KYCKeepUpdatePopUpElementDict,
-        LimitedHomePageElementDict
+        LimitedHomePageElementDict,
+        LeftSideMenuElementDict,
+        SettingPageElementDict,
+        ConfirmEmailPageElementDict,
+        CheckSentEmailPageElementDict
     }
 
     private HashMap<String, UIElementData> CountryPageElementDict;
@@ -40,13 +47,16 @@ public class YouTripAndroidUIElementKey {
     private HashMap<String, UIElementData> OTPPageElementDict;
     private HashMap<String, UIElementData> EmailPageElementDict;
     private HashMap<String, UIElementData> WelcomePageElementDict;
+    private HashMap<String, UIElementData> YnumberPageElementDict;
     private HashMap<String, UIElementData> IdentityVerificationElementDict;
     private HashMap<String, UIElementData> PRRegistrationElementDict;
+    private HashMap<String, UIElementData> ForeignerRegistrationElementDict;
     private HashMap<String, UIElementData> StepsPageElementDict;
     private HashMap<String, UIElementData> CameraAccessAlertElementDict;
     private HashMap<String, UIElementData> CameraPageElementDict;
     private HashMap<String, UIElementData> PhotoConfirmPageElementDict;
     private HashMap<String, UIElementData> TurnBackPopUpPageElementDict;
+    private HashMap<String, UIElementData> ProofOfAddressPageElementDict;
     private HashMap<String, UIElementData> NamePageElementDict;
     private HashMap<String, UIElementData> NameOnCardElementDict;
     private HashMap<String, UIElementData> PersonalInformationElementDict;
@@ -55,6 +65,12 @@ public class YouTripAndroidUIElementKey {
     private HashMap<String, UIElementData> KYCFinalStepElementDict;
     private HashMap<String, UIElementData> KYCKeepUpdatePopUpElementDict;
     private HashMap<String, UIElementData> LimitedHomePageElementDict;
+    private HashMap<String, UIElementData> LeftSideMenuElementDict;
+    private HashMap<String, UIElementData> SettingPageElementDict;
+    private HashMap<String, UIElementData> ConfirmEmailPageElementDict;
+    private HashMap<String, UIElementData> CheckSentEmailPageElementDict;
+
+
 
     private HashMap<Integer, HashMap<String, UIElementData>> Container;
 
@@ -67,13 +83,16 @@ public class YouTripAndroidUIElementKey {
         this.OTPPageElementDict = new HashMap<>();
         this.EmailPageElementDict = new HashMap<>();
         this.WelcomePageElementDict = new HashMap<>();
+        this.YnumberPageElementDict = new HashMap<>();
         this.IdentityVerificationElementDict = new HashMap<>();
         this.PRRegistrationElementDict = new HashMap<>();
+        this.ForeignerRegistrationElementDict = new HashMap<>();
         this.StepsPageElementDict = new HashMap<>();
         this.CameraAccessAlertElementDict = new HashMap<>();
         this.CameraPageElementDict = new HashMap<>();
         this.PhotoConfirmPageElementDict = new HashMap<>();
         this.TurnBackPopUpPageElementDict = new HashMap<>();
+        this.ProofOfAddressPageElementDict = new HashMap<>();
         this.NamePageElementDict = new HashMap<>();
         this.NameOnCardElementDict = new HashMap<>();
         this.PersonalInformationElementDict = new HashMap<>();
@@ -82,6 +101,10 @@ public class YouTripAndroidUIElementKey {
         this.KYCFinalStepElementDict = new HashMap<>();
         this.KYCKeepUpdatePopUpElementDict = new HashMap<>();
         this.LimitedHomePageElementDict = new HashMap<>();
+        this.LeftSideMenuElementDict = new HashMap<>();
+        this.SettingPageElementDict = new HashMap<>();
+        this.ConfirmEmailPageElementDict = new HashMap<>();
+        this.CheckSentEmailPageElementDict = new HashMap<>();
 
         this.Container = new HashMap<>();
 
@@ -133,17 +156,42 @@ public class YouTripAndroidUIElementKey {
         //Welcome Page
         this.WelcomePageElementDict.put("lblWelcome", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
         this.WelcomePageElementDict.put("btnPCRegister", new UIElementData("co.you.youapp.dev:id/buttonOrder", FindMethod.ID));
+        this.WelcomePageElementDict.put("btnNPCRegister", new UIElementData("co.you.youapp.dev:id/buttonActivate", FindMethod.ID));
         this.Container.put(PageKey.WelcomePageElementDict.ordinal(), this.WelcomePageElementDict);
+
+        //Enter Y-number Page
+        this.YnumberPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
+        this.YnumberPageElementDict.put("yNumDigit1", new UIElementData("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[1]/android.widget.EditText", FindMethod.XPATH));
+        this.YnumberPageElementDict.put("yNumDigit2", new UIElementData("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[2]/android.widget.EditText", FindMethod.XPATH));
+        this.YnumberPageElementDict.put("yNumDigit3", new UIElementData("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[3]/android.widget.EditText", FindMethod.XPATH));
+        this.YnumberPageElementDict.put("yNumDigit4", new UIElementData("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[4]/android.widget.EditText", FindMethod.XPATH));
+        this.YnumberPageElementDict.put("yNumDigit5", new UIElementData("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[5]/android.widget.EditText", FindMethod.XPATH));
+        this.YnumberPageElementDict.put("yNumDigit6", new UIElementData("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[6]/android.widget.EditText", FindMethod.XPATH));
+        this.YnumberPageElementDict.put("yNumDigit7", new UIElementData("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[7]/android.widget.EditText", FindMethod.XPATH));
+        this.YnumberPageElementDict.put("yNumDigit8", new UIElementData("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[8]/android.widget.EditText", FindMethod.XPATH));
+        this.YnumberPageElementDict.put("yNumDigit9", new UIElementData("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[9]/android.widget.EditText", FindMethod.XPATH));
+        this.YnumberPageElementDict.put("yNumDigit10", new UIElementData("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[10]/android.widget.EditText", FindMethod.XPATH));
+        this.Container.put(PageKey.YnumberPageElementDict.ordinal(), this.YnumberPageElementDict);
 
         //Identity Verification Page
         this.IdentityVerificationElementDict.put("lblTitle", new UIElementData("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='0']/android.widget.TextView", FindMethod.XPATH));
         this.IdentityVerificationElementDict.put("btnSG", new UIElementData("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='1']", FindMethod.XPATH));
+        this.IdentityVerificationElementDict.put("btnForeigner", new UIElementData("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='2']", FindMethod.XPATH));
         this.Container.put(PageKey.IdentityVerificationElementDict.ordinal(), this.IdentityVerificationElementDict);
 
         //Singaporean & PR Page
         this.PRRegistrationElementDict.put("lblTitle", new UIElementData("//android.widget.ScrollView/android.widget.LinearLayout/android.widget.TextView[@index='0']", FindMethod.XPATH));
         this.PRRegistrationElementDict.put("btnManualSubmit", new UIElementData("co.you.youapp.dev:id/textManual", FindMethod.ID));
         this.Container.put(PageKey.PRRegistrationElementDict.ordinal(), this.PRRegistrationElementDict);
+
+        //Foreigner - Submit Document Page
+        this.ForeignerRegistrationElementDict.put("lblTitle", new UIElementData("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='0']/android.widget.TextView", FindMethod.XPATH));
+        this.ForeignerRegistrationElementDict.put("btnEmploymentPass", new UIElementData("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='1']", FindMethod.XPATH));
+        this.ForeignerRegistrationElementDict.put("btnSPass", new UIElementData("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='2']", FindMethod.XPATH));
+        this.ForeignerRegistrationElementDict.put("btnWorkPermit", new UIElementData("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='3']", FindMethod.XPATH));
+        this.ForeignerRegistrationElementDict.put("btnStudentPass", new UIElementData("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='4']", FindMethod.XPATH));
+        this.ForeignerRegistrationElementDict.put("btnOthers", new UIElementData("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='5']", FindMethod.XPATH));
+        this.Container.put(PageKey.ForeignerRegistrationElementDict.ordinal(), this.ForeignerRegistrationElementDict);
 
         //Just a Few Steps Page
         this.StepsPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
@@ -166,6 +214,12 @@ public class YouTripAndroidUIElementKey {
         this.TurnBackPopUpPageElementDict.put("lblDesc", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
         this.TurnBackPopUpPageElementDict.put("btnOK", new UIElementData("co.you.youapp.dev:id/buttonOK", FindMethod.ID));
         this.Container.put(PageKey.TurnBackPopUpPageElementDict.ordinal(), this.TurnBackPopUpPageElementDict);
+
+        //Confirm Proof of Address
+        this.ProofOfAddressPageElementDict.put("lblTitle", new UIElementData("//android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView", FindMethod.XPATH));
+        this.ProofOfAddressPageElementDict.put("otherDocsLink", new UIElementData("//android.widget.LinearLayout[contains(@resource-id,'layoutPoints')]/android.widget.LinearLayout[3]/android.widget.TextView[contains(@resource-id,'textTitle')]", FindMethod.XPATH));
+        this.ProofOfAddressPageElementDict.put("btnOK", new UIElementData("co.you.youapp.dev:id/buttonConfirm", FindMethod.ID));
+        this.Container.put(PageKey.ProofOfAddressPageElementDict.ordinal(), this.ProofOfAddressPageElementDict);
 
         //Given & Family Name Page
         this.NamePageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
@@ -219,7 +273,31 @@ public class YouTripAndroidUIElementKey {
         this.LimitedHomePageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
         this.LimitedHomePageElementDict.put("referenceNum", new UIElementData("co.you.youapp.dev:id/textRefNumber", FindMethod.ID));
         this.LimitedHomePageElementDict.put("btnRetry", new UIElementData("co.you.youapp.dev:id/button", FindMethod.ID));
+        this.LimitedHomePageElementDict.put("btnActivate", new UIElementData("co.you.youapp.dev:id/button", FindMethod.ID));
+        this.LimitedHomePageElementDict.put("btnMenu", new UIElementData("co.you.youapp.dev:id/imageLeft", FindMethod.ID));
         this.Container.put(PageKey.LimitedHomePageElementDict.ordinal(), this.LimitedHomePageElementDict);
+
+        //Left Side Menu
+        this.LeftSideMenuElementDict.put("optSupport", new UIElementData("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/androidx.drawerlayout.widget.DrawerLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.view.ViewGroup/androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[1]", FindMethod.XPATH));
+        this.LeftSideMenuElementDict.put("optSettings", new UIElementData("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/androidx.drawerlayout.widget.DrawerLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.view.ViewGroup/androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[2]", FindMethod.XPATH));
+        this.Container.put(PageKey.LeftSideMenuElementDict.ordinal(), this.LeftSideMenuElementDict);
+
+        //Settings Page
+        this.SettingPageElementDict.put("optGiveUsFeedback", new UIElementData("co.you.youapp.dev:id/clickFeedback", FindMethod.ID));
+        this.SettingPageElementDict.put("optTermsOfUse", new UIElementData("co.you.youapp.dev:id/clickTnc", FindMethod.ID));
+        this.SettingPageElementDict.put("optPrivacyPolicy", new UIElementData("co.you.youapp.dev:id/layoutPrivacy", FindMethod.ID));
+        this.SettingPageElementDict.put("optLogOut", new UIElementData("co.you.youapp.dev:id/clickLogout", FindMethod.ID));
+        this.Container.put(PageKey.SettingPageElementDict.ordinal(), this.SettingPageElementDict);
+
+        //Confirm Email Address Page
+        this.ConfirmEmailPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
+        this.ConfirmEmailPageElementDict.put("txtUserEmail", new UIElementData("co.you.youapp.dev:id/inputEmail", FindMethod.ID));
+        this.ConfirmEmailPageElementDict.put("btnNext", new UIElementData("co.you.youapp.dev:id/buttonNext", FindMethod.ID));
+        this.Container.put(PageKey.ConfirmEmailPageElementDict.ordinal(), this.ConfirmEmailPageElementDict);
+
+        //Check Sent Email Page
+        this.CheckSentEmailPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
+        this.Container.put(PageKey.CheckSentEmailPageElementDict.ordinal(), this.CheckSentEmailPageElementDict);
     }
 
     public WebElement getElement(PageKey page, String elementKey, AndroidDriver driver){
