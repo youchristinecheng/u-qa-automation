@@ -112,6 +112,7 @@ public class Utils {
     }
 
     public void exportAccountTestData(TestAccountData data) throws Exception {
+        System.out.println("TEST DATA MANAGEMENT: INITIAL NEW DATA SET");
         try {
             boolean isNewCreate = false;
             Path srcFilePath = Paths.get(System.getProperty("user.dir"), "data");
@@ -135,8 +136,23 @@ public class Utils {
             }
             reader.close();
 
+            System.out.println("ACCOUNT DATA EXPORT: userid - " + data.userId);
+            System.out.println("ACCOUNT DATA EXPORT: prefix - " + data.mprefix);
+            System.out.println("ACCOUNT DATA EXPORT: phonenumber - " + data.mnumber);
+            System.out.println("ACCOUNT DATA EXPORT: emailaddress - " + data.emailAddress);
+            System.out.println("ACCOUNT DATA EXPORT: kycstatus - " + data.kycStatus.toString());
+            System.out.println("ACCOUNT DATA EXPORT: cardtype - " + data.cardType.toString());
+            System.out.println("ACCOUNT DATA EXPORT: surname - " + data.surname);
+            System.out.println("ACCOUNT DATA EXPORT: givenname - " + data.givenName);
+            System.out.println("ACCOUNT DATA EXPORT: nameoncard - " + (data.nameOnCard == null ? "NULL" : data.nameOnCard));
+            System.out.println("ACCOUNT DATA EXPORT: dateofbirth - " + data.dateOfBirth);
+            System.out.println("ACCOUNT DATA EXPORT: nricnumber - " + data.nricNumber);
+            System.out.println("ACCOUNT DATA EXPORT: addressline1 - " + data.addressLine1);
+            System.out.println("ACCOUNT DATA EXPORT: addressline2 - " + data.addressLine2);
+            System.out.println("ACCOUNT DATA EXPORT: postoalcode - " + data.postoalCode);
+
             JSONObject newJobj = new JSONObject();
-            newJobj.put("userId", data.userId);
+            newJobj.put("userid", data.userId);
             newJobj.put("prefix", data.mprefix);
             newJobj.put("phonenumber", data.mnumber);
             newJobj.put("emailaddress", data.emailAddress);
@@ -175,6 +191,7 @@ public class Utils {
     }
 
     public void updateData(TestAccountData data)throws Exception{
+        System.out.println("TEST DATA MANAGEMENT: UPDATE DATA VALUE");
         try{
             Path srcFilePath = Paths.get(System.getProperty("user.dir"), "data", "ios_existing_data.json");
             File dataFile= new File(srcFilePath.toUri());
@@ -205,10 +222,28 @@ public class Utils {
                 cardJobj = new JSONObject();
             }
 
+            System.out.println("ACCOUNT DATA UPDATE: userid - " + data.userId);
+            System.out.println("ACCOUNT DATA UPDATE: prefix - " + data.mprefix);
+            System.out.println("ACCOUNT DATA UPDATE: phonenumber - " + data.mnumber);
+            System.out.println("ACCOUNT DATA UPDATE: emailaddress - " + data.emailAddress);
+            System.out.println("ACCOUNT DATA UPDATE: kycstatus - " + data.kycStatus.toString());
+            System.out.println("ACCOUNT DATA UPDATE: cardtype - " + data.cardType.toString());
+            System.out.println("ACCOUNT DATA UPDATE: surname - " + data.surname);
+            System.out.println("ACCOUNT DATA UPDATE: givenname - " + data.givenName);
+            System.out.println("ACCOUNT DATA UPDATE: nameoncard - " + (data.nameOnCard == null ? "NULL" : data.nameOnCard));
+            System.out.println("ACCOUNT DATA UPDATE: dateofbirth - " + data.dateOfBirth);
+            System.out.println("ACCOUNT DATA UPDATE: nricnumber - " + data.nricNumber);
+            System.out.println("ACCOUNT DATA UPDATE: addressline1 - " + data.addressLine1);
+            System.out.println("ACCOUNT DATA UPDATE: addressline2 - " + data.addressLine2);
+            System.out.println("ACCOUNT DATA UPDATE: postoalcode - " + data.postoalCode);
+
+
+            jObj.put("userid", data.userId);
             jObj.put("prefix", data.mprefix);
             jObj.put("phonenumber", data.mnumber);
             jObj.put("emailaddress", data.emailAddress);
             jObj.put("kycstatus", data.kycStatus.toString());
+            jObj.put("cardtype", data.cardType.toString());
 
             jObj.put("surename", data.surname);
             jObj.put("givenname", data.givenName);
@@ -220,6 +255,11 @@ public class Utils {
             jObj.put("postalcode", data.postoalCode);
 
             if (data.cardId != null) {
+                System.out.println("CARD DATA UPDATE: youid - " + data.youId);
+                System.out.println("CARD DATA UPDATE: cardid - " + data.cardId);
+                System.out.println("CARD DATA UPDATE: cardstatus - " + data.cardStatus);
+                System.out.println("CARD DATA UPDATE: numofreplace - " + Integer.toString(data.cardStatus.equals(CardStatus.REPLACE) ? replacementCnt + 1 : replacementCnt));
+
                 cardJobj.put("youid", data.youId);
                 cardJobj.put("cardid", data.cardId);
                 cardJobj.put("cardstatus", data.cardStatus.toString());
@@ -238,6 +278,7 @@ public class Utils {
 
 
     public void insertCardInfo(String prefix, String phoneNumber, String youId, String cardId, CardStatus cardStatus) throws Exception{
+        System.out.println("TEST DATA MANAGEMENT: UPDATE DATA VALUE");
         try{
             Path srcFilePath = Paths.get(System.getProperty("user.dir"), "data", "ios_existing_data.json");
             File dataFile= new File(srcFilePath.toUri());
@@ -267,12 +308,17 @@ public class Utils {
             }catch(JSONException joe){
                 cardJobj = new JSONObject();
             }
+            replacementCnt = (cardStatus.equals(CardStatus.REPLACE) ? replacementCnt + 1 : replacementCnt);
 
+            System.out.println("CARD DATA UPDATE: youid - " + youId);
+            System.out.println("CARD DATA UPDATE: cardid - " + cardId);
+            System.out.println("CARD DATA UPDATE: cardstatus - " + cardStatus);
+            System.out.println("CARD DATA UPDATE: numofreplace - " + replacementCnt);
 
             cardJobj.put("youid", youId);
             cardJobj.put("cardid", cardId);
             cardJobj.put("cardstatus", cardStatus.toString());
-            cardJobj.put("numofreplace", cardStatus.equals(CardStatus.REPLACE) ? replacementCnt + 1 : replacementCnt);
+            cardJobj.put("numofreplace", replacementCnt);
 
             jObj.put("card", cardJobj);
 
@@ -302,17 +348,17 @@ public class Utils {
                 jObj = jObjArray.getJSONObject(i);
                 isCorrect = true;
 
-                try{
+                try {
                     cardJobj = (JSONObject) jObj.get("card");
-                }catch(JSONException joe){
+                } catch (JSONException joe) {
                     cardJobj = null;
                 }
 
                 for (HashMap.Entry<String, String> entry : criteriaMap.entrySet()) {
-                    if(entry.getKey().toLowerCase().equals("youid") ||
-                        entry.getKey().toLowerCase().equals("cardid") ||
-                        entry.getKey().toLowerCase().equals("cardstatus")){
-                        if(cardJobj == null){
+                    if (entry.getKey().toLowerCase().equals("youid") ||
+                            entry.getKey().toLowerCase().equals("cardid") ||
+                            entry.getKey().toLowerCase().equals("cardstatus")) {
+                        if (cardJobj == null) {
                             isCorrect = false;
                             break;
                         } else if (!cardJobj.getString(entry.getKey().toLowerCase()).equals(entry.getValue())) {
@@ -332,15 +378,21 @@ public class Utils {
                 throw new NotFoundException("Test Account not Found");
             reader.close();
 
-            TestAccountData result =  new TestAccountData();
+            TestAccountData result = new TestAccountData();
+            result.userId = jObj.getString("userid");
             result.mprefix = jObj.getString("prefix");
             result.mnumber = jObj.getString("phonenumber");
             result.emailAddress = jObj.getString("emailaddress");
             result.kycStatus = TestAccountData.KYCStatus.valueOf(jObj.getString("kycstatus"));
+            result.cardType = TestAccountData.CardType.valueOf(jObj.getString("cardtype"));
 
             result.surname = jObj.getString("surename");
             result.givenName = jObj.getString("givenname");
-            result.nameOnCard = jObj.getString("nameoncard");
+            if (result.cardType.equals(CardType.PC)) {
+                result.nameOnCard = jObj.getString("nameoncard");
+            }else{
+                result.nameOnCard = null;
+            }
             result.dateOfBirth = jObj.getString("dateofbirth");
             result.nricNumber = jObj.getString("nricnumber");
             result.addressLine1 = jObj.getString("addressline1");

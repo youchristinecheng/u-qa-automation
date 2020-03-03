@@ -433,10 +433,11 @@ public class youtrip_ios_poc {
         IOSElement el;
         String actualText;
         String kycRefNo;
-        String newSurname = "FRejectTESTER";
-        String newGivenName = "FRejectAUTO";
-        String newAddressLine1 = "FReject1";
-        String newAddressLine2 = "FReject2";
+        // All text input only available for CAPITAL LETTER from frontend
+        String newSurname = "FREJECTTESTER".toUpperCase();
+        String newGivenName = "FREJECTAUTO".toUpperCase();
+        String newAddressLine1 = "FREJECT1".toUpperCase();
+        String newAddressLine2 = "FREJECT2".toUpperCase();
         Date date = new Date(System.currentTimeMillis());
         Calendar c = Calendar.getInstance();
         c.setTime(date);
@@ -462,8 +463,7 @@ public class youtrip_ios_poc {
 
             // Limited Home Page
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver), "Thank You for Your Application"));
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
-            kycRefNo = el.getText();
+            kycRefNo = ((IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
 
             subProc.api.yp_fullReject(kycRefNo);
             Thread.sleep(15000);
@@ -481,7 +481,7 @@ public class youtrip_ios_poc {
             el.click();
             Thread.sleep(2000);
 
-            subProc.procSubmitSGNPCEmploymentPassKYC(true, false, testAccountData.surname, testAccountData.givenName, testAccountData.nameOnCard,
+            subProc.procSubmitSGNPCEmploymentPassKYC(true, false, testAccountData.youId, testAccountData.surname, testAccountData.givenName,
                     testAccountData.dateOfBirth, testAccountData.nricNumber,
                     testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
                     newSurname, newGivenName, newDateOfBirth, newAddressLine1, newAddressLine2);
@@ -547,7 +547,7 @@ public class youtrip_ios_poc {
             el.click();
             Thread.sleep(2000);
 
-            subProc.procSubmitSGNPCEmploymentPassKYC(false, true, testAccountData.surname, testAccountData.givenName, testAccountData.nameOnCard,
+            subProc.procSubmitSGNPCEmploymentPassKYC(false, true, testAccountData.youId, testAccountData.surname, testAccountData.givenName,
                     testAccountData.dateOfBirth, testAccountData.nricNumber,
                     testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
                     null, null, null, null, null);
@@ -559,6 +559,48 @@ public class youtrip_ios_poc {
 
             subProc.api.util.updateData(testAccountData);
         }catch (Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void regTC22_approved_PNPC_KYC_EmploymentPass() throws InterruptedException {
+
+        IOSElement el;
+        try {
+            if (testAccountData == null) {
+                HashMap<String, String> searchCriteria = new HashMap<>();
+                searchCriteria.put("kycstatus", KYCStatus.SUBMIT.toString());
+                searchCriteria.put("cardtype", CardType.NPC.toString());
+                testAccountData = subProc.api.util.searchFromPoolBy(searchCriteria);
+            }
+
+            subProc.procSelectCountry(Market.Singapore);
+            subProc.procOTPLogin(testAccountData.mprefix, testAccountData.mnumber, testAccountData.emailAddress, false);
+
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+            if(el != null)
+                el.click();
+
+            //get and store the KYC reference number
+            String kycRefNo = (UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
+            System.out.println("TEST DATA: KYC submission reference number is " + kycRefNo);
+
+            //call YP full reject with Ref Number
+            subProc.api.yp_approve(kycRefNo);
+
+            //back to the app - wait for reject to be updated
+            Thread.sleep(10000);
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
+            System.out.println("TEST STEP: KYC approval received");
+            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Your Card is On Its Way");
+            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver).getText(), "My Card Arrived");
+
+            testAccountData.kycStatus = KYCStatus.CLEAR;
+            subProc.api.util.updateData(testAccountData);
+
+        }catch(Exception e){
             e.printStackTrace();
             fail();
         }
