@@ -365,8 +365,8 @@ public class youtrip_ios_poc {
             Date date = new Date(System.currentTimeMillis());
             System.out.println(formatter.format(date));
             String mprefix = "123";
-            //String mnumber = formatter.format(date);
-            String mnumber = "200362103424111"; // Fixed the mobile number for testing purpose to control the account is accessing the same one
+            String mnumber = formatter.format(date);
+            //String mnumber = "200362103424111"; // Fixed the mobile number for testing purpose to control the account is accessing the same one
             String email = ("qa+sg" + mnumber + "@you.co");
 
             Calendar c = Calendar.getInstance();
@@ -380,6 +380,7 @@ public class youtrip_ios_poc {
             testAccountData.mprefix = mprefix;
             testAccountData.emailAddress = email;
             testAccountData.kycStatus = KYCStatus.SUBMIT;
+            //TODO: Need to pickup a new NPC card for each time testrun is started instead of hardcoded
             testAccountData.cardId = "1863782754944798";
             testAccountData.youId = "Y-8101083375";
             testAccountData.cardType = CardType.NPC;
@@ -399,7 +400,7 @@ public class youtrip_ios_poc {
             System.out.println("PRESET TEST DATA: NRIC Number: " + testAccountData.nricNumber + "DateOfBirth:" + testAccountData.dateOfBirth);
 
             subProc.procSelectCountry(Market.Singapore);
-            subProc.procOTPLogin(mprefix, mnumber, email,false);
+            subProc.procOTPLogin(mprefix, mnumber, email,true);
 
             System.out.println("TEST STEP: Welcome Page - on page");
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver), "Welcome"));
