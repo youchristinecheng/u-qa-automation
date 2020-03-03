@@ -169,6 +169,11 @@ public class Utils {
             newJobj.put("postalcode", data.postoalCode);
 
             if(data.cardType.equals(CardType.NPC)) {
+                System.out.println("CARD DATA EXPORT: youid - " + data.youId);
+                System.out.println("CARD DATA EXPORT: cardid - " + data.cardId);
+                System.out.println("CARD DATA EXPORT: cardstatus - " + data.cardStatus);
+                System.out.println("CARD DATA EXPORT: numofreplace - 0");
+
                 JSONObject cardJobj = new JSONObject();
                 cardJobj.put("youid", data.youId);
                 cardJobj.put("cardid", data.cardId);
@@ -221,6 +226,7 @@ public class Utils {
             }catch(JSONException joe){
                 cardJobj = new JSONObject();
             }
+            replacementCnt = data.cardStatus.equals(CardStatus.REPLACE) ? replacementCnt + 1 : replacementCnt;
 
             System.out.println("ACCOUNT DATA UPDATE: userid - " + data.userId);
             System.out.println("ACCOUNT DATA UPDATE: prefix - " + data.mprefix);
@@ -258,12 +264,12 @@ public class Utils {
                 System.out.println("CARD DATA UPDATE: youid - " + data.youId);
                 System.out.println("CARD DATA UPDATE: cardid - " + data.cardId);
                 System.out.println("CARD DATA UPDATE: cardstatus - " + data.cardStatus);
-                System.out.println("CARD DATA UPDATE: numofreplace - " + Integer.toString(data.cardStatus.equals(CardStatus.REPLACE) ? replacementCnt + 1 : replacementCnt));
+                System.out.println("CARD DATA UPDATE: numofreplace - " + replacementCnt);
 
                 cardJobj.put("youid", data.youId);
                 cardJobj.put("cardid", data.cardId);
                 cardJobj.put("cardstatus", data.cardStatus.toString());
-                cardJobj.put("numofreplace", data.cardStatus.equals(CardStatus.REPLACE) ? replacementCnt + 1 : replacementCnt);
+                cardJobj.put("numofreplace", replacementCnt);
                 jObj.put("card", cardJobj);
             }
 
