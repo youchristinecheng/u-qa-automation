@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
@@ -149,14 +150,13 @@ public class youtrip_android_regression {
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.GetStartedPageElementDict, "btnGetStarted", driver);
         el.click();
         System.out.println("TEST STEP: Get Started SG Page - click Get Started Button");
-        String TC03_TS01 = null;
+        utils.takeScreenshot("TC03_TS01", driver);
 
         Thread.sleep(2000);
         //wait till on enter mobile number page
         wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.MobileNumberPageElementDict, "lblTitle", driver)), "Enter Mobile Number"));
         System.out.println("TEST STEP: Mobile Number Page - on page");
-        String TC03_TS02 = null;
-
+        utils.takeScreenshot("TC03_TS02", driver);
 
         //TODO separate test data
         String mprefix = "123";
@@ -168,25 +168,25 @@ public class youtrip_android_regression {
         el.clear();
         el.sendKeys(mprefix);
         System.out.println("TEST STEP: Mobile Number Page - inputted mobile number prefix");
-        String TC03_TS03 = null;
+        utils.takeScreenshot("TC03_TS03", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.MobileNumberPageElementDict, "txtPhoneNumber", driver);
         el.click();
         el.sendKeys(mnumber);
         System.out.println("TEST STEP: Mobile Number Page - inputted mobile number");
-        String TC03_TS04 = null;
+        utils.takeScreenshot("TC03_TS04", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.MobileNumberPageElementDict, "btnNext", driver);
         el.click();
         System.out.println("TEST STEP: Mobile Number Page - clicked Next button");
-        String TC03_TS05 = null;
+        utils.takeScreenshot("TC03_TS05", driver);
 
         Thread.sleep(2000);
 
         //wait till on enter SMS page
         wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.OTPPageElementDict, "lblTitle", driver)), "Enter Code from SMS"));
         System.out.println("TEST STEP: OTP Page - on page");
-        String TC03_TS06 = null;
+        utils.takeScreenshot("TC03_TS06", driver);
 
         //get OTP from backdoor and input otp
         String otpCode = api.getOTP(mprefix, mnumber);
@@ -211,15 +211,14 @@ public class youtrip_android_regression {
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.OTPPageElementDict, "OTPDigit6", driver);
         el.sendKeys(otp6);
         System.out.println("TEST STEP: OTP Page - entered OTP");
-        String TC03_TS07 = null;
+        utils.takeScreenshot("TC03_TS07", driver);
 
         Thread.sleep(2000);
 
         //wait till on enter email page
         wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.EmailPageElementDict, "lblTitle", driver)), "Enter Email Address"));
         System.out.println("TEST STEP: Enter Email Page - on page");
-        String TC03_TS08 = null;
-
+        utils.takeScreenshot("TC03_TS08", driver);
 
         //TODO separate test data
         String email = ("qa+sg"+mnumber+"@you.co");
@@ -231,14 +230,14 @@ public class youtrip_android_regression {
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.EmailPageElementDict, "btnNext", driver);
         el.click();
         System.out.println("TEST STEP: Enter Email Page - click Next button");
-        String TC03_TS09 = null;
+        utils.takeScreenshot("TC03_TS09", driver);
 
         Thread.sleep(2000);
 
         //wait till on welcome page
         wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver)));
         System.out.println("TEST STEP: Welcome Page - on page");
-        String TC03_TS10 = null;
+        utils.takeScreenshot("TC03_TS10", driver);
 
         assertEquals((UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver)).getText(), "Welcome");
     }
@@ -252,40 +251,37 @@ public class youtrip_android_regression {
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "btnPCRegister", driver);
         el.click();
         System.out.println("TEST STEP: Welcome Page - click Get a YouTrip Card for Free button");
-        String TC04_TS01 = null;
-
+        utils.takeScreenshot("TC04_TS01", driver);
         Thread.sleep(2000);
 
         //wait till on identity verification page
         wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.IdentityVerificationElementDict, "lblTitle", driver)), "Identity Verification"));
         System.out.println("TEST STEP: Identity Verification Page - on page");
-        String TC04_TS02 = null;
+        utils.takeScreenshot("TC04_TS02", driver);
 
         //click Singaporean and PR
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.IdentityVerificationElementDict, "btnSG", driver);
         el.click();
         System.out.println("TEST STEP: Identity Verification Page - click Singaporean/PR button");
-        String TC04_TS03 = null;
-
+        utils.takeScreenshot("TC04_TS03", driver);
         Thread.sleep(2000);
 
         //wait till on Singaporean and PR page
         wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.PRRegistrationElementDict, "lblTitle", driver)), "Singaporean / PR"));
         System.out.println("TEST STEP: Singaporean/PR Page - on page");
-        String TC04_TS04 = null;
+        utils.takeScreenshot("TC04_TS04", driver);
 
         //click submit manually
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PRRegistrationElementDict, "btnManualSubmit", driver);
         el.click();
         System.out.println("TEST STEP: Singaporean/PR Page - click submit manually link");
-        String TC04_TS05 = null;
-
+        utils.takeScreenshot("TC04_TS05", driver);
         Thread.sleep(2000);
 
         //wait till on start of KYC page (just a few steps page)
         wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.StepsPageElementDict, "lblTitle", driver)), "Just a Few Steps"));
         System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - on page");
-        String TC04_TS06 = null;
+        utils.takeScreenshot("TC04_TS06", driver);
 
         //click start KYC
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.StepsPageElementDict, "btnStart", driver);
@@ -298,8 +294,7 @@ public class youtrip_android_regression {
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CameraAccessAlertElementDict, "btnAccept", driver);
         el.click();
         System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click allow YouTrip access to camera button");
-        String TC04_TS07 = null;
-
+        utils.takeScreenshot("TC04_TS07", driver);
         Thread.sleep(3000);
 
         //wait till on page and take front NRIC photo
@@ -307,44 +302,39 @@ public class youtrip_android_regression {
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CameraPageElementDict, "btnShutter", driver);
         el.click();
         System.out.println("TEST STEP: KYC step 1 front of NRIC - click take photo button");
-        String TC04_TS08 = null;
-
+        utils.takeScreenshot("TC04_TS08", driver);
         Thread.sleep(3000);
 
         //confirm front NRIC photo
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PhotoConfirmPageElementDict, "btnAllDataIsReadable", driver);
         el.click();
         System.out.println("TEST STEP: KYC step 1 front of NRIC - click all data is readable button");
-        String TC04_TS09 = null;
-
+        utils.takeScreenshot("TC04_TS09", driver);
         Thread.sleep(2000);
 
         //wait till on back of NRIC information pop up appears and confirm it
         wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.TurnBackPopUpPageElementDict, "lblDesc", driver)), "Back of NRIC"));
         System.out.println("TEST STEP: KYC step 2 back of NRIC - on page");
-        String TC04_TS10 = null;
+        utils.takeScreenshot("TC04_TS10", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.TurnBackPopUpPageElementDict, "btnOK", driver);
         el.click();
         System.out.println("TEST STEP: KYC step 2 back of NRIC - click on got it button from ID reminder dialog");
-        String TC04_TS11 = null;
-
+        utils.takeScreenshot("TC04_TS11", driver);
         Thread.sleep(3000);
 
         //wait till on page and take back NRIC photo
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CameraPageElementDict, "btnShutter", driver);
         el.click();
         System.out.println("TEST STEP: KYC step 2 back of NRIC - click take photo button");
-        String TC04_TS12 = null;
-
+        utils.takeScreenshot("TC04_TS12", driver);
         Thread.sleep(3000);
 
         //confirm back NRIC photo
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PhotoConfirmPageElementDict, "btnAllDataIsReadable", driver);
         el.click();
         System.out.println("TEST STEP: KYC step 2 back of NRIC - click all data is readable button");
-        String TC04_TS13 = null;
-
+        utils.takeScreenshot("TC04_TS13", driver);
         Thread.sleep(3000);
 
         //TODO test data to separate
@@ -363,13 +353,12 @@ public class youtrip_android_regression {
         Thread.sleep(2000);
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblCheckAndConfirmTitle", driver), "Check and Confirm"));
         System.out.println("TEST STEP: Full Name (as per NRIC) page - check and confirm dialog appeared");
-        String TC04_TS14 = null;
+        utils.takeScreenshot("TC04_TS14", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnCheckAndConfirmConfirm", driver);
         el.click();
         System.out.println("TEST STEP: Full Name (as per NRIC) page - on check and confirm dialog click Confirm button");
-        String TC04_TS15 = null;
-
+        utils.takeScreenshot("TC04_TS15", driver);
         Thread.sleep(3000);
 
         //TODO test data to separate
@@ -382,7 +371,7 @@ public class youtrip_android_regression {
         el.clear();
         el.sendKeys(newSurname+" "+firstname);
         System.out.println("TEST STEP: Preferred Name page - change name on card");
-        String TC04_TS16 = null;
+        utils.takeScreenshot("TC04_TS16", driver);
 
         //confirm new name
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "btnNext", driver);
@@ -417,7 +406,7 @@ public class youtrip_android_regression {
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "btnMale", driver);
         el.click();
         System.out.println("TEST STEP: Personal Information page - click sex as male");
-        String TC04_TS17 = null;
+        utils.takeScreenshot("TC04_TS17", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "btnNext", driver);
         el.click();
@@ -440,7 +429,7 @@ public class youtrip_android_regression {
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "txtAddressPostalCode", driver);
         el.sendKeys(postalCode);
         System.out.println("TEST STEP: Residential Address page - input postal code");
-        String TC04_TS18 = null;
+        utils.takeScreenshot("TC04_TS18", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "btnNext", driver);
         el.click();
@@ -452,7 +441,7 @@ public class youtrip_android_regression {
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnAgree", driver);
         el.click();
         System.out.println("TEST STEP: Final Step page - click confirm TnC checkbox");
-        String TC04_TS19 = null;
+        utils.takeScreenshot("TC04_TS19", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnSubmit", driver);
         el.click();
@@ -462,7 +451,7 @@ public class youtrip_android_regression {
         //wait for marketing consent dialog and accept
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.KYCKeepUpdatePopUpElementDict, "lblTitle", driver), "Be the First to Know"));
         System.out.println("TEST STEP: Marketing consent popup - on page");
-        String TC04_TS20 = null;
+        utils.takeScreenshot("TC04_TS20", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCKeepUpdatePopUpElementDict, "btnAccept", driver);
         el.click();
@@ -473,8 +462,7 @@ public class youtrip_android_regression {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         assertEquals((UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)).getText(), "Thank You for Your Application");
         System.out.println("TEST STEP: KYC submitted successfully");
-        String TC04_TS21 = null;
-
+        utils.takeScreenshot("TC04_TS21", driver);
     }
 
     @Test
@@ -493,7 +481,7 @@ public class youtrip_android_regression {
         Thread.sleep(10000);
         wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
         System.out.println("TEST STEP: KYC rejection received");
-        String TC05_TS01 = null;
+        utils.takeScreenshot("TC05_TS01", driver);
 
         assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Attention");
     }
@@ -506,15 +494,14 @@ public class youtrip_android_regression {
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnRetry", driver);
         el.click();
         System.out.println("TEST STEP: Attention page - click retry button");
-        String TC06_TS01 = null;
-
+        utils.takeScreenshot("TC06_TS01", driver);
         Thread.sleep(2000);
 
         //repeat steps from identity verification
         //wait till on identity verification page
         wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.IdentityVerificationElementDict, "lblTitle", driver)), "Identity Verification"));
         System.out.println("TEST STEP: Identity Verification Page - on page");
-        String TC06_TS02 = null;
+        utils.takeScreenshot("TC06_TS02", driver);
 
         //click Singaporean and PR
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.IdentityVerificationElementDict, "btnSG", driver);
@@ -525,7 +512,7 @@ public class youtrip_android_regression {
         //wait till on Singaporean and PR page
         wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.PRRegistrationElementDict, "lblTitle", driver)), "Singaporean / PR"));
         System.out.println("TEST STEP: Singaporean/PR Page - on page");
-        String TC06_TS03 = null;
+        utils.takeScreenshot("TC06_TS03", driver);
 
         //click submit manually
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PRRegistrationElementDict, "btnManualSubmit", driver);
@@ -536,7 +523,7 @@ public class youtrip_android_regression {
         //wait till on start of KYC page (just a few steps page)
         wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.StepsPageElementDict, "lblTitle", driver)), "Just a Few Steps"));
         System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - on page");
-        String TC06_TS04 = null;
+        utils.takeScreenshot("TC06_TS04", driver);
 
         //click start KYC
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.StepsPageElementDict, "btnStart", driver);
@@ -557,44 +544,39 @@ public class youtrip_android_regression {
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CameraPageElementDict, "btnShutter", driver);
         el.click();
         System.out.println("TEST STEP: KYC step 1 front of NRIC - click take photo button");
-        String TC06_TS05 = null;
-
+        utils.takeScreenshot("TC06_TS05", driver);
         Thread.sleep(3000);
 
         //confirm front NRIC photo
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PhotoConfirmPageElementDict, "btnAllDataIsReadable", driver);
         el.click();
         System.out.println("TEST STEP: KYC step 1 front of NRIC - click all data is readable button");
-        String TC06_TS06 = null;
-
+        utils.takeScreenshot("TC06_TS06", driver);
         Thread.sleep(2000);
 
         //wait till on back of NRIC information pop up appears and confirm it
         wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(PageKey.TurnBackPopUpPageElementDict, "lblDesc", driver)), "Back of NRIC"));
         System.out.println("TEST STEP: KYC step 2 back of NRIC - on page");
-        String TC06_TS07 = null;
+        utils.takeScreenshot("TC06_TS07", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.TurnBackPopUpPageElementDict, "btnOK", driver);
         el.click();
         System.out.println("TEST STEP: KYC step 2 back of NRIC - click on got it button from ID reminder dialog");
-        String TC06_TS08 = null;
-
+        utils.takeScreenshot("TC06_TS08", driver);
         Thread.sleep(3000);
 
         //wait till on page and take back NRIC photo
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.CameraPageElementDict, "btnShutter", driver);
         el.click();
         System.out.println("TEST STEP: KYC step 2 back of NRIC - click take photo button");
-        String TC06_TS09 = null;
-
+        utils.takeScreenshot("TC06_TS09", driver);
         Thread.sleep(3000);
 
         //confirm back NRIC photo
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PhotoConfirmPageElementDict, "btnAllDataIsReadable", driver);
         el.click();
         System.out.println("TEST STEP: KYC step 2 back of NRIC - click all data is readable button");
-        String TC06_TS10 = null;
-
+        utils.takeScreenshot("TC06_TS10", driver);
         Thread.sleep(3000);
 
         //TODO test data to separate
@@ -606,7 +588,7 @@ public class youtrip_android_regression {
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "txtGivenName", driver);
         el.clear();
         el.sendKeys(firstname);
-        String TC06_TS11 = null;
+        utils.takeScreenshot("TC06_TS11", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnNext", driver);
         el.click();
@@ -614,7 +596,7 @@ public class youtrip_android_regression {
         Thread.sleep(2000);
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblCheckAndConfirmTitle", driver), "Check and Confirm"));
         System.out.println("TEST STEP: Full Name (as per NRIC) page - check and confirm dialog appeared");
-        String TC06_TS12 = null;
+        utils.takeScreenshot("TC06_TS12", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnCheckAndConfirmConfirm", driver);
         el.click();
@@ -624,7 +606,7 @@ public class youtrip_android_regression {
         //wait till on page, clear name on card and enter new name
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "lblTitle", driver), "Preferred Name"));
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        String TC06_TS13 = null;
+        utils.takeScreenshot("TC06_TS13", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "btnNext", driver);
         el.click();
@@ -633,7 +615,7 @@ public class youtrip_android_regression {
 
         //wait till on page and click next on personal information
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "lblTitle", driver), "Personal Information"));
-        String TC06_TS14 = null;
+        utils.takeScreenshot("TC06_TS14", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "btnNext", driver);
         el.click();
@@ -642,7 +624,7 @@ public class youtrip_android_regression {
 
         //wait till on page and enter residential address
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "lblTitle", driver), "Residential Address"));
-        String TC06_TS15 = null;
+        utils.takeScreenshot("TC06_TS15", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "btnNext", driver);
         el.click();
@@ -651,12 +633,12 @@ public class youtrip_android_regression {
 
         //wait till on page, confirm final steps and submit kyc
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "lblTitle", driver), "Final Step"));
-        String TC06_TS16 = null;
+        utils.takeScreenshot("TC06_TS16", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnAgree", driver);
         el.click();
         System.out.println("TEST STEP: Final Step page - click confirm TnC checkbox");
-        String TC06_TS17 = null;
+        utils.takeScreenshot("TC06_TS17", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnSubmit", driver);
         el.click();
@@ -667,8 +649,7 @@ public class youtrip_android_regression {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         assertEquals((UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)).getText(), "Thank You for Your Application");
         System.out.println("TEST STEP: KYC submitted successfully");
-        String TC06_TS18 = null;
-
+        utils.takeScreenshot("TC06_TS18", driver);
     }
 
     @Test
@@ -688,7 +669,7 @@ public class youtrip_android_regression {
         Thread.sleep(10000);
         wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
         System.out.println("TEST STEP: KYC rejection received");
-        String TC07_TS01 = null;
+        utils.takeScreenshot("TC07_TS01", driver);
 
         assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Attention");
     }
@@ -701,8 +682,7 @@ public class youtrip_android_regression {
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnRetry", driver);
         el.click();
         System.out.println("TEST STEP: Attention page - click retry button");
-        String TC08_TS01 = null;
-
+        utils.takeScreenshot("TC08_TS01", driver);
         Thread.sleep(2000);
 
         //repeat steps from full name page
@@ -712,7 +692,7 @@ public class youtrip_android_regression {
 
         //assert changes to given name from YouPortal
         assertEquals(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "txtGivenName", driver).getText(), "AUTO YP EDIT");
-        String TC08_TS02 = null;
+        utils.takeScreenshot("TC08_TS02", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnNext", driver);
         el.click();
@@ -720,7 +700,7 @@ public class youtrip_android_regression {
         Thread.sleep(2000);
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NamePageElementDict, "lblCheckAndConfirmTitle", driver), "Check and Confirm"));
         System.out.println("TEST STEP: Full Name (as per NRIC) page - check and confirm dialog appeared");
-        String TC08_TS03 = null;
+        utils.takeScreenshot("TC08_TS03", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NamePageElementDict, "btnCheckAndConfirmConfirm", driver);
         el.click();
@@ -730,7 +710,7 @@ public class youtrip_android_regression {
         //wait till on page, clear name on card and enter new name
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "lblTitle", driver), "Preferred Name"));
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        String TC08_TS04 = null;
+        utils.takeScreenshot("TC08_TS04", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.NameOnCardElementDict, "btnNext", driver);
         el.click();
@@ -739,7 +719,7 @@ public class youtrip_android_regression {
 
         //wait till on page and click next on personal information
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "lblTitle", driver), "Personal Information"));
-        String TC08_TS05 = null;
+        utils.takeScreenshot("TC08_TS05", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.PersonalInformationElementDict, "btnNext", driver);
         el.click();
@@ -750,7 +730,7 @@ public class youtrip_android_regression {
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "lblTitle", driver), "Residential Address"));
         //assert changes to given name from YouPortal
         assertEquals(UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "txtAddressLine2", driver).getText(), "PARTIAL EDIT TEST");
-        String TC08_TS06 = null;
+        utils.takeScreenshot("TC08_TS06", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.ResidentialAddressElementDict, "btnNext", driver);
         el.click();
@@ -759,12 +739,12 @@ public class youtrip_android_regression {
 
         //wait till on page, confirm final steps and submit kyc
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "lblTitle", driver), "Final Step"));
-        String TC08_TS07 = null;
+        utils.takeScreenshot("TC08_TS07", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnAgree", driver);
         el.click();
         System.out.println("TEST STEP: Final Step page - click confirm TnC checkbox");
-        String TC08_TS08 = null;
+        utils.takeScreenshot("TC08_TS08", driver);
 
         el = (AndroidElement) UIElementKeyDict.getElement(PageKey.KYCFinalStepElementDict, "btnSubmit", driver);
         el.click();
@@ -775,7 +755,7 @@ public class youtrip_android_regression {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         assertEquals((UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)).getText(), "Thank You for Your Application");
         System.out.println("TEST STEP: KYC submitted successfully");
-        String TC08_TS09 = null;
+        utils.takeScreenshot("TC08_TS09", driver);
 
     }
 
@@ -796,7 +776,7 @@ public class youtrip_android_regression {
         Thread.sleep(10000);
         wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
         System.out.println("TEST STEP: KYC rejection received");
-        String TC09_TS01 = null;
+        utils.takeScreenshot("TC09_TS01", driver);
 
         assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Your Card is On Its Way");
 
