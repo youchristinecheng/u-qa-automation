@@ -1,6 +1,7 @@
 package TestBased;
 
 import TestBased.TestAccountData.*;
+import TestBased.TestAccountData.CardType;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import net.bytebuddy.dynamic.loading.ClassInjector;
 import org.json.*;
@@ -135,9 +136,11 @@ public class Utils {
             reader.close();
 
             JSONObject newJobj = new JSONObject();
+            newJobj.put("userId", data.userId);
             newJobj.put("prefix", data.mprefix);
             newJobj.put("phonenumber", data.mnumber);
             newJobj.put("emailaddress", data.emailAddress);
+            newJobj.put("cardtype", data.cardType.toString());
             newJobj.put("kycstatus", data.kycStatus.toString());
 
             newJobj.put("surename", data.surname);
@@ -149,6 +152,15 @@ public class Utils {
             newJobj.put("addressline2", data.addressLine2);
             newJobj.put("postalcode", data.postoalCode);
 
+            if(data.cardType.equals(CardType.NPC)) {
+                JSONObject cardJobj = new JSONObject();
+                cardJobj.put("youid", data.youId);
+                cardJobj.put("cardid", data.cardId);
+                cardJobj.put("cardstatus", data.cardStatus.toString());
+                cardJobj.put("numofreplace", 0);
+
+                newJobj.put("card", cardJobj);
+            }
 
             jObjArray.put(newJobj);
 

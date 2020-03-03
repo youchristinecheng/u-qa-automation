@@ -25,11 +25,13 @@ public class YouTripIosUIElementKey {
         WelcomePageElementDict,
         IdentityVerificationElementDict,
         PRRegistrationElementDict,
+        DocumentTypeRegistrationElementDict,
         CameraAccessAlertElementDict,
         StepsPageElementDict,
         CameraPageElementDict,
         PhotoConfirmPageElementDict,
         TurnBackPopUpPageElementDict,
+        ProofOfAddressPopUpPageElementDict,
         NamePageElementDict,
         NameOnCardElementDict,
         PersonalInformationElementDict,
@@ -53,11 +55,13 @@ public class YouTripIosUIElementKey {
     private HashMap<String, UIElementData> WelcomePageElementDict;
     private HashMap<String, UIElementData> IdentityVerificationElementDict;
     private HashMap<String, UIElementData> PRRegistrationElementDict;
+    private HashMap<String, UIElementData> DocumentTypeRegistrationElementDict;
     private HashMap<String, UIElementData> CameraAccessAlertElementDict;
     private HashMap<String, UIElementData> StepsPageElementDict;
     private HashMap<String, UIElementData> CameraPageElementDict;
     private HashMap<String, UIElementData> PhotoConfirmPageElementDict;
     private HashMap<String, UIElementData> TurnBackPopUpPageElementDict;
+    private HashMap<String, UIElementData> ProofOfAddressPopUpPageElementDict;
     private HashMap<String, UIElementData> NamePageElementDict;
     private HashMap<String, UIElementData> NameOnCardElementDict;
     private HashMap<String, UIElementData> PersonalInformationElementDict;
@@ -84,10 +88,12 @@ public class YouTripIosUIElementKey {
         this.WelcomePageElementDict = new HashMap<>();
         this.IdentityVerificationElementDict = new HashMap<>();
         this.PRRegistrationElementDict = new HashMap<>();
+        this.DocumentTypeRegistrationElementDict = new HashMap<>();
         this.StepsPageElementDict = new HashMap<>();
         this.CameraPageElementDict = new HashMap<>();
         this.PhotoConfirmPageElementDict = new HashMap<>();
         this.TurnBackPopUpPageElementDict = new HashMap<>();
+        this.ProofOfAddressPopUpPageElementDict = new HashMap<>();
         this.NamePageElementDict = new HashMap<>();
         this.NameOnCardElementDict = new HashMap<>();
         this.PersonalInformationElementDict = new HashMap<>();
@@ -158,7 +164,7 @@ public class YouTripIosUIElementKey {
 
         this.IdentityVerificationElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
         this.IdentityVerificationElementDict.put("singaporeanPRRegister", new UIElementData("//XCUIElementTypeStaticText[@name=\"For Singaporean / PR\"]", FindMethod.XPATH));
-        this.IdentityVerificationElementDict.put("foreignerRegister", new UIElementData("//XCUIElementTypeStaticText[@name=\"For Foreginer\"]", FindMethod.XPATH));
+        this.IdentityVerificationElementDict.put("foreignerRegister", new UIElementData("//XCUIElementTypeStaticText[@name=\"For Foreigner\"]", FindMethod.XPATH));
         this.Container.put(PageKey.IdentityVerificationElementDict.ordinal(), this.IdentityVerificationElementDict);
 
         this.PRRegistrationElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));
@@ -166,6 +172,13 @@ public class YouTripIosUIElementKey {
         this.PRRegistrationElementDict.put("btnMyInfo", new UIElementData("btnMyInfo", FindMethod.ACCESSIBILITYID));
         this.PRRegistrationElementDict.put("btnSubmit", new UIElementData("btnSubmit", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.PRRegistrationElementDict.ordinal(), this.PRRegistrationElementDict);
+
+        this.DocumentTypeRegistrationElementDict.put("btnEmploymentPass", new UIElementData("//XCUIElementTypeStaticText[@name=\"Employment Pass\"]", FindMethod.XPATH));
+        this.DocumentTypeRegistrationElementDict.put("btnSPass", new UIElementData("//XCUIElementTypeStaticText[@name=\"S Pass\"]", FindMethod.XPATH));
+        this.DocumentTypeRegistrationElementDict.put("btnWorkPermit", new UIElementData("//XCUIElementTypeStaticText[@name=\"Work Permit\"]", FindMethod.XPATH));
+        this.DocumentTypeRegistrationElementDict.put("btnStudentPass", new UIElementData("//XCUIElementTypeStaticText[@name=\"Student Pass\"]", FindMethod.XPATH));
+        this.DocumentTypeRegistrationElementDict.put("btnOthers", new UIElementData("//XCUIElementTypeStaticText[@name=\"Others\"]", FindMethod.XPATH));
+        this.Container.put(PageKey.DocumentTypeRegistrationElementDict.ordinal(), this.DocumentTypeRegistrationElementDict);
 
         this.StepsPageElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));
         this.StepsPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
@@ -186,6 +199,15 @@ public class YouTripIosUIElementKey {
         this.TurnBackPopUpPageElementDict.put("lblDesc", new UIElementData("lblTurnBackPopUpDesc", FindMethod.ACCESSIBILITYID));
         this.TurnBackPopUpPageElementDict.put("btnOK", new UIElementData("btnOK", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.TurnBackPopUpPageElementDict.ordinal(), this.TurnBackPopUpPageElementDict);
+
+        this.ProofOfAddressPopUpPageElementDict.put("lblTitle", new UIElementData("lblProofofAddressTitle", FindMethod.ACCESSIBILITYID));
+        this.ProofOfAddressPopUpPageElementDict.put("lblDesc", new UIElementData("lblProofofAddressDesc", FindMethod.ACCESSIBILITYID));
+        this.ProofOfAddressPopUpPageElementDict.put("lblDescPt1", new UIElementData("lblProofofAddressDescPt1", FindMethod.ACCESSIBILITYID));
+        this.ProofOfAddressPopUpPageElementDict.put("lblDescPt2", new UIElementData("lblProofofAddressDesc", FindMethod.ACCESSIBILITYID));
+        this.ProofOfAddressPopUpPageElementDict.put("lblDescPt3", new UIElementData("lblProofofAddressDescPt3", FindMethod.ACCESSIBILITYID));
+        this.ProofOfAddressPopUpPageElementDict.put("lblDescPt4", new UIElementData("lblProofofAddressDescPt4", FindMethod.ACCESSIBILITYID));
+        this.ProofOfAddressPopUpPageElementDict.put("btnOK", new UIElementData("btnOK", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.ProofOfAddressPopUpPageElementDict.ordinal(), this.ProofOfAddressPopUpPageElementDict);
 
         this.NamePageElementDict.put("btnClose", new UIElementData("btnClose", FindMethod.ACCESSIBILITYID));
         this.NamePageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));

@@ -5,6 +5,7 @@ import TestBased.YouTripIosUIElementKey.Market;
 public class TestAccountData {
     public enum CardStatus{
         INACTIVE,
+        NEWACTIVE,
         ACTIVE,
         LOCKED,
         SUSPENDED,
@@ -17,15 +18,22 @@ public class TestAccountData {
         CLEAR
     }
 
+    public enum CardType{
+        PC,
+        NPC
+    }
+
 
     public Market market;
     public String mprefix;
     public String mnumber;
+    public String userId;
     public String emailAddress;
     public KYCStatus kycStatus;
 
     public String youId;
     public String cardId;
+    public CardType cardType;
     public CardStatus cardStatus;
 
     public String surname;
@@ -40,9 +48,11 @@ public class TestAccountData {
     public TestAccountData() {
         mprefix = null;
         mnumber = null;
+        userId = null;
         emailAddress = null;
         youId = null;
         cardId = null;
+        cardType = null;
         cardStatus = null;
         market = null;
 

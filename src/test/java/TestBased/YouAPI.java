@@ -146,6 +146,8 @@ public class YouAPI {
         String idNum;
         String dob;
         String nationality;
+        String userId;
+        String cardType;
 
         //call get KYC details
         String url_getKYCDetails  = ("http://yp.internal.sg.sit.you.co/api/kyc/"+kycID);
@@ -160,12 +162,20 @@ public class YouAPI {
         //get full JSON response body
         JSONObject responseJson = getKYCjsonResponse.getBody().getObject();
         //store data
+        userId = responseJson.getString("UserID");
+        System.out.println("get kyc: User ID is " +userId);
+        cardType = responseJson.getString("CardType");
+        System.out.println("get card type: Card Type is " +cardType);
         firstName = responseJson.getString("FirstName");
         System.out.println("get kyc: First Name is " +firstName);
         lastName = responseJson.getString("LastName");
         System.out.println("get kyc: Last Name is " +lastName);
-        nameOnCard = responseJson.getString("NameOnCard");
-        System.out.println("get kyc: Name On Card  is " +nameOnCard);
+        if (cardType.equals(TestAccountData.CardType.PC.toString())){
+            nameOnCard = responseJson.getString("NameOnCard");
+            System.out.println("get kyc: Name On Card  is " + nameOnCard);
+        }else{
+            nameOnCard = null;
+        }
         idNum = responseJson.getString("IDNum");
         System.out.println("get kyc: ID Number is " +idNum);
         dob = responseJson.getString("DateOfBirth");
@@ -196,6 +206,7 @@ public class YouAPI {
         result.put("addLine1", addLine1);
         result.put("addLine2", addLine2);
         result.put("postalCode", postalCode);
+        result.put("userId", userId);
 
         return result;
 
