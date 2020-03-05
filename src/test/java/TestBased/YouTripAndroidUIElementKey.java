@@ -2,12 +2,18 @@ package TestBased;
 import TestBased.UIElementData.*;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.NotFoundException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class YouTripAndroidUIElementKey {
+
+    public enum Market{
+        Singapore,
+        Thailand
+    }
+
     public enum PageKey{
         CountryPageElementDict,
         CountrySelectionElementDict,
@@ -69,8 +75,6 @@ public class YouTripAndroidUIElementKey {
     private HashMap<String, UIElementData> SettingPageElementDict;
     private HashMap<String, UIElementData> ConfirmEmailPageElementDict;
     private HashMap<String, UIElementData> CheckSentEmailPageElementDict;
-
-
 
     private HashMap<Integer, HashMap<String, UIElementData>> Container;
 
@@ -300,13 +304,20 @@ public class YouTripAndroidUIElementKey {
         this.Container.put(PageKey.CheckSentEmailPageElementDict.ordinal(), this.CheckSentEmailPageElementDict);
     }
 
-    public WebElement getElement(PageKey page, String elementKey, AndroidDriver driver){
+    public WebElement getElement(PageKey page, String elementKey, WebDriver driver) throws NotFoundException{
+        return getElement(page, elementKey, driver, false);
+    }
+
+    public WebElement getElement(PageKey page, String elementKey, WebDriver driver, boolean isNullable){
         UIElementData result = null;
         result = (this.Container.get(page.ordinal())).get(elementKey);
         if (result ==  null){
-            throw new NotFoundException("Element Not Declared");
+            if (isNullable)
+                return null;
+            else
+                throw new NotFoundException("Element Not Declared");
         }else{
-            return result.getAndroidElement(driver);
+            return result.getAndroidElement((AndroidDriver)driver, isNullable);
         }
     }
 }

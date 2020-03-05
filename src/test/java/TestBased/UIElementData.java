@@ -47,7 +47,7 @@ public class UIElementData {
         }
     }
 
-    public WebElement getAndroidElement(AndroidDriver driver) throws NotFoundException {
+    public WebElement getAndroidElement(AndroidDriver driver, boolean isNullable) throws NotFoundException {
         try {
             switch (this.findBy) {
                 case ID:
@@ -55,10 +55,18 @@ public class UIElementData {
                 case XPATH:
                     return driver.findElementByXPath(this.keyId);
                 default:
-                    throw new NotFoundException("element not found");
+                    if (isNullable) {
+                        return null;
+                    } else {
+                        throw new NotFoundException("element not found");
+                    }
             }
         }catch(Exception e){
-            throw new NotFoundException("element not found");
+            if (isNullable) {
+                return null;
+            } else {
+                throw new NotFoundException("element not found");
+            }
         }
     }
 }
