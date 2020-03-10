@@ -203,7 +203,7 @@ public class YouTripIosUIElementKey {
         this.ProofOfAddressPopUpPageElementDict.put("lblTitle", new UIElementData("lblProofofAddressTitle", FindMethod.ACCESSIBILITYID));
         this.ProofOfAddressPopUpPageElementDict.put("lblDesc", new UIElementData("lblProofofAddressDesc", FindMethod.ACCESSIBILITYID));
         this.ProofOfAddressPopUpPageElementDict.put("lblDescPt1", new UIElementData("lblProofofAddressDescPt1", FindMethod.ACCESSIBILITYID));
-        this.ProofOfAddressPopUpPageElementDict.put("lblDescPt2", new UIElementData("lblProofofAddressDesc", FindMethod.ACCESSIBILITYID));
+        this.ProofOfAddressPopUpPageElementDict.put("lblDescPt2", new UIElementData("lblProofofAddressDescPt2", FindMethod.ACCESSIBILITYID));
         this.ProofOfAddressPopUpPageElementDict.put("lblDescPt3", new UIElementData("lblProofofAddressDescPt3", FindMethod.ACCESSIBILITYID));
         this.ProofOfAddressPopUpPageElementDict.put("lblDescPt4", new UIElementData("lblProofofAddressDescPt4", FindMethod.ACCESSIBILITYID));
         this.ProofOfAddressPopUpPageElementDict.put("btnOK", new UIElementData("btnOK", FindMethod.ACCESSIBILITYID));

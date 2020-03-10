@@ -119,7 +119,7 @@ public class Utils {
             if(!Files.exists(srcFilePath)){
                 Files.createDirectories(srcFilePath);
             }
-            srcFilePath = Paths.get(System.getProperty("user.dir"), "data","ios_existing_data.json");
+            srcFilePath = Paths.get(System.getProperty("user.dir"), "data", "ios_existing_data.json");
             if(!Files.exists(srcFilePath)){
                 Files.createFile(srcFilePath);
                 isNewCreate = true;
@@ -411,6 +411,8 @@ public class Utils {
                 result.cardId = cardJobj.getString("cardid");
                 result.cardStatus = TestAccountData.CardStatus.valueOf(cardJobj.getString("cardstatus"));
             }
+
+            System.out.println("ACCOUNT DATA: " + jObj.toString());
 
             return result;
         }catch(IOException ioe){

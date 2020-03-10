@@ -85,12 +85,55 @@ public class youtrip_ios_poc {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         subProc =  new YoutripIosSubRoutine(UIElementKeyDict, driver);
         wait = subProc.getDriverWait();
+        try {
+            subProc.procHandleDevAlert();
+        }catch(Exception e){
+            fail(e.getMessage());
+        }
     }
 
     @Test
     public void regTC03_selectTH() {
         try {
             subProc.procSelectCountry(Market.Thailand);
+
+            testAccountData = new TestAccountData();
+            SimpleDateFormat formatter = new SimpleDateFormat("YYMMDDHHmmssSS");
+            Date date = new Date(System.currentTimeMillis());
+            System.out.println(formatter.format(date));
+            String mprefix = "123";
+            String mnumber = formatter.format(date);
+            String email = ("qa+sg" + mnumber + "@you.co");
+
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.YEAR, -20);
+            Date dateOfBirth = c.getTime();
+            SimpleDateFormat dateOfBirthFormatter = new SimpleDateFormat("ddMMYYYY");
+
+            testAccountData.market = Market.Singapore;
+            testAccountData.mnumber = mnumber;
+            testAccountData.mprefix = mprefix;
+            testAccountData.emailAddress = email;
+            testAccountData.kycStatus = KYCStatus.SUBMIT;
+            testAccountData.cardId = null;
+            testAccountData.youId = null;
+            testAccountData.cardType = CardType.PC;
+            testAccountData.cardStatus = null;
+            testAccountData.surname = "TESTER";;
+            testAccountData.givenName = "AUTO";;
+            testAccountData.nameOnCard = testAccountData.surname + " " + testAccountData.givenName;
+            testAccountData.nricNumber = subProc.api.util.getNRIC();
+            testAccountData.dateOfBirth = dateOfBirthFormatter.format(dateOfBirth);
+            testAccountData.addressLine1 = "1";
+            testAccountData.addressLine2 = "2";
+            testAccountData.postoalCode = "000000";
+            testAccountData.userId = "********";
+            subProc.api.util.exportAccountTestData(testAccountData);
+
+            HashMap<String, String> searchCriteria = new HashMap<>();
+            searchCriteria.put("userid", "********");
+            testAccountData = subProc.api.util.searchFromPoolBy(searchCriteria);
         }catch(Exception e){
             e.printStackTrace();
             fail();
@@ -634,21 +677,26 @@ public class youtrip_ios_poc {
         }
     }*/
 
-    @Test
+    /*@Test
     public void test(){
         IOSElement el;
         try {
             YouAPI api = new YouAPI();
-            api.yp_getKYCdetails("1234387610686357504");
+            api.yp_partialReject("1235111361413545984");
         }catch(Exception e){
             e.printStackTrace();
             fail();
         }
-    }
+    }*/
 
     @AfterMethod
     public void TestMethodTeardown(){
         ((IOSDriver)driver).resetApp();
+        try {
+            subProc.procHandleDevAlert();
+        }catch(Exception e){
+            fail(e.getMessage());
+        }
     }
 
     @AfterTest

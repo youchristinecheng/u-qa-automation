@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import TestBased.YouTripIosUIElementKey.Market;
+import org.testng.Assert;
 
 import static org.testng.Assert.assertEquals;
 
@@ -28,8 +29,7 @@ public class YoutripIosSubRoutine {
 
     public WebDriverWait getDriverWait() { return this.wait; }
 
-    public void procSelectCountry(Market country) throws Exception{
-        String expectedResult;
+    public void procHandleDevAlert() throws Exception {
         IOSElement el;
         try {
             // Handle the ios DEV alert By Force Logout
@@ -37,7 +37,17 @@ public class YoutripIosSubRoutine {
             System.out.println("DEV ALERT: dev version alert displayed");
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.DevAlertElementDict, "Continue", driver);
             el.click();
+        }catch(Exception e){
+            throw e;
+        }
+    }
 
+    public void procSelectCountry(Market country) throws Exception{
+        String expectedResult;
+        IOSElement el;
+        try {
+            // Handle the ios DEV alert By Force Logout
+            WebDriverWait wait = new WebDriverWait(driver, 20);
             // Wait for page change
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CountryPageElementDict, "lblTitle", driver), "Where do you live?"));
             //Go to country page
@@ -306,8 +316,12 @@ public class YoutripIosSubRoutine {
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PhotoConfirmPageElementDict, "btnAllDataIsReadable", driver);
             el.click();
             System.out.println("TEST STEP: KYC Process - Start Proof of Address Capture dialog");
-            // TODO: Need to Further modify to check all description text @ bullet point
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt2", driver), "•      Utilities Bill within 6 months"));
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblTitle", driver), "Proof of Address"));
+            Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDesc", driver).getText(), "Please take a photo of one of the followings:");
+            Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt1", driver).getText(), "•      Phone Bill within 6 months");
+            Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt2", driver).getText(), "•      Utilities Bill within 6 months");
+            Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt3", driver).getText(), "•      Bank Statement within 6 months");
+            Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt4", driver).getText(), "•      Other accepted documents");
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "btnOK", driver);
             el.click();
             System.out.println("TEST STEP: KYC Process - Proof of Address Capture");
