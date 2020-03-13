@@ -4,9 +4,13 @@ import TestBased.YouTripIosUIElementKey.Market;
 import TestBased.YouTripIosUIElementKey.PageKey;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.touch.TouchActions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -57,7 +61,7 @@ public class youtrip_ios_poc {
         capabilities.setCapability("bundleId", "co.you.youapp");
         File filePath = new File(System.getProperty("user.dir"));
         File appDir = new File(filePath, "/apps");
-        File app = new File(appDir, "YOUTrip TH_SIT.ipa");
+        File app = new File(appDir, "YOUTrip TH_SIT_pre-3.4.0.1370.ipa");
         capabilities.setCapability("app", app.getAbsolutePath());
         capabilities.setCapability("xcodeOrgId", "2HWNYH89R4");
         capabilities.setCapability("xcodeSigningId", "iPhone Developer");
@@ -409,7 +413,7 @@ public class youtrip_ios_poc {
             System.out.println(formatter.format(date));
             String mprefix = "123";
             String mnumber = formatter.format(date);
-            //String mnumber = "200362103424111"; // Fixed the mobile number for testing purpose to control the account is accessing the same one
+//            String mnumber = "200373143841380"; // Fixed the mobile number for testing purpose to control the account is accessing the same one
             String email = ("qa+sg" + mnumber + "@you.co");
 
             Calendar c = Calendar.getInstance();
@@ -424,8 +428,8 @@ public class youtrip_ios_poc {
             testAccountData.emailAddress = email;
             testAccountData.kycStatus = KYCStatus.SUBMIT;
             //TODO: Need to pickup a new NPC card for each time testrun is started instead of hardcoded
-            testAccountData.cardId = "1863782754944798";
-            testAccountData.youId = "Y-8101083375";
+            testAccountData.cardId = "1863782701713825";
+            testAccountData.youId = "Y-8110693553";
             testAccountData.cardType = CardType.NPC;
             testAccountData.cardStatus = CardStatus.INACTIVE;
             testAccountData.surname = "TESTER";
@@ -459,8 +463,7 @@ public class youtrip_ios_poc {
             Thread.sleep(25000);
             System.out.println("TEST STEP: Verify Back to Limited Home Page");
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver), "Thank You for Your Application"));
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
-            String kycRefNo = el.getText();
+            String kycRefNo = ((IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
             testAccountData.userId = subProc.api.yp_getKYCdetails(kycRefNo).get("userId");
 
             subProc.api.util.exportAccountTestData(testAccountData);
@@ -609,7 +612,7 @@ public class youtrip_ios_poc {
     }
 
     @Test
-    public void regTC22_approved_PNPC_KYC_EmploymentPass() throws InterruptedException {
+    public void regTC22_approved_NPC_KYC_EmploymentPass() throws InterruptedException {
 
         IOSElement el;
         try {
@@ -638,7 +641,7 @@ public class youtrip_ios_poc {
             Thread.sleep(10000);
             wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
             System.out.println("TEST STEP: KYC approval received");
-            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Your Card is On Its Way");
+            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Verification Complete");
             assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver).getText(), "My Card Arrived");
 
             testAccountData.kycStatus = KYCStatus.CLEAR;
@@ -650,32 +653,62 @@ public class youtrip_ios_poc {
         }
     }
 
-    /*@Test
-    public void regTC10_TopUp() throws InterruptedException {
-        IOSElement el;
-        try {
-            subProc.procSelectCountry(Market.Singapore);
-            subProc.procOTPLogin("123", "1110110", "", false);
-
-            ((IOSElement)UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "1", driver)).click();
-            ((IOSElement)UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "1", driver)).click();
-            ((IOSElement)UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "1", driver)).click();
-            ((IOSElement)UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "1", driver)).click();
-
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
-            if(el != null)
-                el.click();
-
-            ((IOSDriver) driver).findElementByAccessibilityId("icon home topup").click();
-
-            //get and store the KYC reference number
-            System.out.println("debug");
-
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }*/
+//    @Test
+//    public void regTC10_TopUp() throws InterruptedException {
+//        IOSElement el;
+//        JavascriptExecutor jsExec = (JavascriptExecutor) driver;
+//        String defaultAPPPinCode = "1111";
+//        try {
+//            subProc.procSelectCountry(Market.Singapore);
+//            subProc.procOTPLogin("123", "1110687", "", false);
+//
+//            Thread.sleep(500);
+//            el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+//            if(el != null)
+//                el.click();
+//
+//            for (char c : defaultAPPPinCode.toCharArray()) {
+//                ((IOSElement)UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, Character.toString(c), driver)).click();
+//		    }
+//
+//            Thread.sleep(500);
+//            el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+//            if(el != null)
+//                el.click();
+//
+//            Thread.sleep(2000);
+//            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnTopUp", driver).click();
+//            UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "txtAmt", driver).sendKeys("20");
+//            el = (IOSElement)UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "sliderTopUp", driver);
+//            Rectangle eleRect = el.getRect();
+//
+//            Map<String, Object> params = new HashMap<>();
+//            params.put("duration", 1.0);
+//            params.put("fromX", eleRect.x);
+//            params.put("fromY", eleRect.x);
+//            params.put("toX", eleRect.x + eleRect.width);
+//            params.put("toY", eleRect.x);
+//            params.put("element", el.getId());
+//            jsExec.executeScript("mobile: dragFromToForDuration", params);
+//
+//            Thread.sleep(10000);
+//            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "lblTopUpSuccess", driver), "Top Up is Successful"));
+//            el = (IOSElement)UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "btnOK", driver);
+//            el.click();
+//
+//            Thread.sleep(2000);
+//            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnTopUp", driver)));
+//            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnExchange", driver)));
+//            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnCard", driver)));
+//
+//            //get and store the KYC reference number
+//            System.out.println("debug");
+//
+//        }catch(Exception e){
+//            e.printStackTrace();
+//            fail();
+//        }
+//    }
 
     /*@Test
     public void test(){

@@ -42,7 +42,9 @@ public class YouTripIosUIElementKey {
         NotificationAlertElementDict,
         LimitedHomePageElementDict,
         EnterYNumberPageElementDict,
-        APPPinCodePageElementDict
+        APPPinCodePageElementDict,
+        HomePageElementDict,
+        TopUpPageElementDict
     }
 
     private HashMap<String, UIElementData> DevAlertElementDict;
@@ -73,6 +75,8 @@ public class YouTripIosUIElementKey {
     private HashMap<String, UIElementData> LimitedHomePageElementDict;
     private HashMap<String, UIElementData> EnterYNumberPageElementDict;
     private HashMap<String, UIElementData> APPPinCodePageElementDict;
+    private HashMap<String, UIElementData> HomePageElementDict;
+    private HashMap<String, UIElementData> TopUpPageElementDict;
     private HashMap<Integer, HashMap<String, UIElementData>> Container;
 
     public YouTripIosUIElementKey(){
@@ -105,6 +109,8 @@ public class YouTripIosUIElementKey {
         this.LimitedHomePageElementDict = new HashMap<>();
         this.EnterYNumberPageElementDict = new HashMap<>();
         this.APPPinCodePageElementDict = new HashMap<>();
+        this.HomePageElementDict = new HashMap<>();
+        this.TopUpPageElementDict = new HashMap<>();
 
         this.Container = new HashMap<>();
 
@@ -201,11 +207,15 @@ public class YouTripIosUIElementKey {
         this.Container.put(PageKey.TurnBackPopUpPageElementDict.ordinal(), this.TurnBackPopUpPageElementDict);
 
         this.ProofOfAddressPopUpPageElementDict.put("lblTitle", new UIElementData("lblProofofAddressTitle", FindMethod.ACCESSIBILITYID));
+        //TODO: Here is the switch between old version and new version. Once new version is launch, old version of code would be able to remove
+//        this.ProofOfAddressPopUpPageElementDict.put("lblDescPt2", new UIElementData("lblProofofAddressDesc", FindMethod.ACCESSIBILITYID));
+        //TODO: New version code below
         this.ProofOfAddressPopUpPageElementDict.put("lblDesc", new UIElementData("lblProofofAddressDesc", FindMethod.ACCESSIBILITYID));
         this.ProofOfAddressPopUpPageElementDict.put("lblDescPt1", new UIElementData("lblProofofAddressDescPt1", FindMethod.ACCESSIBILITYID));
         this.ProofOfAddressPopUpPageElementDict.put("lblDescPt2", new UIElementData("lblProofofAddressDescPt2", FindMethod.ACCESSIBILITYID));
         this.ProofOfAddressPopUpPageElementDict.put("lblDescPt3", new UIElementData("lblProofofAddressDescPt3", FindMethod.ACCESSIBILITYID));
         this.ProofOfAddressPopUpPageElementDict.put("lblDescPt4", new UIElementData("lblProofofAddressDescPt4", FindMethod.ACCESSIBILITYID));
+
         this.ProofOfAddressPopUpPageElementDict.put("btnOK", new UIElementData("btnOK", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.ProofOfAddressPopUpPageElementDict.ordinal(), this.ProofOfAddressPopUpPageElementDict);
 
@@ -293,8 +303,18 @@ public class YouTripIosUIElementKey {
         this.APPPinCodePageElementDict.put("0", new UIElementData("0", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("btnDelete", new UIElementData("icDelete", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("btnForgot", new UIElementData("Forgot?", FindMethod.ACCESSIBILITYID));
-        this.Container.put(PageKey.EnterYNumberPageElementDict.ordinal(), this.EnterYNumberPageElementDict);
+        this.Container.put(PageKey.APPPinCodePageElementDict.ordinal(), this.APPPinCodePageElementDict);
 
+        this.HomePageElementDict.put("btnTopUp", new UIElementData("btnTopUp", FindMethod.ACCESSIBILITYID));
+        this.HomePageElementDict.put("btnExchange", new UIElementData("btnExchange", FindMethod.ACCESSIBILITYID));
+        this.HomePageElementDict.put("btnCard", new UIElementData("btnCard", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.HomePageElementDict.ordinal(), this.HomePageElementDict);
+
+        this.TopUpPageElementDict.put("txtAmt", new UIElementData("txtAmt", FindMethod.ACCESSIBILITYID));
+        this.TopUpPageElementDict.put("sliderTopUp", new UIElementData("sliderTopUp", FindMethod.ACCESSIBILITYID));
+        this.TopUpPageElementDict.put("lblTopUpSuccess", new UIElementData("Top Up is Successful", FindMethod.ACCESSIBILITYID));
+        this.TopUpPageElementDict.put("btnOk", new UIElementData("OK", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.TopUpPageElementDict.ordinal(), this.TopUpPageElementDict);
     }
 
     public WebElement getElement(PageKey page, String elementKey, WebDriver driver) throws NotFoundException{

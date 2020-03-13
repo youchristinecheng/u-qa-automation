@@ -226,7 +226,9 @@ public class Utils {
             }catch(JSONException joe){
                 cardJobj = new JSONObject();
             }
-            replacementCnt = data.cardStatus.equals(CardStatus.REPLACE) ? replacementCnt + 1 : replacementCnt;
+            if(data.cardStatus != null) {
+                replacementCnt = data.cardStatus.equals(CardStatus.REPLACE) ? replacementCnt + 1 : replacementCnt;
+            }
 
             System.out.println("ACCOUNT DATA UPDATE: userid - " + data.userId);
             System.out.println("ACCOUNT DATA UPDATE: prefix - " + data.mprefix);
