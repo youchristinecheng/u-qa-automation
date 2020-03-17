@@ -4,9 +4,7 @@ import TestBased.YouTripIosUIElementKey.Market;
 import TestBased.YouTripIosUIElementKey.PageKey;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Rectangle;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.touch.TouchActions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -32,11 +30,13 @@ public class youtrip_ios_poc {
     YoutripIosSubRoutine subProc;
     WebDriverWait wait;
     TestAccountData testAccountData;
+    String defaultAPPPinCode;
 
     @BeforeTest
     public void setUp() throws MalformedURLException {
         testAccountData = null;
         UIElementKeyDict = new YouTripIosUIElementKey();
+        defaultAPPPinCode = "1111";
         // Created object of DesiredCapabilities class.
         DesiredCapabilities capabilities = new DesiredCapabilities();
         /*
@@ -56,12 +56,13 @@ public class youtrip_ios_poc {
         capabilities.setCapability("deviceName", "YouTech iPhone");
         capabilities.setCapability(CapabilityType.VERSION, "13.1.2");
         capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
+//        capabilities.setCapability("udid", "00008020-00026C2E3A46002E");
         capabilities.setCapability("automationName", "XCUITest");
         capabilities.setCapability("platformName", "iOS");
         capabilities.setCapability("bundleId", "co.you.youapp");
         File filePath = new File(System.getProperty("user.dir"));
         File appDir = new File(filePath, "/apps");
-        File app = new File(appDir, "YOUTrip TH_SIT_pre-3.4.0.1370.ipa");
+        File app = new File(appDir, "YOUTrip TH_SIT.ipa");
         capabilities.setCapability("app", app.getAbsolutePath());
         capabilities.setCapability("xcodeOrgId", "2HWNYH89R4");
         capabilities.setCapability("xcodeSigningId", "iPhone Developer");
@@ -653,69 +654,211 @@ public class youtrip_ios_poc {
         }
     }
 
-//    @Test
-//    public void regTC10_TopUp() throws InterruptedException {
-//        IOSElement el;
-//        JavascriptExecutor jsExec = (JavascriptExecutor) driver;
-//        String defaultAPPPinCode = "1111";
-//        try {
-//            subProc.procSelectCountry(Market.Singapore);
-//            subProc.procOTPLogin("123", "1110687", "", false);
-//
-//            Thread.sleep(500);
-//            el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
-//            if(el != null)
-//                el.click();
-//
-//            for (char c : defaultAPPPinCode.toCharArray()) {
-//                ((IOSElement)UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, Character.toString(c), driver)).click();
-//		    }
-//
-//            Thread.sleep(500);
-//            el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
-//            if(el != null)
-//                el.click();
-//
-//            Thread.sleep(2000);
-//            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnTopUp", driver).click();
-//            UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "txtAmt", driver).sendKeys("20");
-//            el = (IOSElement)UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "sliderTopUp", driver);
-//            Rectangle eleRect = el.getRect();
-//
-//            Map<String, Object> params = new HashMap<>();
-//            params.put("duration", 1.0);
-//            params.put("fromX", eleRect.x);
-//            params.put("fromY", eleRect.x);
-//            params.put("toX", eleRect.x + eleRect.width);
-//            params.put("toY", eleRect.x);
-//            params.put("element", el.getId());
-//            jsExec.executeScript("mobile: dragFromToForDuration", params);
-//
-//            Thread.sleep(10000);
-//            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "lblTopUpSuccess", driver), "Top Up is Successful"));
-//            el = (IOSElement)UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "btnOK", driver);
-//            el.click();
-//
-//            Thread.sleep(2000);
-//            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnTopUp", driver)));
-//            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnExchange", driver)));
-//            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnCard", driver)));
-//
-//            //get and store the KYC reference number
-//            System.out.println("debug");
-//
-//        }catch(Exception e){
-//            e.printStackTrace();
-//            fail();
-//        }
-//    }
+    @Test
+    public void regTC07_Logout() throws InterruptedException {
+        IOSElement el;
+        try {
+            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
+            System.out.println("TEST STEP: Logout");
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnMenu", driver).click();
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "menuBtnSetting", driver).click();
+            Thread.sleep(1000);
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.SettingPageElementDict, "btnLogout", driver)));
+            UIElementKeyDict.getElement(PageKey.SettingPageElementDict, "btnLogout", driver).click();
+            Thread.sleep(3000);
+            System.out.println("TEST STEP: Back to Country Selection page");
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CountryPageElementDict, "lblTitle", driver), "Where do you live?"));
+            Assert.assertTrue(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CountryPageElementDict, "optionCountry", driver).isDisplayed());
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void regTC33_ChangePINFromSetting() throws InterruptedException {
+        IOSElement el;
+        String newAPPPinCode = "2222";
+        try {
+            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
+
+            subProc.procChangeAppPinFromHomePage(defaultAPPPinCode, newAPPPinCode);
+
+            System.out.println("TEST STEP: Logout");
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnMenu", driver).click();
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "menuBtnSetting", driver).click();
+            Thread.sleep(1000);
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.SettingPageElementDict, "btnLogout", driver)));
+            UIElementKeyDict.getElement(PageKey.SettingPageElementDict, "btnLogout", driver).click();
+            Thread.sleep(3000);
+            System.out.println("TEST STEP: Re-Login with new App Pin Code");
+            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", newAPPPinCode);
+            subProc.procChangeAppPinFromHomePage(newAPPPinCode, defaultAPPPinCode);
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void regTC10_TopUp() throws InterruptedException {
+        IOSElement el;
+        List<WebElement> balanceList;
+        List<WebElement> activityList;
+        double actualBalance = 0.0;
+        double expectedBalance = 0.0;
+        double topUpAmt = 20.00;
+
+        JavascriptExecutor jsExec = (JavascriptExecutor) driver;
+        try {
+            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
+
+            System.out.println("TEST STEP: Home Page - Get Current SGD Balance");
+            balanceList = UIElementKeyDict.getHorizontalBalancelockList(driver);
+            for(int i = 1; i < balanceList.size(); i++){
+                if(balanceList.get(i).getText().equals("SGD")){
+                    actualBalance = Double.parseDouble(balanceList.get(i + 1).getText());
+                    expectedBalance = actualBalance + topUpAmt;
+                    System.out.println("TEST DATA: Home Page - Current SGD Balance: " + String.valueOf(actualBalance));
+                    System.out.println("TEST DATA: Home Page - Expect SGD Balance After Top-up: " + String.valueOf(expectedBalance));
+                    break;
+                }
+            }
+
+            System.out.println("TEST STEP: TopUp Page - on page");
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnTopUp", driver).click();
+            UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "txtAmt", driver).sendKeys(String.valueOf(topUpAmt));
+            el = (IOSElement)UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "sliderTopUp", driver);
+            el.click();
+            Rectangle eleRect = el.getRect();
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("duration", 1.0);
+            params.put("fromX", eleRect.x);
+            params.put("fromY", eleRect.x);
+            params.put("toX", eleRect.x + eleRect.width);
+            params.put("toY", eleRect.x);
+            params.put("element", el.getId());
+            jsExec.executeScript("mobile: dragFromToForDuration", params);
+            Thread.sleep(20000);
+
+            System.out.println("TEST STEP: TopUp PopUp - TopUp Success");
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "lblTopUpSuccessPopUpDesc", driver), "Top Up is Successful"));
+            el = (IOSElement)UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "btnTopUpSuccessPopUpOk", driver);
+            el.click();
+
+            Thread.sleep(2000);
+            subProc.procVerifyInHomePage(Market.Singapore);
+
+            balanceList = UIElementKeyDict.getHorizontalBalancelockList(driver);
+            // Verify SGD is move to the left most after Top Up
+            Assert.assertEquals(balanceList.get(1).getText(), "SGD");
+            actualBalance = Double.parseDouble(balanceList.get(2).getText());
+            // Verify SGD balance is updated by adding 20
+            Assert.assertEquals(expectedBalance, actualBalance);
+
+            activityList = UIElementKeyDict.getRecentActivityBlockList(driver);
+            Assert.assertEquals(activityList.get(0).getText(), "+ " + String.format("%.2f", topUpAmt) + " SGD");
+            Assert.assertEquals(activityList.get(2).getText(), "Top Up");
+            Assert.assertEquals(activityList.get(1).getText(), "1 min");
+
+            //get and store the KYC reference number
+            System.out.println("debug");
+
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void regTC41_LockCard() throws InterruptedException {
+        try {
+            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnCard", driver).click();
+            Thread.sleep(2000);
+
+            System.out.println("TEST STEP: Card Lock Page - on page");
+            Assert.assertTrue(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "toggleLockCard", driver).isDisplayed());
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "lblOrderCardTitle", driver).getText(), "Replacement Card");
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "lblOrderCardDesc", driver).getText(), "Card lost or stolen?\nGet a replacement card for S$10.00.");
+            Assert.assertTrue(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "btnOrderCard", driver).isDisplayed());
+
+            System.out.println("TEST STEP: Card Lock Page - LockCard");
+            UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "toggleLockCard", driver).click();
+            Thread.sleep(3000);
+            UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "btnClose", driver).click();
+
+            subProc.procVerifyInHomePage(Market.Singapore);
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.HomePageElementDict, "lblCardStatus", driver).getText(), "Your Card is Locked");
+
+            //TODO: Checking FIS card status  eqaul to card blocked by user via API Calls
+
+            System.out.println("TEST STEP: Home Page - Check Main Buttons Disabled");
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnTopUp", driver).click();
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.HomePageElementDict, "txtCardLockedPopUpTitle", driver).getText(), "Your Card is Locked");
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.HomePageElementDict, "txtCardLockedPopUpDesc", driver).getText(), "Tap \"Card\" button to unlock your card first.");
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnCardLockedPopUpOK", driver).click();
+
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnExchange", driver).click();
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.HomePageElementDict, "txtCardLockedPopUpTitle", driver).getText(), "Your Card is Locked");
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.HomePageElementDict, "txtCardLockedPopUpDesc", driver).getText(), "Tap \"Card\" button to unlock your card first.");
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnCardLockedPopUpOK", driver).click();
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void regTC43_checkOrderReplacementCardPage() throws InterruptedException {
+        IOSElement el;
+        try {
+            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnCard", driver).click();
+            Thread.sleep(1000);
+
+            System.out.println("TEST STEP: Card Lock Page - on page");
+            Assert.assertTrue(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "toggleLockCard", driver).isDisplayed());
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "lblOrderCardTitle", driver).getText(), "Replacement Card");
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "lblOrderCardDesc", driver).getText(), "Card lost or stolen?\nGet a replacement card for S$10.00.");
+            Assert.assertTrue(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "btnOrderCard", driver).isDisplayed());
+            UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "btnOrderCard", driver).click();
+            Thread.sleep(1000);
+
+            System.out.println("TEST STEP: Order Replacement CardP age - on page");
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.OrderReplacementCardPageElementDict, "lblTitle", driver).getText(), "Order Replacement Card");
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.OrderReplacementCardPageElementDict, "lblCurrencySign", driver).getText(), "S$");
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.OrderReplacementCardPageElementDict, "lblFeeAmt", driver).getText(), "10.00");
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.OrderReplacementCardPageElementDict, "txtAddress", driver).getText(), "Q\nA\n000000");
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.OrderReplacementCardPageElementDict, "lblImportantNote", driver).getText(), "Important: Your original YouTrip card will be suspended once you place the order.");
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.OrderReplacementCardPageElementDict, "btnChangeCreditCard", driver)));
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.OrderReplacementCardPageElementDict, "sliderOrderReplacementCard", driver)));
+
+            System.out.println("TEST STEP: Order Replacement CardP age - exit");
+            UIElementKeyDict.getElement(PageKey.OrderReplacementCardPageElementDict, "btnClose", driver).click();
+
+            System.out.println("TEST STEP: Card Lock Page - on page and exit");
+            Assert.assertTrue(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "toggleLockCard", driver).isDisplayed());
+            UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "btnClose", driver).click();
+
+            subProc.procVerifyInHomePage(Market.Singapore);
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
 
     /*@Test
     public void test(){
-        IOSElement el;
+
         try {
-            YouAPI api = new YouAPI();
-            api.yp_partialReject("1235111361413545984");
+            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
+
+            List<WebElement> balanceList = driver.findElements(By.xpath("//XCUIElementTypeCell[@name=\"balanceHorizonList\"]/XCUIElementTypeStaticText"));
+            List<WebElement> transactionList = driver.findElements(By.xpath("//XCUIElementTypeCell[@name=\"recentActivityList\"]/XCUIElementTypeStaticText"));
+
+            System.out.println("debug");
         }catch(Exception e){
             e.printStackTrace();
             fail();

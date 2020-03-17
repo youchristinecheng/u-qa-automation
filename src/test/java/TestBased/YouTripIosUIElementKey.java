@@ -1,11 +1,14 @@
 package TestBased;
 
 import io.appium.java_client.ios.IOSDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.util.HashMap;
+import java.util.List;
+
 import TestBased.UIElementData.*;
 
 public class YouTripIosUIElementKey {
@@ -44,7 +47,10 @@ public class YouTripIosUIElementKey {
         EnterYNumberPageElementDict,
         APPPinCodePageElementDict,
         HomePageElementDict,
-        TopUpPageElementDict
+        SettingPageElementDict,
+        TopUpPageElementDict,
+        LockCardPageElementDict,
+        OrderReplacementCardPageElementDict,
     }
 
     private HashMap<String, UIElementData> DevAlertElementDict;
@@ -76,7 +82,10 @@ public class YouTripIosUIElementKey {
     private HashMap<String, UIElementData> EnterYNumberPageElementDict;
     private HashMap<String, UIElementData> APPPinCodePageElementDict;
     private HashMap<String, UIElementData> HomePageElementDict;
+    private HashMap<String, UIElementData> SettingPageElementDict;
     private HashMap<String, UIElementData> TopUpPageElementDict;
+    private HashMap<String, UIElementData> LockCardPageElementDict;
+    private HashMap<String, UIElementData> OrderReplacementCardPageElementDict;
     private HashMap<Integer, HashMap<String, UIElementData>> Container;
 
     public YouTripIosUIElementKey(){
@@ -111,6 +120,9 @@ public class YouTripIosUIElementKey {
         this.APPPinCodePageElementDict = new HashMap<>();
         this.HomePageElementDict = new HashMap<>();
         this.TopUpPageElementDict = new HashMap<>();
+        this.SettingPageElementDict = new HashMap<>();
+        this.LockCardPageElementDict = new HashMap<>();
+        this.OrderReplacementCardPageElementDict = new HashMap<>();
 
         this.Container = new HashMap<>();
 
@@ -291,6 +303,9 @@ public class YouTripIosUIElementKey {
         this.EnterYNumberPageElementDict.put("txtYouIdDigit10", new UIElementData("txtYouIdDigit10", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.EnterYNumberPageElementDict.ordinal(), this.EnterYNumberPageElementDict);
 
+        this.APPPinCodePageElementDict.put("lblChangePinTitle", new UIElementData("Enter Current PIN", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("lblChangePinNewPinTitle", new UIElementData("Create New PIN", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("lblChangePinConfirmPinTitle", new UIElementData("Confirm New PIN", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("1", new UIElementData("1", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("2", new UIElementData("2", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("3", new UIElementData("3", FindMethod.ACCESSIBILITYID));
@@ -301,20 +316,55 @@ public class YouTripIosUIElementKey {
         this.APPPinCodePageElementDict.put("8", new UIElementData("8", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("9", new UIElementData("9", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("0", new UIElementData("0", FindMethod.ACCESSIBILITYID));
-        this.APPPinCodePageElementDict.put("btnDelete", new UIElementData("icDelete", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("btnBackSpace", new UIElementData("icDelete", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("btnForgot", new UIElementData("Forgot?", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.APPPinCodePageElementDict.ordinal(), this.APPPinCodePageElementDict);
 
+        this.HomePageElementDict.put("btnMenu", new UIElementData("btnMenu", FindMethod.ACCESSIBILITYID));
         this.HomePageElementDict.put("btnTopUp", new UIElementData("btnTopUp", FindMethod.ACCESSIBILITYID));
         this.HomePageElementDict.put("btnExchange", new UIElementData("btnExchange", FindMethod.ACCESSIBILITYID));
         this.HomePageElementDict.put("btnCard", new UIElementData("btnCard", FindMethod.ACCESSIBILITYID));
+        this.HomePageElementDict.put("lblCardStatus", new UIElementData("lblCardStatus", FindMethod.ACCESSIBILITYID));
+        this.HomePageElementDict.put("btnReferral", new UIElementData("btnReferral", FindMethod.ACCESSIBILITYID));
+        this.HomePageElementDict.put("menuBtnSupport", new UIElementData("btnSupport", FindMethod.ACCESSIBILITYID));
+        this.HomePageElementDict.put("menuBtnOverseasWithdrawal", new UIElementData("btnOverseasWithdrawal", FindMethod.ACCESSIBILITYID));
+        this.HomePageElementDict.put("menuBtnTransferOut", new UIElementData("btnTransferOut", FindMethod.ACCESSIBILITYID));
+        this.HomePageElementDict.put("menuBtnSetting", new UIElementData("btnSetting", FindMethod.ACCESSIBILITYID));
+        this.HomePageElementDict.put("txtCardLockedPopUpTitle", new UIElementData("Your Card is Locked", FindMethod.ACCESSIBILITYID));
+        this.HomePageElementDict.put("txtCardLockedPopUpDesc", new UIElementData("Tap \"Card\" button to unlock your card first.", FindMethod.ACCESSIBILITYID));
+        this.HomePageElementDict.put("btnCardLockedPopUpOK", new UIElementData("OK", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.HomePageElementDict.ordinal(), this.HomePageElementDict);
+
+        this.SettingPageElementDict.put("btnClose", new UIElementData("icClose", FindMethod.ACCESSIBILITYID));
+        this.SettingPageElementDict.put("btnExplorerMode", new UIElementData("Explorer Mode", FindMethod.ACCESSIBILITYID));
+        this.SettingPageElementDict.put("btnChangePIN", new UIElementData("Change PIN", FindMethod.ACCESSIBILITYID));
+        this.SettingPageElementDict.put("btnLogout", new UIElementData("btnLogout", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.SettingPageElementDict.ordinal(), this.SettingPageElementDict);
 
         this.TopUpPageElementDict.put("txtAmt", new UIElementData("txtAmt", FindMethod.ACCESSIBILITYID));
         this.TopUpPageElementDict.put("sliderTopUp", new UIElementData("sliderTopUp", FindMethod.ACCESSIBILITYID));
-        this.TopUpPageElementDict.put("lblTopUpSuccess", new UIElementData("Top Up is Successful", FindMethod.ACCESSIBILITYID));
-        this.TopUpPageElementDict.put("btnOk", new UIElementData("OK", FindMethod.ACCESSIBILITYID));
+        this.TopUpPageElementDict.put("lblTopUpSuccessPopUpDesc", new UIElementData("Top Up is Successful", FindMethod.ACCESSIBILITYID));
+        this.TopUpPageElementDict.put("btnTopUpSuccessPopUpOk", new UIElementData("OK", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.TopUpPageElementDict.ordinal(), this.TopUpPageElementDict);
+
+        this.LockCardPageElementDict.put("btnClose", new UIElementData("icClose", FindMethod.ACCESSIBILITYID));
+        this.LockCardPageElementDict.put("toggleLockCard", new UIElementData("toggleLockCard", FindMethod.ACCESSIBILITYID));
+        this.LockCardPageElementDict.put("lblOrderCardTitle", new UIElementData("lblOrderCardTitle", FindMethod.ACCESSIBILITYID));
+        this.LockCardPageElementDict.put("lblOrderCardDesc", new UIElementData("lblOrderCardDesc", FindMethod.ACCESSIBILITYID));
+        this.LockCardPageElementDict.put("btnOrderCard", new UIElementData("btnOrderCard", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.LockCardPageElementDict.ordinal(), this.LockCardPageElementDict);
+
+        this.OrderReplacementCardPageElementDict.put("btnClose", new UIElementData("btnClose", FindMethod.ACCESSIBILITYID));
+        this.OrderReplacementCardPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.OrderReplacementCardPageElementDict.put("lblCurrencySign", new UIElementData("lblCurrencySign", FindMethod.ACCESSIBILITYID));
+        this.OrderReplacementCardPageElementDict.put("lblFeeAmt", new UIElementData("lblFeeAmt", FindMethod.ACCESSIBILITYID));
+        this.OrderReplacementCardPageElementDict.put("txtAddress", new UIElementData("txtAddress", FindMethod.ACCESSIBILITYID));
+        this.OrderReplacementCardPageElementDict.put("lblCreditCardNumber", new UIElementData("lblCreditCardNumber", FindMethod.ACCESSIBILITYID));
+        this.OrderReplacementCardPageElementDict.put("lblImportantNote", new UIElementData("lblImportantNote", FindMethod.ACCESSIBILITYID));
+        this.OrderReplacementCardPageElementDict.put("btnChangeCreditCard", new UIElementData("btnChangeCreditCard", FindMethod.ACCESSIBILITYID));
+        this.OrderReplacementCardPageElementDict.put("sliderOrderReplacementCard", new UIElementData("sliderOrderReplacementCard", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.OrderReplacementCardPageElementDict.ordinal(), this.OrderReplacementCardPageElementDict);
+
     }
 
     public WebElement getElement(PageKey page, String elementKey, WebDriver driver) throws NotFoundException{
@@ -332,5 +382,18 @@ public class YouTripIosUIElementKey {
         }else{
             return result.getIOSElement((IOSDriver)driver, isNullable);
         }
+    }
+
+    public List<WebElement> getHorizontalBalancelockList(WebDriver driver){
+        // The Ordering of balance is under currency, amount in pair by zero-based indexing as object order 1 by 1.
+        // The first (0-index) block must be "+OtherCurrency" cell block
+        return driver.findElements(By.xpath("//XCUIElementTypeCell[@name=\"horizontalBalanceList\"]/XCUIElementTypeStaticText"));
+
+    }
+
+    public List<WebElement> getRecentActivityBlockList(WebDriver driver){
+        // The Ordering of activity is under Amount, Time, Description in collection by zero-based indexing as object 1 by 1.
+        // The first (0-index) block must be the latest
+        return driver.findElements(By.xpath("//XCUIElementTypeCell[@name=\"recentActivityList\"]/XCUIElementTypeStaticText"));
     }
 }

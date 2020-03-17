@@ -4,6 +4,7 @@ import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
 import kong.unirest.Unirest;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.text.SimpleDateFormat;
@@ -432,5 +433,69 @@ public class YoutripIosSubRoutine {
         el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCKeepUpdatePopUpElementDict, "btnAccept", driver, true);
         if (el != null)
             el.click();
+    }
+
+    public void procLoginToHomePage(YouTripIosUIElementKey.Market market, String mprefix, String phoneNumber, String appPinCode) throws Exception {
+        IOSElement el;
+        this.procSelectCountry(market);
+        this.procOTPLogin(mprefix, phoneNumber, "", false);
+
+        Thread.sleep(500);
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+        if(el != null)
+            el.click();
+        this.procEnterAPPPinCode(appPinCode);
+
+        Thread.sleep(2000);
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+        if(el != null) {
+            el.click();
+            Thread.sleep(2000);
+        }
+
+        this.procVerifyInHomePage(market);
+    }
+
+    public void procEnterAPPPinCode(String appPinCode) throws Exception {
+        System.out.println("TEST STEP: App PIN Code Page - Enter App PIN Code: " + appPinCode);
+        for (char c : appPinCode.toCharArray()) {
+            (UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, Character.toString(c), driver)).click();
+        }
+    }
+
+    public void procVerifyInHomePage(YouTripIosUIElementKey.Market market) throws Exception {
+        System.out.println("TEST STEP: Home Page - Verify Home Page is Entered");
+        wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnMenu", driver)));
+        Assert.assertTrue(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnTopUp", driver).isDisplayed());
+        Assert.assertTrue(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnExchange", driver).isDisplayed());
+        Assert.assertTrue(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnCard", driver).isDisplayed());
+        WebElement ele = UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnReferral", driver, true);
+        if(market.equals(Market.Singapore)){
+            Assert.assertNull(ele);
+        }else{
+            Assert.assertTrue(ele.isDisplayed());
+        }
+    }
+
+    public void procChangeAppPinFromHomePage(String oldAPPPinCode, String newAPPPINCode)throws Exception{
+        UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnMenu", driver).click();
+        UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "menuBtnSetting", driver).click();
+        Thread.sleep(1000);
+        wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.SettingPageElementDict, "btnLogout", driver)));
+        UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.SettingPageElementDict, "btnChangePIN", driver).click();
+        Thread.sleep(3000);
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "lblChangePinTitle", driver), "Enter Current PIN"));
+        this.procEnterAPPPinCode(oldAPPPinCode);
+        Thread.sleep(1000);
+
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "lblChangePinNewPinTitle", driver), "Create New PIN"));
+        this.procEnterAPPPinCode(newAPPPINCode);
+        Thread.sleep(1000);
+
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "lblChangePinConfirmPinTitle", driver), "Confirm New PIN"));
+        this.procEnterAPPPinCode(newAPPPINCode);
+        Thread.sleep(5000);
+
+        this.procVerifyInHomePage(Market.Singapore);
     }
 }
