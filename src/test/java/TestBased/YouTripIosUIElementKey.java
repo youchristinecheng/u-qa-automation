@@ -49,6 +49,7 @@ public class YouTripIosUIElementKey {
         HomePageElementDict,
         SettingPageElementDict,
         TopUpPageElementDict,
+        TopUpChangeCardPageElementDict,
         LockCardPageElementDict,
         OrderReplacementCardPageElementDict,
     }
@@ -84,6 +85,7 @@ public class YouTripIosUIElementKey {
     private HashMap<String, UIElementData> HomePageElementDict;
     private HashMap<String, UIElementData> SettingPageElementDict;
     private HashMap<String, UIElementData> TopUpPageElementDict;
+    private HashMap<String, UIElementData> TopUpChangeCardPageElementDict;
     private HashMap<String, UIElementData> LockCardPageElementDict;
     private HashMap<String, UIElementData> OrderReplacementCardPageElementDict;
     private HashMap<Integer, HashMap<String, UIElementData>> Container;
@@ -120,6 +122,7 @@ public class YouTripIosUIElementKey {
         this.APPPinCodePageElementDict = new HashMap<>();
         this.HomePageElementDict = new HashMap<>();
         this.TopUpPageElementDict = new HashMap<>();
+        this.TopUpChangeCardPageElementDict = new HashMap<>();
         this.SettingPageElementDict = new HashMap<>();
         this.LockCardPageElementDict = new HashMap<>();
         this.OrderReplacementCardPageElementDict = new HashMap<>();
@@ -275,8 +278,8 @@ public class YouTripIosUIElementKey {
         this.KYCFinalStepElementDict.put("btnSubmit", new UIElementData("btnSubmit", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.KYCFinalStepElementDict.ordinal(), this.KYCFinalStepElementDict);
 
-        this.KYCKeepUpdatePopUpElementDict.put("btnAccept", new UIElementData("//XCUIElementTypeStaticText[@name=\"Keep Me Updated\"]", FindMethod.XPATH));
-        this.KYCKeepUpdatePopUpElementDict.put("btnReject", new UIElementData("//XCUIElementTypeStaticText[@name=\"Do not send me updates\"]", FindMethod.XPATH));
+        this.KYCKeepUpdatePopUpElementDict.put("btnAccept", new UIElementData("Keep Me Updated", FindMethod.ACCESSIBILITYID));
+        this.KYCKeepUpdatePopUpElementDict.put("btnReject", new UIElementData("Do not send me updates", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.KYCKeepUpdatePopUpElementDict.ordinal(), this.KYCKeepUpdatePopUpElementDict);
 
         this.NotificationAlertElementDict.put("lblTitle", new UIElementData("//XCUIElementTypeStaticText[@name=\"“YouTrip” Would Like to Send You Notifications\"]", FindMethod.XPATH));
@@ -341,11 +344,25 @@ public class YouTripIosUIElementKey {
         this.SettingPageElementDict.put("btnLogout", new UIElementData("btnLogout", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.SettingPageElementDict.ordinal(), this.SettingPageElementDict);
 
+        this.TopUpPageElementDict.put("btnClose", new UIElementData("icClose", FindMethod.ACCESSIBILITYID));
+        this.TopUpPageElementDict.put("lblTitle", new UIElementData("lblAmtTitle", FindMethod.ACCESSIBILITYID));
         this.TopUpPageElementDict.put("txtAmt", new UIElementData("txtAmt", FindMethod.ACCESSIBILITYID));
+        this.TopUpPageElementDict.put("txtAmtDesc", new UIElementData("txtAmtDesc", FindMethod.ACCESSIBILITYID));
+        this.TopUpPageElementDict.put("btnInfo", new UIElementData("btnInfo", FindMethod.ACCESSIBILITYID));
+        this.TopUpPageElementDict.put("lblCard", new UIElementData("lblCard", FindMethod.ACCESSIBILITYID));
+        this.TopUpPageElementDict.put("btnChangeCard", new UIElementData("btnChangeCard", FindMethod.ACCESSIBILITYID));
         this.TopUpPageElementDict.put("sliderTopUp", new UIElementData("sliderTopUp", FindMethod.ACCESSIBILITYID));
         this.TopUpPageElementDict.put("lblTopUpSuccessPopUpDesc", new UIElementData("Top Up is Successful", FindMethod.ACCESSIBILITYID));
         this.TopUpPageElementDict.put("btnTopUpSuccessPopUpOk", new UIElementData("OK", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.TopUpPageElementDict.ordinal(), this.TopUpPageElementDict);
+
+        this.TopUpChangeCardPageElementDict.put("btnClose", new UIElementData("icClose", FindMethod.ACCESSIBILITYID));
+        this.TopUpChangeCardPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.TopUpChangeCardPageElementDict.put("txtCardNumber", new UIElementData("txtCardNumber", FindMethod.ACCESSIBILITYID));
+        this.TopUpChangeCardPageElementDict.put("txtExpiryDate", new UIElementData("txtExpiryDate", FindMethod.ACCESSIBILITYID));
+        this.TopUpChangeCardPageElementDict.put("txtCVV", new UIElementData("txtCVV", FindMethod.ACCESSIBILITYID));
+        this.TopUpChangeCardPageElementDict.put("btnNext", new UIElementData("btnNext", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.TopUpChangeCardPageElementDict.ordinal(), this.TopUpChangeCardPageElementDict);
 
         this.LockCardPageElementDict.put("btnClose", new UIElementData("icClose", FindMethod.ACCESSIBILITYID));
         this.LockCardPageElementDict.put("toggleLockCard", new UIElementData("toggleLockCard", FindMethod.ACCESSIBILITYID));
@@ -384,16 +401,16 @@ public class YouTripIosUIElementKey {
         }
     }
 
-    public List<WebElement> getHorizontalBalancelockList(WebDriver driver){
+    public List<WebElement> getHorizontalBalanceBlockList(WebDriver driver){
         // The Ordering of balance is under currency, amount in pair by zero-based indexing as object order 1 by 1.
         // The first (0-index) block must be "+OtherCurrency" cell block
-        return driver.findElements(By.xpath("//XCUIElementTypeCell[@name=\"horizontalBalanceList\"]/XCUIElementTypeStaticText"));
+        return driver.findElements(By.xpath("//XCUIElementTypeCell[@name=\"horizontalBalanceCell\"]/XCUIElementTypeStaticText"));
 
     }
 
     public List<WebElement> getRecentActivityBlockList(WebDriver driver){
         // The Ordering of activity is under Amount, Time, Description in collection by zero-based indexing as object 1 by 1.
         // The first (0-index) block must be the latest
-        return driver.findElements(By.xpath("//XCUIElementTypeCell[@name=\"recentActivityList\"]/XCUIElementTypeStaticText"));
+        return driver.findElements(By.xpath("//XCUIElementTypeCell[@name=\"recentActivityCell\"]/XCUIElementTypeStaticText"));
     }
 }
