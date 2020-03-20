@@ -52,12 +52,12 @@ public class youtrip_ios_poc {
         /*
          * ###### Desired Capabilities for Real iPhone ######
          */
-        /*capabilities.setCapability("deviceName", "YouTech iPhone");
-        capabilities.setCapability(CapabilityType.VERSION, "13.1.2");
-        capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
-//        capabilities.setCapability("deviceName", "YouTech QAs iPhone");
-//        capabilities.setCapability(CapabilityType.VERSION, "12.1.1");
-//        capabilities.setCapability("udid", "00008020-00026C2E3A46002E");
+//        capabilities.setCapability("deviceName", "YouTech iPhone");
+//        capabilities.setCapability(CapabilityType.VERSION, "13.1.2");
+//        capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
+        capabilities.setCapability("deviceName", "YouTech QAs iPhone");
+        capabilities.setCapability(CapabilityType.VERSION, "12.1.1");
+        capabilities.setCapability("udid", "00008020-00026C2E3A46002E");
         capabilities.setCapability("automationName", "XCUITest");
         capabilities.setCapability("platformName", "iOS");
         capabilities.setCapability("bundleId", "co.you.youapp");
@@ -66,7 +66,7 @@ public class youtrip_ios_poc {
         File app = new File(appDir, "YOUTrip TH_SIT.ipa");
         capabilities.setCapability("app", app.getAbsolutePath());
         capabilities.setCapability("xcodeOrgId", "2HWNYH89R4");
-        capabilities.setCapability("xcodeSigningId", "iPhone Developer");*/
+        capabilities.setCapability("xcodeSigningId", "iPhone Developer");
         /*
          * ###### Desired Capabilities for Real Device ######
          */
@@ -196,17 +196,10 @@ public class youtrip_ios_poc {
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "btnPCRegister", driver);
             el.click();
 
-            if(osMainVerInt >= 13) {
-                subProc.procSubmitSGPCNRICKYC(false, false, testAccountData.surname, testAccountData.givenName, testAccountData.nameOnCard,
-                        testAccountData.dateOfBirth, testAccountData.nricNumber,
-                        testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
-                        null, null, null, null, null, null);
-            }else{
-                subProc.procSubmitSGPCNRICKYCForiOS12(false, false, testAccountData.surname, testAccountData.givenName, testAccountData.nameOnCard,
-                        testAccountData.dateOfBirth, testAccountData.nricNumber,
-                        testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
-                        null, null, null, null, null, null);
-            }
+            subProc.procSubmitSGPCNRICKYC(osMainVerInt, false, false, testAccountData.surname, testAccountData.givenName, testAccountData.nameOnCard,
+                    testAccountData.dateOfBirth, testAccountData.nricNumber,
+                    testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
+                    null, null, null, null, null, null);
 
 //            subProc.api.util.exportAccountTestData(testAccountData);
             Thread.sleep(25000);
@@ -277,17 +270,10 @@ public class youtrip_ios_poc {
             el.click();
             Thread.sleep(2000);
 
-            if (osMainVerInt >= 13) {
-                subProc.procSubmitSGPCNRICKYC(true, false, testAccountData.surname, testAccountData.givenName, testAccountData.nameOnCard,
-                        testAccountData.dateOfBirth, testAccountData.nricNumber,
-                        testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
-                        newSurname, newGivenName, newNameOnCard, newDateOfBirth, newAddressLine1, newAddressLine2);
-            } else {
-                subProc.procSubmitSGPCNRICKYCForiOS12(false, false, testAccountData.surname, testAccountData.givenName, testAccountData.nameOnCard,
-                        testAccountData.dateOfBirth, testAccountData.nricNumber,
-                        testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
-                        newSurname, newGivenName, newNameOnCard, newDateOfBirth, newAddressLine1, newAddressLine2);
-            }
+            subProc.procSubmitSGPCNRICKYC(osMainVerInt, true, false, testAccountData.surname, testAccountData.givenName, testAccountData.nameOnCard,
+                    testAccountData.dateOfBirth, testAccountData.nricNumber,
+                    testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
+                    newSurname, newGivenName, newNameOnCard, newDateOfBirth, newAddressLine1, newAddressLine2);
 
             testAccountData.surname = newSurname;
             testAccountData.givenName = newGivenName;
@@ -352,17 +338,11 @@ public class youtrip_ios_poc {
             el.click();
             Thread.sleep(2000);
 
-            if(osMainVerInt >= 13) {
-                subProc.procSubmitSGPCNRICKYC(false, false, testAccountData.surname, testAccountData.givenName, testAccountData.nameOnCard,
-                        testAccountData.dateOfBirth, testAccountData.nricNumber,
-                        testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
-                        null, null, null, null, null, null);
-            }else{
-                subProc.procSubmitSGPCNRICKYCForiOS12(false, false, testAccountData.surname, testAccountData.givenName, testAccountData.nameOnCard,
-                        testAccountData.dateOfBirth, testAccountData.nricNumber,
-                        testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
-                        null, null, null, null, null, null);
-            }
+
+            subProc.procSubmitSGPCNRICKYC(osMainVerInt, false, false, testAccountData.surname, testAccountData.givenName, testAccountData.nameOnCard,
+                    testAccountData.dateOfBirth, testAccountData.nricNumber,
+                    testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
+                    null, null, null, null, null, null);
 
             Thread.sleep(25000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
@@ -470,17 +450,10 @@ public class youtrip_ios_poc {
             el.click();
             Thread.sleep(2000);
 
-            if (osMainVerInt >= 13) {
-                subProc.procSubmitSGNPCEmploymentPassKYC(false, false, testAccountData.youId, testAccountData.surname, testAccountData.givenName,
-                        testAccountData.dateOfBirth, testAccountData.nricNumber,
-                        testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
-                        null, null, null, null, null);
-            }else {
-                subProc.procSubmitSGNPCEmploymentPassKYCForiOS12(false, false, testAccountData.youId, testAccountData.surname, testAccountData.givenName,
-                        testAccountData.dateOfBirth, testAccountData.nricNumber,
-                        testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
-                        null, null, null, null, null);
-            }
+            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, false, false, testAccountData.youId, testAccountData.surname, testAccountData.givenName,
+                    testAccountData.dateOfBirth, testAccountData.nricNumber,
+                    testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
+                    null, null, null, null, null);
 
             Thread.sleep(25000);
             System.out.println("TEST STEP: Verify Back to Limited Home Page");
@@ -550,17 +523,11 @@ public class youtrip_ios_poc {
             el.click();
             Thread.sleep(2000);
 
-            if(osMainVerInt >= 13) {
-                subProc.procSubmitSGNPCEmploymentPassKYC(true, false, testAccountData.youId, testAccountData.surname, testAccountData.givenName,
-                        testAccountData.dateOfBirth, testAccountData.nricNumber,
-                        testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
-                        newSurname, newGivenName, newDateOfBirth, newAddressLine1, newAddressLine2);
-            } else {
-                subProc.procSubmitSGNPCEmploymentPassKYCForiOS12(false, false, testAccountData.youId, testAccountData.surname, testAccountData.givenName,
-                        testAccountData.dateOfBirth, testAccountData.nricNumber,
-                        testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
-                        newSurname, newGivenName, newDateOfBirth, newAddressLine1, newAddressLine2);
-            }
+            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, true, false, testAccountData.youId, testAccountData.surname, testAccountData.givenName,
+                    testAccountData.dateOfBirth, testAccountData.nricNumber,
+                    testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
+                    newSurname, newGivenName, newDateOfBirth, newAddressLine1, newAddressLine2);
+
 
             testAccountData.surname = newSurname;
             testAccountData.givenName = newGivenName;
@@ -624,17 +591,10 @@ public class youtrip_ios_poc {
             el.click();
             Thread.sleep(2000);
 
-            if (osMainVerInt >= 13) {
-                subProc.procSubmitSGNPCEmploymentPassKYC(false, false, testAccountData.youId, testAccountData.surname, testAccountData.givenName,
-                        testAccountData.dateOfBirth, testAccountData.nricNumber,
-                        testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
-                        null, null, null, null, null);
-            } else {
-                subProc.procSubmitSGNPCEmploymentPassKYCForiOS12(false, false, testAccountData.youId, testAccountData.surname, testAccountData.givenName,
-                        testAccountData.dateOfBirth, testAccountData.nricNumber,
-                        testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
-                        null, null, null, null, null);
-            }
+            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, false, false, testAccountData.youId, testAccountData.surname, testAccountData.givenName,
+                    testAccountData.dateOfBirth, testAccountData.nricNumber,
+                    testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
+                    null, null, null, null, null);
 
             Thread.sleep(25000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
