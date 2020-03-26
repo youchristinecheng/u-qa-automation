@@ -49,9 +49,11 @@ public class YouTripIosUIElementKey {
         HomePageElementDict,
         SettingPageElementDict,
         TopUpPageElementDict,
-        TopUpChangeCardPageElementDict,
+        ChangeCardPageElementDict,
+        ChangeCardVerificationPopUpPageElementDict,
         LockCardPageElementDict,
         OrderReplacementCardPageElementDict,
+        OrderReplacementCardChangeCardPageElementDict
     }
 
     private HashMap<String, UIElementData> DevAlertElementDict;
@@ -86,8 +88,10 @@ public class YouTripIosUIElementKey {
     private HashMap<String, UIElementData> SettingPageElementDict;
     private HashMap<String, UIElementData> TopUpPageElementDict;
     private HashMap<String, UIElementData> TopUpChangeCardPageElementDict;
+    private HashMap<String, UIElementData> ChangeCardVerificationPopUpPageElementDict;
     private HashMap<String, UIElementData> LockCardPageElementDict;
     private HashMap<String, UIElementData> OrderReplacementCardPageElementDict;
+    private HashMap<String, UIElementData> OrderReplacementCardChangeCardPageElementDict;
     private HashMap<Integer, HashMap<String, UIElementData>> Container;
 
     public YouTripIosUIElementKey(){
@@ -123,9 +127,11 @@ public class YouTripIosUIElementKey {
         this.HomePageElementDict = new HashMap<>();
         this.TopUpPageElementDict = new HashMap<>();
         this.TopUpChangeCardPageElementDict = new HashMap<>();
+        this.ChangeCardVerificationPopUpPageElementDict = new HashMap<>();
         this.SettingPageElementDict = new HashMap<>();
         this.LockCardPageElementDict = new HashMap<>();
         this.OrderReplacementCardPageElementDict = new HashMap<>();
+        this.OrderReplacementCardChangeCardPageElementDict = new HashMap<>();
 
         this.Container = new HashMap<>();
 
@@ -345,11 +351,11 @@ public class YouTripIosUIElementKey {
         this.Container.put(PageKey.SettingPageElementDict.ordinal(), this.SettingPageElementDict);
 
         this.TopUpPageElementDict.put("btnClose", new UIElementData("icClose", FindMethod.ACCESSIBILITYID));
-        this.TopUpPageElementDict.put("lblTitle", new UIElementData("lblAmtTitle", FindMethod.ACCESSIBILITYID));
+        this.TopUpPageElementDict.put("lblAmtTitle", new UIElementData("lblAmtTitle", FindMethod.ACCESSIBILITYID));
         this.TopUpPageElementDict.put("txtAmt", new UIElementData("txtAmt", FindMethod.ACCESSIBILITYID));
         this.TopUpPageElementDict.put("txtAmtDesc", new UIElementData("txtAmtDesc", FindMethod.ACCESSIBILITYID));
         this.TopUpPageElementDict.put("btnInfo", new UIElementData("btnInfo", FindMethod.ACCESSIBILITYID));
-        this.TopUpPageElementDict.put("lblCard", new UIElementData("lblCard", FindMethod.ACCESSIBILITYID));
+        this.TopUpPageElementDict.put("lblPayBy", new UIElementData("lblPayBy", FindMethod.ACCESSIBILITYID));
         this.TopUpPageElementDict.put("btnChangeCard", new UIElementData("btnChangeCard", FindMethod.ACCESSIBILITYID));
         this.TopUpPageElementDict.put("sliderTopUp", new UIElementData("sliderTopUp", FindMethod.ACCESSIBILITYID));
         this.TopUpPageElementDict.put("lblTopUpSuccessPopUpDesc", new UIElementData("Top Up is Successful", FindMethod.ACCESSIBILITYID));
@@ -362,7 +368,16 @@ public class YouTripIosUIElementKey {
         this.TopUpChangeCardPageElementDict.put("txtExpiryDate", new UIElementData("txtExpiryDate", FindMethod.ACCESSIBILITYID));
         this.TopUpChangeCardPageElementDict.put("txtCVV", new UIElementData("txtCVV", FindMethod.ACCESSIBILITYID));
         this.TopUpChangeCardPageElementDict.put("btnNext", new UIElementData("btnNext", FindMethod.ACCESSIBILITYID));
-        this.Container.put(PageKey.TopUpChangeCardPageElementDict.ordinal(), this.TopUpChangeCardPageElementDict);
+        this.Container.put(PageKey.ChangeCardPageElementDict.ordinal(), this.TopUpChangeCardPageElementDict);
+
+        this.ChangeCardVerificationPopUpPageElementDict.put("btnOK", new UIElementData("//XCUIElementTypeButton[@name=\"OK\"]", FindMethod.XPATH));
+        this.ChangeCardVerificationPopUpPageElementDict.put("btnCancel", new UIElementData("//XCUIElementTypeButton[@name=\"Cancel\"]", FindMethod.XPATH));
+        this.ChangeCardVerificationPopUpPageElementDict.put("lblTitle", new UIElementData("//XCUIElementTypeStaticText[@name=\"Verification Required\"]", FindMethod.XPATH));
+        this.ChangeCardVerificationPopUpPageElementDict.put("3dsStubBtnPass", new UIElementData("COMPLETE AUTHENTICATION", FindMethod.ACCESSIBILITYID));
+        this.ChangeCardVerificationPopUpPageElementDict.put("3dsStubBtnFail", new UIElementData("FAIL AUTHENTICATION", FindMethod.ACCESSIBILITYID));
+        this.ChangeCardVerificationPopUpPageElementDict.put("AddCardPopUpLblTitle", new UIElementData("Add a Debit/Credit Card", FindMethod.ACCESSIBILITYID));
+        this.ChangeCardVerificationPopUpPageElementDict.put("AddCardPopUpBtnGotIt", new UIElementData("Got it", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.ChangeCardVerificationPopUpPageElementDict.ordinal(), this.ChangeCardVerificationPopUpPageElementDict);
 
         this.LockCardPageElementDict.put("btnClose", new UIElementData("icClose", FindMethod.ACCESSIBILITYID));
         this.LockCardPageElementDict.put("toggleLockCard", new UIElementData("toggleLockCard", FindMethod.ACCESSIBILITYID));
@@ -378,9 +393,17 @@ public class YouTripIosUIElementKey {
         this.OrderReplacementCardPageElementDict.put("txtAddress", new UIElementData("txtAddress", FindMethod.ACCESSIBILITYID));
         this.OrderReplacementCardPageElementDict.put("lblCreditCardNumber", new UIElementData("lblCreditCardNumber", FindMethod.ACCESSIBILITYID));
         this.OrderReplacementCardPageElementDict.put("lblImportantNote", new UIElementData("lblImportantNote", FindMethod.ACCESSIBILITYID));
-        this.OrderReplacementCardPageElementDict.put("btnChangeCreditCard", new UIElementData("btnChangeCreditCard", FindMethod.ACCESSIBILITYID));
+        this.OrderReplacementCardPageElementDict.put("btnChangeCard", new UIElementData("btnChangeCreditCard", FindMethod.ACCESSIBILITYID));
         this.OrderReplacementCardPageElementDict.put("sliderOrderReplacementCard", new UIElementData("sliderOrderReplacementCard", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.OrderReplacementCardPageElementDict.ordinal(), this.OrderReplacementCardPageElementDict);
+
+        this.OrderReplacementCardChangeCardPageElementDict.put("btnClose", new UIElementData("icClose", FindMethod.ACCESSIBILITYID));
+        this.OrderReplacementCardChangeCardPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.OrderReplacementCardChangeCardPageElementDict.put("txtCardNumber", new UIElementData("txtCardNumber", FindMethod.ACCESSIBILITYID));
+        this.OrderReplacementCardChangeCardPageElementDict.put("txtExpiryDate", new UIElementData("txtExpiryDate", FindMethod.ACCESSIBILITYID));
+        this.OrderReplacementCardChangeCardPageElementDict.put("txtCVV", new UIElementData("txtCVV", FindMethod.ACCESSIBILITYID));
+        this.OrderReplacementCardChangeCardPageElementDict.put("btnNext", new UIElementData("btnNext", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.OrderReplacementCardChangeCardPageElementDict.ordinal(), this.OrderReplacementCardChangeCardPageElementDict);
 
     }
 

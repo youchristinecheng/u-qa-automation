@@ -104,9 +104,8 @@ public class YoutripIosSubRoutine {
         System.out.println("TEST STEP: OTP Page - on page");
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.OTPPageElementDict, "lblTitle", driver), "Enter Code from SMS"));
         // Get OTP from backdoor and input otp
-        Thread.sleep(10000);
-
         String otpCode = api.getOTP(mprefix, mnumber);
+        Thread.sleep(10000);
 
         // Make use of app text field focus shifting functionality
         System.out.println("TEST STEP: OTP Page - entered OTP");

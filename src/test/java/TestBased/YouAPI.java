@@ -15,20 +15,54 @@ import java.util.Map;
 public class YouAPI {
 
     private String kycRejectReason;
+    private String backDoorEndPoint;
+    private boolean isBackDoorRequireAuthen;
+    private String backDoorAuthUserName;
+    private String backDoorAuthPwd;
 
     public Utils util = new Utils();
 
     public String getKycRejectReason(){return this.kycRejectReason;}
     public void setKycRejectReason(String value){this.kycRejectReason = value;}
+    public void setBackDoorEndPoint(String endPoint, boolean isAuthenticated, String UserName, String Password){
+        if(endPoint.endsWith("/"))
+            endPoint = endPoint.replaceAll("/$", "");
+        this.backDoorEndPoint = endPoint;
+        this.isBackDoorRequireAuthen = isAuthenticated;
+        if(!isAuthenticated){
+            this.backDoorAuthUserName = "";
+            this.backDoorAuthPwd = "";
+        } else {
+            this.backDoorAuthUserName = UserName;
+            this.backDoorAuthPwd = Password;
+        }
+    }
+
+    public YouAPI(){
+        this.backDoorEndPoint = "http://backdoor.internal.sg.sit.you.co";
+        this.isBackDoorRequireAuthen = false;
+        backDoorAuthUserName = "qa";
+        backDoorAuthUserName = "youtrip1@3";
+    }
 
     public String getOTP(String mprefix, String mnumber) {
 
-        String url_backdoorOTP = ("http://backdoor.internal.sg.sit.you.co/onboarding/otp/"+mprefix+"/"+mnumber);
-        String otpCode = Unirest.get(url_backdoorOTP)
-                .asJson()
-                .getBody()
-                .getObject()
-                .getString("password");
+        String url_backdoorOTP = (backDoorEndPoint + "/onboarding/otp/"+mprefix+"/"+mnumber);
+        String otpCode = null;
+        if (!isBackDoorRequireAuthen) {
+            otpCode = Unirest.get(url_backdoorOTP)
+                    .asJson()
+                    .getBody()
+                    .getObject()
+                    .getString("password");
+        }else{
+            otpCode = Unirest.get(url_backdoorOTP)
+                    .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                    .asJson()
+                    .getBody()
+                    .getObject()
+                    .getString("password");
+        }
 
         System.out.println("API CALL: " +url_backdoorOTP);
         return otpCode;
@@ -95,16 +129,27 @@ public class YouAPI {
 
 
     public String yp_getToken() {
-        String url_backdoorYP = ("http://backdoor.internal.sg.sit.you.co/youportal/token?scopes=https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile,openid");
+        String url_backdoorYP = (backDoorEndPoint + "/youportal/token?scopes=https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile,openid");
         System.out.println("API CALL: " +url_backdoorYP);
 
-        String ypToken = Unirest.get(url_backdoorYP)
-                .header("x-request-id", "token"+util.getTimestamp())
-                .asJson()
-                .getBody()
-                .getObject()
-                .getString("token");
-        System.out.println("TEST DATA: YP token is " +ypToken);
+        String ypToken = null;
+        if (!isBackDoorRequireAuthen) {
+            ypToken = Unirest.get(url_backdoorYP)
+                    .header("x-request-id", "token"+util.getTimestamp())
+                    .asJson()
+                    .getBody()
+                    .getObject()
+                    .getString("token");
+        }else{
+            ypToken = Unirest.get(url_backdoorYP)
+                    .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                    .header("x-request-id", "token"+util.getTimestamp())
+                    .asJson()
+                    .getBody()
+                    .getObject()
+                    .getString("token");
+
+        }
 
         return ypToken;
     }

@@ -52,12 +52,12 @@ public class youtrip_ios_poc {
         /*
          * ###### Desired Capabilities for Real iPhone ######
          */
-//        capabilities.setCapability("deviceName", "YouTech iPhone");
-//        capabilities.setCapability(CapabilityType.VERSION, "13.1.2");
-//        capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
-        capabilities.setCapability("deviceName", "YouTech QAs iPhone");
-        capabilities.setCapability(CapabilityType.VERSION, "12.1.1");
-        capabilities.setCapability("udid", "00008020-00026C2E3A46002E");
+        capabilities.setCapability("deviceName", "YouTech iPhone");
+        capabilities.setCapability(CapabilityType.VERSION, "13.1.2");
+        capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
+//        capabilities.setCapability("deviceName", "YouTech QAs iPhone");
+//        capabilities.setCapability(CapabilityType.VERSION, "12.1.1");
+//        capabilities.setCapability("udid", "00008020-00026C2E3A46002E");
         capabilities.setCapability("automationName", "XCUITest");
         capabilities.setCapability("platformName", "iOS");
         capabilities.setCapability("bundleId", "co.you.youapp");
@@ -98,11 +98,11 @@ public class youtrip_ios_poc {
         }
 
         osMainVerInt = -1;
-        System.out.println("TEST PARAMETER: iOS Version(Default): " + osMainVerInt);
+        System.out.println("TEST PARAMETER: iOS Main Version(Default): " + osMainVerInt);
         Map<String, Object> caps = ((IOSDriver) driver).getSessionDetails();
         String verStr = caps.get("sdkVersion").toString();
         osMainVerInt = Integer.parseInt(verStr.substring(0, verStr.indexOf(".")));
-        System.out.println("TEST PARAMETER: iOS Version(In Session): " + osMainVerInt);
+        System.out.println("TEST PARAMETER: iOS Main Version(In Session): " + osMainVerInt);
     }
 
     @Test
@@ -697,7 +697,249 @@ public class youtrip_ios_poc {
     }
 
     @Test
-    public void regTC10_TopUp() throws InterruptedException {
+    public void regTC24_AddCardFromTopUpPage() throws InterruptedException {
+        IOSElement el;
+        String toBeCard = "4000000000003089";
+        String defaultCVV = "000";
+        String expectedDisplayCard = "Pay by Visa-" + toBeCard.substring(12);
+
+        Date date = new Date(System.currentTimeMillis());
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.YEAR, 5);
+        Date expiryDate = c.getTime();
+        SimpleDateFormat expiryDateFormatter = new SimpleDateFormat("MMYY");
+        String expiryDateString = expiryDateFormatter.format(expiryDate);
+        try {
+            if (testAccountData == null) {
+                HashMap<String, String> searchCriteria = new HashMap<>();
+                searchCriteria.put("kycstatus", KYCStatus.CLEAR.toString());
+                searchCriteria.put("cardstatus", CardStatus.NEWACTIVE.toString());
+                testAccountData = subProc.api.util.searchFromPoolBy(searchCriteria);
+            }
+
+            subProc.procLoginToHomePage(Market.Singapore, testAccountData.mprefix, testAccountData.mnumber, defaultAPPPinCode);
+
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnTopUp", driver).click();
+            Thread.sleep(3000);
+
+            System.out.println("TEST STEP: Add Credit Card Pop Up - on page");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "AddCardPopUpLblTitle", driver);
+            Assert.assertEquals(el.getText(), "Add a Debit/Credit Card");
+            UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "AddCardPopUpBtnGotIt", driver).click();
+            Thread.sleep(2000);
+
+            System.out.println("TEST STEP: Add Card Page - on page");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.ChangeCardPageElementDict, "lblTitle", driver);
+            Assert.assertEquals(el.getText(), "Debit/Credit Card");
+
+            System.out.println("TEST STEP: Change Card Page - Enter New Credit Card");
+            System.out.println("TEST DATA: Credit Card ID: " + toBeCard);
+            System.out.println("TEST DATA: Expiry Date: " + expiryDateString);
+            System.out.println("TEST DATA: CVV: " + defaultCVV);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.ChangeCardPageElementDict, "txtCardNumber", driver);
+            el.sendKeys(toBeCard);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.ChangeCardPageElementDict, "txtExpiryDate", driver);
+            el.sendKeys(expiryDateString);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.ChangeCardPageElementDict, "txtCVV", driver);
+            el.sendKeys(defaultCVV);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.ChangeCardPageElementDict, "btnNext", driver);
+            el.click();
+            Thread.sleep(3000);
+
+            System.out.println("TEST STEP: 3DS verification Pop Up - on page");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "lblTitle", driver);
+            Assert.assertEquals(el.getText(), "Verification Required");
+            UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "btnOK", driver).click();
+            Thread.sleep(10000);
+
+            System.out.println("TEST STEP: 3DS verification Stub Page - on page");
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "3dsStubBtnPass", driver)));
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "3dsStubBtnFail", driver)));
+            UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "3dsStubBtnPass", driver).click();
+            Thread.sleep(10000);
+
+            System.out.println("TEST STEP: Back to TopUp Page - on page");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "lblAmtTitle", driver);
+            Assert.assertEquals(el.getText(), "Amount (SGD)");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "lblPayBy", driver);
+            Assert.assertEquals(el.getText(), expectedDisplayCard);
+            UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "btnClose", driver).click();
+            Thread.sleep(2000);
+
+            System.out.println("TEST STEP: Card Lock Page - on page");
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnCard", driver).click();
+            Thread.sleep(1000);;
+            Assert.assertTrue(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "btnOrderCard", driver).isDisplayed());
+            UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "btnOrderCard", driver).click();
+            Thread.sleep(1000);
+
+            System.out.println("TEST STEP: Order Replacement CardP age - Verify Card information");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.OrderReplacementCardPageElementDict, "lblCreditCardNumber", driver);
+            expectedDisplayCard = "Visa-" + toBeCard.substring(12);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.OrderReplacementCardPageElementDict, "lblCreditCardNumber", driver);
+            Assert.assertEquals(el.getText(), expectedDisplayCard);
+
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void regTC25_UpdateCardFromTopUpPage() throws InterruptedException {
+        IOSElement el;
+        String currentCard = "";
+        String toBeCard = "";
+        String defaultCVV = "000";
+        String expectedDisplayCard = "";
+
+        Date date = new Date(System.currentTimeMillis());
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.YEAR, 5);
+        Date expiryDate = c.getTime();
+        SimpleDateFormat expiryDateFormatter = new SimpleDateFormat("MMYY");
+        String expiryDateString = expiryDateFormatter.format(expiryDate);
+        try {
+            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
+
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnTopUp", driver).click();
+            Thread.sleep(2000);
+
+            System.out.println("TEST STEP: TopUp Page - on page");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "lblAmtTitle", driver);
+            Assert.assertEquals(el.getText(), "Amount (SGD)");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "lblPayBy", driver);
+            currentCard = el.getText();
+            toBeCard = (currentCard.equals("Pay by Visa-3089"))? "4000000000003055" : "4000000000003089";
+            expectedDisplayCard = "Pay by Visa-" + toBeCard.substring(12);
+
+            UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "btnChangeCard", driver).click();
+            Thread.sleep(2000);
+
+            System.out.println("TEST STEP: Change Card Page - on page");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.ChangeCardPageElementDict, "lblTitle", driver);
+            Assert.assertEquals(el.getText(), "Debit/Credit Card");
+
+            System.out.println("TEST STEP: Change Card Page - Enter New Credit Card");
+            System.out.println("TEST DATA: Credit Card ID: " + toBeCard);
+            System.out.println("TEST DATA: Expiry Date: " + expiryDateString);
+            System.out.println("TEST DATA: CVV: " + defaultCVV);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.ChangeCardPageElementDict, "txtCardNumber", driver);
+            el.sendKeys(toBeCard);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.ChangeCardPageElementDict, "txtExpiryDate", driver);
+            el.sendKeys(expiryDateString);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.ChangeCardPageElementDict, "txtCVV", driver);
+            el.sendKeys(defaultCVV);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.ChangeCardPageElementDict, "btnNext", driver);
+            el.click();
+            Thread.sleep(3000);
+
+            System.out.println("TEST STEP: 3DS verification Pop Up - on page");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "lblTitle", driver);
+            Assert.assertEquals(el.getText(), "Verification Required");
+            UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "btnOK", driver).click();
+            Thread.sleep(10000);
+
+            System.out.println("TEST STEP: 3DS verification Stub Page - on page");
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "3dsStubBtnPass", driver)));
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "3dsStubBtnFail", driver)));
+            UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "3dsStubBtnPass", driver).click();
+            Thread.sleep(15000);
+
+            System.out.println("TEST STEP: Back to TopUp Page - on page");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "lblAmtTitle", driver);
+            Assert.assertEquals(el.getText(), "Amount (SGD)");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "lblPayBy", driver);
+            Assert.assertEquals(el.getText(), expectedDisplayCard);
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void regTC25_UpdateCardFromOrderCardReplacePage() throws InterruptedException {
+        IOSElement el;
+        String currentCard = "";
+        String toBeCard = "";
+        String defaultCVV = "000";
+        String expectedDisplayCard = "";
+
+        Date date = new Date(System.currentTimeMillis());
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.YEAR, 5);
+        Date expiryDate = c.getTime();
+        SimpleDateFormat expiryDateFormatter = new SimpleDateFormat("MMYY");
+        String expiryDateString = expiryDateFormatter.format(expiryDate);
+        try {
+            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
+
+            UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnCard", driver).click();
+            Thread.sleep(1000);
+
+            System.out.println("TEST STEP: Card Lock Page - on page");
+            Assert.assertTrue(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "toggleLockCard", driver).isDisplayed());
+            Assert.assertTrue(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "btnOrderCard", driver).isDisplayed());
+            UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "btnOrderCard", driver).click();
+            Thread.sleep(1000);
+
+            System.out.println("TEST STEP: Order Replacement CardP age - on page");
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.OrderReplacementCardPageElementDict, "lblTitle", driver).getText(), "Order Replacement Card");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.OrderReplacementCardPageElementDict, "lblCreditCardNumber", driver);
+            currentCard = el.getText();
+            toBeCard = (currentCard.equals("Visa-3089"))? "4000000000003055" : "4000000000003089";
+            expectedDisplayCard = "Visa-" + toBeCard.substring(12);
+
+
+            UIElementKeyDict.getElement(PageKey.OrderReplacementCardPageElementDict, "btnChangeCard", driver).click();
+            Thread.sleep(2000);
+
+            System.out.println("TEST STEP: Change Card Page - on page");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.OrderReplacementCardChangeCardPageElementDict, "lblTitle", driver);
+            Assert.assertEquals(el.getText(), "Debit/Credit Card");
+
+            System.out.println("TEST STEP: Change Card Page - Enter New Credit Card");
+            System.out.println("TEST DATA: Credit Card ID: " + toBeCard);
+            System.out.println("TEST DATA: Expiry Date: " + expiryDateString);
+            System.out.println("TEST DATA: CVV: " + defaultCVV);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.OrderReplacementCardChangeCardPageElementDict, "txtCardNumber", driver);
+            el.sendKeys(toBeCard);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.OrderReplacementCardChangeCardPageElementDict, "txtExpiryDate", driver);
+            el.sendKeys(expiryDateString);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.OrderReplacementCardChangeCardPageElementDict, "txtCVV", driver);
+            el.sendKeys(defaultCVV);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.OrderReplacementCardChangeCardPageElementDict, "btnNext", driver);
+            el.click();
+            Thread.sleep(3000);
+
+            System.out.println("TEST STEP: 3DS verification Pop Up - on page");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "lblTitle", driver);
+            Assert.assertEquals(el.getText(), "Verification Required");
+            UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "btnOK", driver).click();
+            Thread.sleep(10000);
+
+            System.out.println("TEST STEP: 3DS verification Stub Page - on page");
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "3dsStubBtnPass", driver)));
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "3dsStubBtnFail", driver)));
+            UIElementKeyDict.getElement(PageKey.ChangeCardVerificationPopUpPageElementDict, "3dsStubBtnPass", driver).click();
+            Thread.sleep(15000);
+
+            System.out.println("TEST STEP: Order Replacement CardP age - on page");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.OrderReplacementCardChangeCardPageElementDict, "lblTitle", driver);
+            Assert.assertEquals(el.getText(), "Debit/Credit Card");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.OrderReplacementCardChangeCardPageElementDict, "lblCreditCardNumber", driver);
+            Assert.assertEquals(el.getText(), expectedDisplayCard);
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void regTC26_TopUpSuccess() throws InterruptedException {
         IOSElement el;
         List<WebElement> balanceList;
         List<WebElement> activityList;
@@ -723,6 +965,7 @@ public class youtrip_ios_poc {
 
             System.out.println("TEST STEP: TopUp Page - on page");
             UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnTopUp", driver).click();
+            Thread.sleep(2000);
             UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "txtAmt", driver).sendKeys(String.valueOf(topUpAmt));
             el = (IOSElement)UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "sliderTopUp", driver);
             el.click();
@@ -763,6 +1006,8 @@ public class youtrip_ios_poc {
             fail();
         }
     }
+
+
 
     @Test
     public void regTC41_LockCard() throws InterruptedException {
@@ -842,11 +1087,40 @@ public class youtrip_ios_poc {
         }
     }
 
-   /* @Test
+    /*@Test
     public void test(){
+        IOSElement el;
+        try {
+            String mprefix = "65";
+            String mnumber = "200318102902351";
+            System.out.println("TEST DATA: Mobile Number is " + mprefix + " " + mnumber);
+            System.out.println("TEST DATA: Email address is \"No EMail\"");
+            subProc.api.setBackDoorEndPoint("http://uoy.backdoor.dev.you.co/", true, "qa", "youtrip1@3");
 
-            System.out.println("debug");
-        }catch(Exception e){
+            subProc.procSelectCountry(Market.Singapore);
+            subProc.procOTPLogin(mprefix, mnumber, "", false);
+            Thread.sleep(500);
+
+            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+            if(el != null)
+                el.click();
+            subProc.procEnterAPPPinCode("1111");
+
+            Thread.sleep(2000);
+            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+            if(el != null) {
+                el.click();
+                Thread.sleep(2000);
+            }
+
+            System.out.println("Entered Home Page");
+            Set<String> contexts = ((IOSDriver)driver).getContextHandles();
+            for (String context : contexts) {
+                System.out.println(context);
+            }
+
+            System.out.println("Debug");
+        }catch (Exception e){
             e.printStackTrace();
             fail();
         }
@@ -854,12 +1128,12 @@ public class youtrip_ios_poc {
 
     @AfterMethod
     public void TestMethodTeardown(){
-        ((IOSDriver)driver).resetApp();
+        /*((IOSDriver)driver).resetApp();
         try {
             subProc.procHandleDevAlert();
         }catch(Exception e){
             fail(e.getMessage());
-        }
+        }*/
     }
 
     @AfterTest
