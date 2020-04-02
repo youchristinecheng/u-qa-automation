@@ -16,6 +16,7 @@ public class YouAPI {
 
     private String kycRejectReason;
     private String backDoorEndPoint;
+    private String ypEndPoint;
     private boolean isBackDoorRequireAuthen;
     private String backDoorAuthUserName;
     private String backDoorAuthPwd;
@@ -39,23 +40,30 @@ public class YouAPI {
     }
 
     public YouAPI(){
-        this.backDoorEndPoint = "http://backdoor.internal.sg.sit.you.co";
-        this.isBackDoorRequireAuthen = false;
+        //TODO need to refactor end points
+        //this.backDoorEndPoint = "http://backdoor.internal.sg.sit.you.co";
+        this.backDoorEndPoint = "https://uoy.backdoor.sg.sit.you.co";
+        this.ypEndPoint = "http://yp.external.sg.sit.you.co";
+        this.isBackDoorRequireAuthen = true;
         backDoorAuthUserName = "qa";
-        backDoorAuthUserName = "youtrip1@3";
+        backDoorAuthPwd = "youtrip1@3";
+
     }
 
     public String getOTP(String mprefix, String mnumber) {
 
         String url_backdoorOTP = (backDoorEndPoint + "/onboarding/otp/"+mprefix+"/"+mnumber);
         String otpCode = null;
+
         if (!isBackDoorRequireAuthen) {
+            Unirest.config().verifySsl(false);
             otpCode = Unirest.get(url_backdoorOTP)
                     .asJson()
                     .getBody()
                     .getObject()
                     .getString("password");
         }else{
+            Unirest.config().verifySsl(false);
             otpCode = Unirest.get(url_backdoorOTP)
                     .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
                     .asJson()
@@ -127,13 +135,13 @@ public class YouAPI {
         return result;
     }
 
-
     public String yp_getToken() {
         String url_backdoorYP = (backDoorEndPoint + "/youportal/token?scopes=https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile,openid");
         System.out.println("API CALL: " +url_backdoorYP);
 
         String ypToken = null;
         if (!isBackDoorRequireAuthen) {
+            Unirest.config().verifySsl(false);
             ypToken = Unirest.get(url_backdoorYP)
                     .header("x-request-id", "token"+util.getTimestamp())
                     .asJson()
@@ -141,6 +149,7 @@ public class YouAPI {
                     .getObject()
                     .getString("token");
         }else{
+            Unirest.config().verifySsl(false);
             ypToken = Unirest.get(url_backdoorYP)
                     .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
                     .header("x-request-id", "token"+util.getTimestamp())
@@ -158,7 +167,7 @@ public class YouAPI {
 
         String token = yp_getToken();
 
-        String url_getKYC = ("http://yp.internal.sg.sit.you.co/api/kyc?ReferenceIDs="+kycRefNo);
+        String url_getKYC = (ypEndPoint + "/api/kyc?ReferenceIDs=" +kycRefNo);
         System.out.println("API CALL: " +url_getKYC);
 
         HttpResponse<JsonNode> getKYCjsonResponse = Unirest.get(url_getKYC)
@@ -195,7 +204,7 @@ public class YouAPI {
         String cardType;
 
         //call get KYC details
-        String url_getKYCDetails  = ("http://yp.internal.sg.sit.you.co/api/kyc/"+kycID);
+        String url_getKYCDetails  = (ypEndPoint + "/api/kyc/" +kycID);
         System.out.println("API CALL: " +url_getKYCDetails);
 
         HttpResponse<JsonNode> getKYCjsonResponse = Unirest.get(url_getKYCDetails)
@@ -262,7 +271,7 @@ public class YouAPI {
         String token = yp_getToken();
         String kycID = yp_getKYC(kycRefNo);
 
-        String url_fullRejectKYC = ("http://yp.internal.sg.sit.you.co/api/kyc/" + kycID + "/reject");
+        String url_fullRejectKYC = (ypEndPoint + "/api/kyc/" +kycID+ "/reject");
         System.out.println("API CALL: " + url_fullRejectKYC);
 
         HttpResponse<JsonNode> rejectKYCjsonResponse = Unirest.put(url_fullRejectKYC)
@@ -285,7 +294,7 @@ public class YouAPI {
         Map<String, String> kycDetails = yp_getKYCdetails(kycRefNo);
 
         //call partial reject
-        String url_partialRejectKYC = ("http://yp.internal.sg.sit.you.co/api/kyc/"+kycID+"/partially_reject");
+        String url_partialRejectKYC = (ypEndPoint + "/api/kyc/" +kycID+ "/partially_reject");
         System.out.println("API CALL: " +url_partialRejectKYC);
 
         HttpResponse<JsonNode> partialrejectKYCjsonResponse = Unirest.put(url_partialRejectKYC)
@@ -325,7 +334,7 @@ public class YouAPI {
         Map<String, String> kycDetails = yp_getKYCdetails(kycRefNo);
 
         //call partial reject
-        String url_partialRejectKYC = ("http://yp.internal.sg.sit.you.co/api/kyc/"+kycID+"/partially_reject");
+        String url_partialRejectKYC = (ypEndPoint + "/api/kyc/"+kycID+"/partially_reject");
         System.out.println("API CALL: " +url_partialRejectKYC);
 
         HttpResponse<JsonNode> partialrejectKYCjsonResponse = Unirest.put(url_partialRejectKYC)
@@ -359,7 +368,7 @@ public class YouAPI {
         String kycID = yp_getKYC(kycRefNo);
         Map<String, String> kycDetails = yp_getKYCdetails(kycRefNo);
 
-        String url_approveKYC = ("http://yp.internal.sg.sit.you.co/api/kyc/"+kycID+"/accept?SkipArtemis=true");
+        String url_approveKYC = (ypEndPoint + "/api/kyc/"+kycID+"/accept?SkipArtemis=true");
         System.out.println("API CALL: " +url_approveKYC);
 
         HttpResponse<JsonNode> acceptKYCjsonResponse = Unirest.put(url_approveKYC)
