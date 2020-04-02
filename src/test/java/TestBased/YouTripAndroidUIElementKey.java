@@ -43,7 +43,9 @@ public class YouTripAndroidUIElementKey {
         LeftSideMenuElementDict,
         SettingPageElementDict,
         ConfirmEmailPageElementDict,
-        CheckSentEmailPageElementDict
+        CheckSentEmailPageElementDict,
+        UnlockAppPageElementDict,
+        HomePageElementDict
     }
 
     private HashMap<String, UIElementData> CountryPageElementDict;
@@ -75,6 +77,8 @@ public class YouTripAndroidUIElementKey {
     private HashMap<String, UIElementData> SettingPageElementDict;
     private HashMap<String, UIElementData> ConfirmEmailPageElementDict;
     private HashMap<String, UIElementData> CheckSentEmailPageElementDict;
+    private HashMap<String, UIElementData> UnlockAppPageElementDict;
+    private HashMap<String, UIElementData> HomePageElementDict;
 
     private HashMap<Integer, HashMap<String, UIElementData>> Container;
 
@@ -109,14 +113,14 @@ public class YouTripAndroidUIElementKey {
         this.SettingPageElementDict = new HashMap<>();
         this.ConfirmEmailPageElementDict = new HashMap<>();
         this.CheckSentEmailPageElementDict = new HashMap<>();
+        this.UnlockAppPageElementDict = new HashMap<>();
+        this.HomePageElementDict = new HashMap<>();
 
         this.Container = new HashMap<>();
-
         this.build();
     }
 
     private void build(){
-
 
         //Country Page
         this.CountryPageElementDict.put("lblTitle", new UIElementData("//android.widget.TextView[@text='Where do you live?']", UIElementData.FindMethod.XPATH));
@@ -302,6 +306,38 @@ public class YouTripAndroidUIElementKey {
         //Check Sent Email Page
         this.CheckSentEmailPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
         this.Container.put(PageKey.CheckSentEmailPageElementDict.ordinal(), this.CheckSentEmailPageElementDict);
+
+        //Unlock App Page
+        this.UnlockAppPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
+        this.UnlockAppPageElementDict.put("btn1", new UIElementData("co.you.youapp.dev:id/input1", FindMethod.ID));
+        this.UnlockAppPageElementDict.put("btn2", new UIElementData("co.you.youapp.dev:id/input2", FindMethod.ID));
+        this.UnlockAppPageElementDict.put("btn3", new UIElementData("co.you.youapp.dev:id/input3", FindMethod.ID));
+        this.UnlockAppPageElementDict.put("btn4", new UIElementData("co.you.youapp.dev:id/input4", FindMethod.ID));
+        this.UnlockAppPageElementDict.put("btn5", new UIElementData("co.you.youapp.dev:id/input4", FindMethod.ID));
+        this.UnlockAppPageElementDict.put("btn6", new UIElementData("co.you.youapp.dev:id/input6", FindMethod.ID));
+        this.UnlockAppPageElementDict.put("btn7", new UIElementData("co.you.youapp.dev:id/input7", FindMethod.ID));
+        this.UnlockAppPageElementDict.put("btn8", new UIElementData("co.you.youapp.dev:id/input8", FindMethod.ID));
+        this.UnlockAppPageElementDict.put("btn9", new UIElementData("co.you.youapp.dev:id/input9", FindMethod.ID));
+        this.UnlockAppPageElementDict.put("btn0", new UIElementData("co.you.youapp.dev:id/input0", FindMethod.ID));
+        this.UnlockAppPageElementDict.put("btnForgot", new UIElementData("co.you.youapp.dev:id/button", FindMethod.ID));
+        this.UnlockAppPageElementDict.put("btnDelete", new UIElementData("co.you.youapp.dev:id/clickDelete", FindMethod.ID));
+        this.Container.put(PageKey.UnlockAppPageElementDict.ordinal(), this.UnlockAppPageElementDict);
+
+        //Home Page
+        //non explorer + explorer
+        this.HomePageElementDict.put("logoYouTrip", new UIElementData("co.you.youapp.dev:id/imageHeader", FindMethod.ID));
+        this.HomePageElementDict.put("btnTopUp", new UIElementData("co.you.youapp.dev:id/clickTopUp", FindMethod.ID));
+        this.HomePageElementDict.put("btnExchange", new UIElementData("co.you.youapp.dev:id/clickExchange", FindMethod.ID));
+        //non explorer only
+        this.HomePageElementDict.put("btnCard", new UIElementData("co.you.youapp.dev:id/clickCard", FindMethod.ID));
+        //explorer only
+        this.HomePageElementDict.put("menuWallet", new UIElementData("Wallet", FindMethod.ACCESSIBILITYID));
+        this.HomePageElementDict.put("menuCard", new UIElementData("Card", FindMethod.ACCESSIBILITYID));
+        this.HomePageElementDict.put("menuHelp", new UIElementData("Help", FindMethod.ACCESSIBILITYID));
+        this.HomePageElementDict.put("menuSettings", new UIElementData("Settings", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.HomePageElementDict.ordinal(), this.HomePageElementDict);
+
+
     }
 
     public WebElement getElement(PageKey page, String elementKey, WebDriver driver) throws NotFoundException{
