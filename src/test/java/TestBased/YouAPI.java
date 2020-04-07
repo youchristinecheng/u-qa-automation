@@ -475,7 +475,7 @@ public class YouAPI {
     }
 
     public void data_bindTestCardToTestUser(String userId, String cardId) {
-        String url_updateTestUserCard = (this.dataBackDoorEndPoint + "/testUser/bindTestCardToTesUser/");
+        String url_updateTestUserCard = (this.dataBackDoorEndPoint + "/testUser/bindTestCardToTestUser/");
 
         System.out.println("API CALL: " + url_updateTestUserCard);
 
