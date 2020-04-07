@@ -1,21 +1,22 @@
 package TestBased;
 
-import TestBased.Utils;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 import static org.testng.Assert.assertEquals;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.Map;
+import TestBased.TestAccountData.*;
 
 
 public class YouAPI {
 
     private String kycRejectReason;
     private String backDoorEndPoint;
+    private String dataBackDoorEndPoint;
     private String ypEndPoint;
     private boolean isBackDoorRequireAuthen;
     private String backDoorAuthUserName;
@@ -44,6 +45,7 @@ public class YouAPI {
         //this.backDoorEndPoint = "http://backdoor.internal.sg.sit.you.co";
         this.backDoorEndPoint = "https://uoy.backdoor.sg.sit.you.co";
         this.ypEndPoint = "http://yp.external.sg.sit.you.co";
+        this.dataBackDoorEndPoint = "http://qa-auto-support.backdoor.sg.sit.you.co";
         this.isBackDoorRequireAuthen = true;
         backDoorAuthUserName = "qa";
         backDoorAuthPwd = "youtrip1@3";
@@ -224,7 +226,7 @@ public class YouAPI {
         System.out.println("get kyc: First Name is " +firstName);
         lastName = responseJson.getString("LastName");
         System.out.println("get kyc: Last Name is " +lastName);
-        if (cardType.equals(TestAccountData.CardType.PC.toString())){
+        if (cardType.equals(CardType.PC.toString())){
             nameOnCard = responseJson.getString("NameOnCard");
             System.out.println("get kyc: Name On Card  is " + nameOnCard);
         }else{
@@ -385,5 +387,107 @@ public class YouAPI {
         assertEquals(200, acceptKYCjsonResponse.getStatus());
     }
 
+    public void data_createTestUser(TestAccountData data) {
+        String url_createUser = (this.dataBackDoorEndPoint + "/testUser/create");
 
+        System.out.println("API CALL: " +url_createUser);
+
+        HttpResponse<JsonNode> partialrejectKYCjsonResponse = Unirest.post(url_createUser)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .header("x-request-id", "createTestUser"+util.getTimestamp())
+                .header("Content-Type", "application/json")
+                .body(data.toRequestBodyString())
+                .asJson();
+
+        assertEquals(200, partialrejectKYCjsonResponse.getStatus());
+    }
+
+    public void data_updateTestUser(TestAccountData data){
+        String url_updateUser = (this.dataBackDoorEndPoint + "/testUser/update");
+
+        System.out.println("API CALL: " +url_updateUser);
+
+        HttpResponse<JsonNode> partialrejectKYCjsonResponse = Unirest.post(url_updateUser)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .header("x-request-id", "updateTestUser"+util.getTimestamp())
+                .header("Content-Type", "application/json")
+                .body(data.toRequestBodyString())
+                .asJson();
+
+        assertEquals(200, partialrejectKYCjsonResponse.getStatus());
+    }
+
+    public TestAccountData data_getTestUserByCardTypeAndKycStatus(String cardType, String kycStatus) throws NoSuchFieldException {
+        String url_getTestUser = (this.dataBackDoorEndPoint + "/searchNoCardTestUser/" + cardType + "/" + kycStatus);
+
+        System.out.println("API CALL: " + url_getTestUser);
+
+        JSONObject Rspbody = Unirest.get(url_getTestUser)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .asJson()
+                .getBody()
+                .getObject();
+
+        return TestAccountData.toTestAccountData(Rspbody);
+    }
+
+    public TestAccountData data_getTestUserByCardTypeAndKycStatusAndCardStatus(String cardType, String kycStatus, String cardStatus) throws NoSuchFieldException{
+        String url_getTestUser = (this.dataBackDoorEndPoint + "/searchTestUser/" + cardType + "/" + kycStatus + "/" + cardStatus);
+
+        System.out.println("API CALL: " + url_getTestUser);
+
+        JSONObject Rspbody = Unirest.get(url_getTestUser)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .asJson()
+                .getBody()
+                .getObject();
+
+        return TestAccountData.toTestAccountData(Rspbody);
+    }
+
+    public void data_updateTestCard(TestCardData data){
+        String url_updateCard = (this.dataBackDoorEndPoint + "/testCard/update/");
+
+        System.out.println("API CALL: " + url_updateCard);
+
+        HttpResponse<JsonNode> partialrejectKYCjsonResponse = Unirest.post(url_updateCard)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .header("x-request-id", "updateTestCard"+util.getTimestamp())
+                .header("Content-Type", "application/json")
+                .body(data.toRequestBodyString())
+                .asJson();
+
+        assertEquals(200, partialrejectKYCjsonResponse.getStatus());
+    }
+
+    public TestCardData data_getTestCardByCardTypeAndStatus(String cardType, String cardStatus) throws NoSuchFieldException{
+        String url_getTestCaed = (this.dataBackDoorEndPoint + "/searchTestCard/" + cardType + "/" + cardStatus);
+
+        System.out.println("API CALL: " + url_getTestCaed);
+
+        JSONObject Rspbody = Unirest.get(url_getTestCaed)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .asJson()
+                .getBody()
+                .getObject();
+
+        return TestCardData.toTestCardData(Rspbody);
+    }
+
+    public void data_bindTestCardToTestUser(String userId, String cardId) {
+        String url_updateTestUserCard = (this.dataBackDoorEndPoint + "/testUser/bindTestCardToTesUser/");
+
+        System.out.println("API CALL: " + url_updateTestUserCard);
+
+        HttpResponse<JsonNode> partialrejectKYCjsonResponse = Unirest.post(url_updateTestUserCard)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .header("x-request-id", "updateTestCard"+util.getTimestamp())
+                .header("Content-Type", "application/json")
+                .body("{\n" +
+                        "\t\"userId\":\""+userId+"\",\n" +
+                        "\t\"cardId\": \""+cardId+"\"\n" +
+                        "}")
+                .asJson();
+
+    }
 }

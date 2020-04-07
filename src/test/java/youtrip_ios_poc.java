@@ -28,6 +28,7 @@ public class youtrip_ios_poc {
     YoutripIosSubRoutine subProc;
     WebDriverWait wait;
     TestAccountData testAccountData;
+    boolean isContinueTest;
     String defaultAPPPinCode;
     Integer osMainVerInt;
 
@@ -96,7 +97,7 @@ public class youtrip_ios_poc {
         }catch(Exception e){
             fail(e.getMessage());
         }
-
+        isContinueTest = true;
         osMainVerInt = -1;
         System.out.println("TEST PARAMETER: iOS Main Version(Default): " + osMainVerInt);
         Map<String, Object> caps = ((IOSDriver) driver).getSessionDetails();
@@ -165,28 +166,26 @@ public class youtrip_ios_poc {
             Date dateOfBirth = c.getTime();
             SimpleDateFormat dateOfBirthFormatter = new SimpleDateFormat("ddMMYYYY");
 
-            testAccountData.market = Market.Singapore;
-            testAccountData.mnumber = mnumber;
-            testAccountData.mprefix = mprefix;
-            testAccountData.emailAddress = email;
-            testAccountData.kycStatus = KYCStatus.SUBMIT;
-            testAccountData.cardId = null;
-            testAccountData.youId = null;
-            testAccountData.cardType = CardType.PC;
-            testAccountData.cardStatus = null;
-            testAccountData.surname = "TESTER";;
-            testAccountData.givenName = "AUTO";;
-            testAccountData.nameOnCard = testAccountData.surname + " " + testAccountData.givenName;
-            testAccountData.nricNumber = subProc.api.util.getNRIC();
-            testAccountData.dateOfBirth = dateOfBirthFormatter.format(dateOfBirth);
-            testAccountData.addressLine1 = "1";
-            testAccountData.addressLine2 = "2";
-            testAccountData.postoalCode = "000000";
+            testAccountData.PhoneNumber = mnumber;
+            testAccountData.MCC = mprefix;
+            testAccountData.Email = email;
+            testAccountData.KycStatus = KYCStatus.Submit;
+            testAccountData.TestAccountCardType = CardType.PC;
+            testAccountData.LastName = "TESTER";;
+            testAccountData.FirstName = "AUTO";;
+            testAccountData.NameOnCard = testAccountData.LastName + " " + testAccountData.FirstName;
+            testAccountData.NricNumber = subProc.api.util.getNRIC();
+            testAccountData.Birthdate = dateOfBirthFormatter.format(dateOfBirth);
+            testAccountData.AddressLineOne = "1";
+            testAccountData.AddressLineTwo = "2";
+            testAccountData.PostalCode = "000000";
+            testAccountData.Card = null;
+            testAccountData.UnderUse = isContinueTest;
 
-            System.out.println("PRESET TEST DATA: Mobile Number is " + testAccountData.mprefix + " " + testAccountData.mnumber);
+            System.out.println("PRESET TEST DATA: Mobile Number is " + testAccountData.MCC + " " + testAccountData.PhoneNumber);
             System.out.println("PRESET TEST DATA: Email address is " + email);
-            System.out.println("PRESET TEST DATA: Surname - " + testAccountData.surname + ";Firstname - " + testAccountData.givenName + ";");
-            System.out.println("PRESET TEST DATA: NRIC Number: " + testAccountData.nricNumber + "DateOfBirth:" + testAccountData.dateOfBirth);
+            System.out.println("PRESET TEST DATA: Surname - " + testAccountData.LastName + ";Firstname - " + testAccountData.FirstName + ";");
+            System.out.println("PRESET TEST DATA: NRIC Number: " + testAccountData.NricNumber + "DateOfBirth:" + testAccountData.Birthdate);
 
             subProc.procSelectCountry(Market.Singapore);
             subProc.procOTPLogin(mprefix, mnumber, email,true);
@@ -196,9 +195,9 @@ public class youtrip_ios_poc {
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "btnPCRegister", driver);
             el.click();
 
-            subProc.procSubmitSGPCNRICKYC(osMainVerInt, false, false, testAccountData.surname, testAccountData.givenName, testAccountData.nameOnCard,
-                    testAccountData.dateOfBirth, testAccountData.nricNumber,
-                    testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
+            subProc.procSubmitSGPCNRICKYC(osMainVerInt, false, false, testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
+                    testAccountData.Birthdate, testAccountData.NricNumber,
+                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
                     null, null, null, null, null, null);
 
 //            subProc.api.util.exportAccountTestData(testAccountData);
@@ -207,10 +206,11 @@ public class youtrip_ios_poc {
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver), "Thank You for Your Application"));
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             String kycRefNo = el.getText();
-            testAccountData.userId = subProc.api.yp_getKYCdetails(kycRefNo).get("userId");
+            testAccountData.Id = subProc.api.yp_getKYCdetails(kycRefNo).get("userId");
 
-            subProc.api.util.exportAccountTestData(testAccountData);
+            subProc.api.data_createTestUser(testAccountData);
         }catch (Exception e){
+            testAccountData = null;
             e.printStackTrace();
             fail();
         }
@@ -236,14 +236,11 @@ public class youtrip_ios_poc {
         String newDateOfBirth = dateOfBirthFormatter.format(dateOfBirth);
         try {
             if (testAccountData == null) {
-                HashMap<String, String> searchCriteria = new HashMap<>();
-                searchCriteria.put("kycstatus", KYCStatus.SUBMIT.toString());
-                searchCriteria.put("cardtype", CardType.PC.toString());
-                testAccountData = subProc.api.util.searchFromPoolBy(searchCriteria);
+                testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.PC.toString(), KYCStatus.Submit.toString());
             }
 
             subProc.procSelectCountry(Market.Singapore);
-            subProc.procOTPLogin(testAccountData.mprefix, testAccountData.mnumber, testAccountData.emailAddress, false);
+            subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
             if (el != null)
@@ -270,25 +267,27 @@ public class youtrip_ios_poc {
             el.click();
             Thread.sleep(2000);
 
-            subProc.procSubmitSGPCNRICKYC(osMainVerInt, true, false, testAccountData.surname, testAccountData.givenName, testAccountData.nameOnCard,
-                    testAccountData.dateOfBirth, testAccountData.nricNumber,
-                    testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
+            subProc.procSubmitSGPCNRICKYC(osMainVerInt, true, false, testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
+                    testAccountData.Birthdate, testAccountData.NricNumber,
+                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
                     newSurname, newGivenName, newNameOnCard, newDateOfBirth, newAddressLine1, newAddressLine2);
 
-            testAccountData.surname = newSurname;
-            testAccountData.givenName = newGivenName;
-            testAccountData.nameOnCard = newNameOnCard;
-            testAccountData.dateOfBirth = newDateOfBirth;
-            testAccountData.addressLine1 = newAddressLine1;
-            testAccountData.addressLine2 = newAddressLine2;
+            testAccountData.LastName = newSurname;
+            testAccountData.FirstName = newGivenName;
+            testAccountData.NameOnCard = newNameOnCard;
+            testAccountData.Birthdate = newDateOfBirth;
+            testAccountData.AddressLineOne = newAddressLine1;
+            testAccountData.AddressLineTwo = newAddressLine2;
+            testAccountData.UnderUse = isContinueTest;
 
             Thread.sleep(25000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             String newKycRefNo = el.getText();
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
 
-            subProc.api.util.updateData(testAccountData);
+            subProc.api.data_updateTestUser(testAccountData);
         }catch (Exception e){
+            testAccountData = null;
             e.printStackTrace();
             fail();
         }
@@ -301,14 +300,11 @@ public class youtrip_ios_poc {
         String kycRefNo;
         try {
             if (testAccountData == null) {
-                HashMap<String, String> searchCriteria = new HashMap<>();
-                searchCriteria.put("kycstatus", KYCStatus.SUBMIT.toString());
-                searchCriteria.put("cardtype", CardType.PC.toString());
-                testAccountData = subProc.api.util.searchFromPoolBy(searchCriteria);
+                testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.PC.toString(), KYCStatus.Submit.toString());
             }
 
             subProc.procSelectCountry(Market.Singapore);
-            subProc.procOTPLogin(testAccountData.mprefix, testAccountData.mnumber, testAccountData.emailAddress, false);
+            subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
             if(el != null)
@@ -323,8 +319,8 @@ public class youtrip_ios_poc {
             Thread.sleep(15000);
             System.out.println("TEST STEP: KYC Partial rejection received");
 
-            testAccountData.givenName = "Auto YP Edit";
-            testAccountData.addressLine2 = "PARTIAL EDIT TEST";
+            testAccountData.FirstName = "Auto YP Edit";
+            testAccountData.AddressLineTwo = "PARTIAL EDIT TEST";
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
             actualText = el.getText();
@@ -339,9 +335,9 @@ public class youtrip_ios_poc {
             Thread.sleep(2000);
 
 
-            subProc.procSubmitSGPCNRICKYC(osMainVerInt, false, false, testAccountData.surname, testAccountData.givenName, testAccountData.nameOnCard,
-                    testAccountData.dateOfBirth, testAccountData.nricNumber,
-                    testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
+            subProc.procSubmitSGPCNRICKYC(osMainVerInt, false, false, testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
+                    testAccountData.Birthdate, testAccountData.NricNumber,
+                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
                     null, null, null, null, null, null);
 
             Thread.sleep(25000);
@@ -349,8 +345,10 @@ public class youtrip_ios_poc {
             String newKycRefNo = el.getText();
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
 
-            subProc.api.util.updateData(testAccountData);
+            testAccountData.UnderUse = isContinueTest;
+            subProc.api.data_updateTestUser(testAccountData);
         }catch (Exception e){
+            testAccountData = null;
             e.printStackTrace();
             fail();
         }
@@ -362,14 +360,11 @@ public class youtrip_ios_poc {
         IOSElement el;
         try {
             if (testAccountData == null) {
-                HashMap<String, String> searchCriteria = new HashMap<>();
-                searchCriteria.put("kycstatus", KYCStatus.SUBMIT.toString());
-                searchCriteria.put("cardtype", CardType.PC.toString());
-                testAccountData = subProc.api.util.searchFromPoolBy(searchCriteria);
+                testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.PC.toString(), KYCStatus.Submit.toString());
             }
 
             subProc.procSelectCountry(Market.Singapore);
-            subProc.procOTPLogin(testAccountData.mprefix, testAccountData.mnumber, testAccountData.emailAddress, false);
+            subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
             if(el != null)
@@ -389,10 +384,12 @@ public class youtrip_ios_poc {
             assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Your Card is On Its Way");
             assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver).getText(), "My Card Arrived");
 
-            testAccountData.kycStatus = KYCStatus.CLEAR;
+            testAccountData.KycStatus = KYCStatus.Clear;
+            testAccountData.UnderUse = false;
 
-            subProc.api.util.updateData(testAccountData);
+            subProc.api.data_updateTestUser(testAccountData);
         }catch(Exception e){
+            testAccountData = null;
             e.printStackTrace();
             fail();
         }
@@ -402,7 +399,11 @@ public class youtrip_ios_poc {
     public void reg19_submit_NPC_KYC_EmploymentPass() throws InterruptedException {
         IOSElement el;
         testAccountData = new TestAccountData();
+        TestCardData testCardData = null;
         try {
+            testCardData = subProc.api.data_getTestCardByCardTypeAndStatus(CardType.NPC.toString(), CardStatus.NPCPending.toString());
+            testAccountData.Card = testCardData;
+
             SimpleDateFormat formatter = new SimpleDateFormat("YYMMDDHHmmssSS");
             Date date = new Date(System.currentTimeMillis());
             System.out.println(formatter.format(date));
@@ -417,29 +418,25 @@ public class youtrip_ios_poc {
             Date dateOfBirth = c.getTime();
             SimpleDateFormat dateOfBirthFormatter = new SimpleDateFormat("ddMMYYYY");
 
-            testAccountData.market = Market.Singapore;
-            testAccountData.mnumber = mnumber;
-            testAccountData.mprefix = mprefix;
-            testAccountData.emailAddress = email;
-            testAccountData.kycStatus = KYCStatus.SUBMIT;
-            //TODO: Need to pickup a new NPC card for each time testrun is started instead of hardcoded
-            testAccountData.cardId = "1863782701713825";
-            testAccountData.youId = "Y-8110693553";
-            testAccountData.cardType = CardType.NPC;
-            testAccountData.cardStatus = CardStatus.INACTIVE;
-            testAccountData.surname = "TESTER";
-            testAccountData.givenName = "AUTO";
-            testAccountData.nameOnCard = null;
-            testAccountData.nricNumber = subProc.api.util.getNRIC();
-            testAccountData.dateOfBirth = dateOfBirthFormatter.format(dateOfBirth);
-            testAccountData.addressLine1 = "1";
-            testAccountData.addressLine2 = "2";
-            testAccountData.postoalCode = "000000";
+            testAccountData.PhoneNumber = mnumber;
+            testAccountData.MCC = mprefix;
+            testAccountData.Email = email;
+            testAccountData.KycStatus = KYCStatus.Submit;
+            testAccountData.TestAccountCardType = CardType.NPC;
+            testAccountData.LastName = "TESTER";
+            testAccountData.FirstName = "AUTO";
+            testAccountData.NameOnCard = "";
+            testAccountData.NricNumber = subProc.api.util.getNRIC();
+            testAccountData.Birthdate = dateOfBirthFormatter.format(dateOfBirth);
+            testAccountData.AddressLineOne = "1";
+            testAccountData.AddressLineTwo = "2";
+            testAccountData.PostalCode = "000000";
+            testAccountData.UnderUse = isContinueTest;
 
-            System.out.println("PRESET TEST DATA: Mobile Number is " + testAccountData.mprefix + " " + testAccountData.mnumber);
+            System.out.println("PRESET TEST DATA: Mobile Number is " + testAccountData.MCC + " " + testAccountData.PhoneNumber);
             System.out.println("PRESET TEST DATA: Email address is " + email);
-            System.out.println("PRESET TEST DATA: Surname - " + testAccountData.surname + ";Firstname - " + testAccountData.givenName + ";");
-            System.out.println("PRESET TEST DATA: NRIC Number: " + testAccountData.nricNumber + "DateOfBirth:" + testAccountData.dateOfBirth);
+            System.out.println("PRESET TEST DATA: Surname - " + testAccountData.LastName + ";Firstname - " + testAccountData.FirstName + ";");
+            System.out.println("PRESET TEST DATA: NRIC Number: " + testAccountData.NricNumber + "DateOfBirth:" + testAccountData.Birthdate);
 
             subProc.procSelectCountry(Market.Singapore);
             subProc.procOTPLogin(mprefix, mnumber, email,true);
@@ -450,19 +447,27 @@ public class youtrip_ios_poc {
             el.click();
             Thread.sleep(2000);
 
-            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, false, false, testAccountData.youId, testAccountData.surname, testAccountData.givenName,
-                    testAccountData.dateOfBirth, testAccountData.nricNumber,
-                    testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
+            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, false, false, testAccountData.Card.YouId, testAccountData.LastName, testAccountData.FirstName,
+                    testAccountData.Birthdate, testAccountData.NricNumber,
+                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
                     null, null, null, null, null);
 
             Thread.sleep(25000);
             System.out.println("TEST STEP: Verify Back to Limited Home Page");
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver), "Thank You for Your Application"));
             String kycRefNo = ((IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
-            testAccountData.userId = subProc.api.yp_getKYCdetails(kycRefNo).get("userId");
+            testAccountData.Id = subProc.api.yp_getKYCdetails(kycRefNo).get("userId");
 
-            subProc.api.util.exportAccountTestData(testAccountData);
+            subProc.api.data_createTestUser(testAccountData);
+
+            subProc.api.data_bindTestCardToTestUser(testAccountData.Id, testCardData.Id);
         }catch (Exception e){
+            testAccountData = null;
+            if (testCardData != null){
+                testCardData.Status = CardStatus.UnknownCardStatus;
+                testCardData.UnderUse = false;
+                subProc.api.data_updateTestCard(testCardData);
+            }
             e.printStackTrace();
             fail();
         }
@@ -490,14 +495,11 @@ public class youtrip_ios_poc {
 
         try {
             if (testAccountData == null) {
-                HashMap<String, String> searchCriteria = new HashMap<>();
-                searchCriteria.put("kycstatus", KYCStatus.SUBMIT.toString());
-                searchCriteria.put("cardtype", CardType.NPC.toString());
-                testAccountData = subProc.api.util.searchFromPoolBy(searchCriteria);
+                testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.NPC.toString(), KYCStatus.Submit.toString());
             }
 
             subProc.procSelectCountry(Market.Singapore);
-            subProc.procOTPLogin(testAccountData.mprefix, testAccountData.mnumber, testAccountData.emailAddress, false);
+            subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
             if(el != null)
@@ -523,25 +525,29 @@ public class youtrip_ios_poc {
             el.click();
             Thread.sleep(2000);
 
-            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, true, false, testAccountData.youId, testAccountData.surname, testAccountData.givenName,
-                    testAccountData.dateOfBirth, testAccountData.nricNumber,
-                    testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
+            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, true, false, testAccountData.Card.YouId, testAccountData.LastName, testAccountData.FirstName,
+                    testAccountData.Birthdate, testAccountData.NricNumber,
+                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
                     newSurname, newGivenName, newDateOfBirth, newAddressLine1, newAddressLine2);
 
 
-            testAccountData.surname = newSurname;
-            testAccountData.givenName = newGivenName;
-            testAccountData.dateOfBirth = newDateOfBirth;
-            testAccountData.addressLine1 = newAddressLine1;
-            testAccountData.addressLine2 = newAddressLine2;
+            testAccountData.LastName = newSurname;
+            testAccountData.FirstName = newGivenName;
+            testAccountData.Birthdate = newDateOfBirth;
+            testAccountData.AddressLineOne = newAddressLine1;
+            testAccountData.AddressLineTwo = newAddressLine2;
 
             Thread.sleep(25000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             String newKycRefNo = el.getText();
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
 
-            subProc.api.util.updateData(testAccountData);
+            testAccountData.UnderUse = isContinueTest;
+            testAccountData.Card.UnderUse = isContinueTest;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
         }catch (Exception e){
+            testAccountData = null;
             e.printStackTrace();
             fail();
         }
@@ -554,14 +560,11 @@ public class youtrip_ios_poc {
         String kycRefNo;
         try {
             if (testAccountData == null) {
-                HashMap<String, String> searchCriteria = new HashMap<>();
-                searchCriteria.put("kycstatus", KYCStatus.SUBMIT.toString());
-                searchCriteria.put("cardtype", CardType.NPC.toString());
-                testAccountData = subProc.api.util.searchFromPoolBy(searchCriteria);
+                testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.NPC.toString(), KYCStatus.Submit.toString());
             }
 
             subProc.procSelectCountry(Market.Singapore);
-            subProc.procOTPLogin(testAccountData.mprefix, testAccountData.mnumber, testAccountData.emailAddress, false);
+            subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
             if(el != null)
@@ -576,8 +579,8 @@ public class youtrip_ios_poc {
             Thread.sleep(15000);
             System.out.println("TEST STEP: KYC Partial rejection received");
 
-            testAccountData.givenName = "Auto YP Edit";
-            testAccountData.addressLine2 = "PARTIAL EDIT TEST";
+            testAccountData.FirstName = "Auto YP Edit";
+            testAccountData.AddressLineTwo = "PARTIAL EDIT TEST";
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
             actualText = el.getText();
@@ -591,9 +594,9 @@ public class youtrip_ios_poc {
             el.click();
             Thread.sleep(2000);
 
-            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, false, false, testAccountData.youId, testAccountData.surname, testAccountData.givenName,
-                    testAccountData.dateOfBirth, testAccountData.nricNumber,
-                    testAccountData.addressLine1, testAccountData.addressLine2, testAccountData.postoalCode,
+            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, false, false, testAccountData.Card.YouId, testAccountData.LastName, testAccountData.FirstName,
+                    testAccountData.Birthdate, testAccountData.NricNumber,
+                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
                     null, null, null, null, null);
 
             Thread.sleep(25000);
@@ -601,8 +604,12 @@ public class youtrip_ios_poc {
             String newKycRefNo = el.getText();
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
 
-            subProc.api.util.updateData(testAccountData);
+            testAccountData.UnderUse = isContinueTest;
+            testAccountData.Card.UnderUse = isContinueTest;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
         }catch (Exception e){
+            testAccountData = null;
             e.printStackTrace();
             fail();
         }
@@ -614,14 +621,11 @@ public class youtrip_ios_poc {
         IOSElement el;
         try {
             if (testAccountData == null) {
-                HashMap<String, String> searchCriteria = new HashMap<>();
-                searchCriteria.put("kycstatus", KYCStatus.SUBMIT.toString());
-                searchCriteria.put("cardtype", CardType.NPC.toString());
-                testAccountData = subProc.api.util.searchFromPoolBy(searchCriteria);
+                testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.NPC.toString(), KYCStatus.Submit.toString());
             }
 
             subProc.procSelectCountry(Market.Singapore);
-            subProc.procOTPLogin(testAccountData.mprefix, testAccountData.mnumber, testAccountData.emailAddress, false);
+            subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
             if(el != null)
@@ -641,10 +645,14 @@ public class youtrip_ios_poc {
             assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Verification Complete");
             assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver).getText(), "My Card Arrived");
 
-            testAccountData.kycStatus = KYCStatus.CLEAR;
+            testAccountData.KycStatus = KYCStatus.Clear;
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
 
-            subProc.api.util.updateData(testAccountData);
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
         }catch(Exception e){
+            testAccountData = null;
             e.printStackTrace();
             fail();
         }
@@ -654,7 +662,9 @@ public class youtrip_ios_poc {
     public void regTC07_Logout() throws InterruptedException {
         IOSElement el;
         try {
-            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
+            testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatusAndCardStatus(CardType.PC.toString(), KYCStatus.Clear.toString(), CardStatus.Active.toString());
+
+            subProc.procLoginToHomePage(Market.Singapore, testAccountData.MCC, testAccountData.PhoneNumber, defaultAPPPinCode);
             System.out.println("TEST STEP: Logout");
             UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnMenu", driver).click();
             UIElementKeyDict.getElement(PageKey.HomePageElementDict, "menuBtnSetting", driver).click();
@@ -665,7 +675,16 @@ public class youtrip_ios_poc {
             System.out.println("TEST STEP: Back to Country Selection page");
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CountryPageElementDict, "lblTitle", driver), "Where do you live?"));
             Assert.assertTrue(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CountryPageElementDict, "optionCountry", driver).isDisplayed());
+
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
         }catch(Exception e){
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
             e.printStackTrace();
             fail();
         }
@@ -676,7 +695,9 @@ public class youtrip_ios_poc {
         IOSElement el;
         String newAPPPinCode = "2222";
         try {
-            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
+            testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatusAndCardStatus(CardType.PC.toString(), KYCStatus.Clear.toString(), CardStatus.Active.toString());
+
+            subProc.procLoginToHomePage(Market.Singapore, testAccountData.MCC, testAccountData.PhoneNumber, defaultAPPPinCode);
 
             subProc.procChangeAppPinFromHomePage(defaultAPPPinCode, newAPPPinCode);
 
@@ -690,7 +711,16 @@ public class youtrip_ios_poc {
             System.out.println("TEST STEP: Re-Login with new App Pin Code");
             subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", newAPPPinCode);
             subProc.procChangeAppPinFromHomePage(newAPPPinCode, defaultAPPPinCode);
+
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
         }catch(Exception e){
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
             e.printStackTrace();
             fail();
         }
@@ -711,14 +741,9 @@ public class youtrip_ios_poc {
         SimpleDateFormat expiryDateFormatter = new SimpleDateFormat("MMYY");
         String expiryDateString = expiryDateFormatter.format(expiryDate);
         try {
-            if (testAccountData == null) {
-                HashMap<String, String> searchCriteria = new HashMap<>();
-                searchCriteria.put("kycstatus", KYCStatus.CLEAR.toString());
-                searchCriteria.put("cardstatus", CardStatus.NEWACTIVE.toString());
-                testAccountData = subProc.api.util.searchFromPoolBy(searchCriteria);
-            }
+            testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatusAndCardStatus(CardType.PC.toString(), KYCStatus.Clear.toString(), CardStatus.NewActive.toString());
 
-            subProc.procLoginToHomePage(Market.Singapore, testAccountData.mprefix, testAccountData.mnumber, defaultAPPPinCode);
+            subProc.procLoginToHomePage(Market.Singapore, testAccountData.MCC, testAccountData.PhoneNumber, defaultAPPPinCode);
 
             UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnTopUp", driver).click();
             Thread.sleep(3000);
@@ -780,7 +805,18 @@ public class youtrip_ios_poc {
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.OrderReplacementCardPageElementDict, "lblCreditCardNumber", driver);
             Assert.assertEquals(el.getText(), expectedDisplayCard);
 
+            testAccountData.UnderUse = false;
+            testAccountData.Card.Status = CardStatus.Active;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
+
         }catch(Exception e){
+            testAccountData.UnderUse = false;
+            testAccountData.Card.Status = CardStatus.UnknownCardStatus;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
             e.printStackTrace();
             fail();
         }
@@ -802,7 +838,9 @@ public class youtrip_ios_poc {
         SimpleDateFormat expiryDateFormatter = new SimpleDateFormat("MMYY");
         String expiryDateString = expiryDateFormatter.format(expiryDate);
         try {
-            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
+            testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatusAndCardStatus(CardType.PC.toString(), KYCStatus.Clear.toString(), CardStatus.Active.toString());
+
+            subProc.procLoginToHomePage(Market.Singapore, testAccountData.MCC, testAccountData.PhoneNumber, defaultAPPPinCode);
 
             UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnTopUp", driver).click();
             Thread.sleep(2000);
@@ -853,7 +891,16 @@ public class youtrip_ios_poc {
             Assert.assertEquals(el.getText(), "Amount (SGD)");
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.TopUpPageElementDict, "lblPayBy", driver);
             Assert.assertEquals(el.getText(), expectedDisplayCard);
+
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
         }catch(Exception e){
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
             e.printStackTrace();
             fail();
         }
@@ -875,7 +922,9 @@ public class youtrip_ios_poc {
         SimpleDateFormat expiryDateFormatter = new SimpleDateFormat("MMYY");
         String expiryDateString = expiryDateFormatter.format(expiryDate);
         try {
-            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
+            testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatusAndCardStatus(CardType.PC.toString(), KYCStatus.Clear.toString(), CardStatus.Active.toString());
+
+            subProc.procLoginToHomePage(Market.Singapore, testAccountData.MCC, testAccountData.PhoneNumber, defaultAPPPinCode);
 
             UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnCard", driver).click();
             Thread.sleep(1000);
@@ -932,7 +981,16 @@ public class youtrip_ios_poc {
             Assert.assertEquals(el.getText(), "Debit/Credit Card");
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.OrderReplacementCardChangeCardPageElementDict, "lblCreditCardNumber", driver);
             Assert.assertEquals(el.getText(), expectedDisplayCard);
+
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
         }catch(Exception e){
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
             e.printStackTrace();
             fail();
         }
@@ -949,7 +1007,9 @@ public class youtrip_ios_poc {
 
         JavascriptExecutor jsExec = (JavascriptExecutor) driver;
         try {
-            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
+            testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatusAndCardStatus(CardType.PC.toString(), KYCStatus.Clear.toString(), CardStatus.Active.toString());
+
+            subProc.procLoginToHomePage(Market.Singapore, testAccountData.MCC, testAccountData.PhoneNumber, defaultAPPPinCode);
 
             System.out.println("TEST STEP: Home Page - Get Current SGD Balance");
             balanceList = UIElementKeyDict.getHorizontalBalanceBlockList(driver);
@@ -1001,7 +1061,16 @@ public class youtrip_ios_poc {
             Assert.assertEquals(activityList.get(2).getText(), "Top Up");
             Assert.assertEquals(activityList.get(1).getText(), "1 min");
 
+
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
         }catch(Exception e){
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
             e.printStackTrace();
             fail();
         }
@@ -1012,6 +1081,8 @@ public class youtrip_ios_poc {
     @Test
     public void regTC41_LockCard() throws InterruptedException {
         try {
+            testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatusAndCardStatus(CardType.PC.toString(), KYCStatus.Clear.toString(), CardStatus.Active.toString());
+
             subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
             UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnCard", driver).click();
             Thread.sleep(2000);
@@ -1042,7 +1113,16 @@ public class youtrip_ios_poc {
             Assert.assertEquals(UIElementKeyDict.getElement(PageKey.HomePageElementDict, "txtCardLockedPopUpTitle", driver).getText(), "Your Card is Locked");
             Assert.assertEquals(UIElementKeyDict.getElement(PageKey.HomePageElementDict, "txtCardLockedPopUpDesc", driver).getText(), "Tap \"Card\" button to unlock your card first.");
             UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnCardLockedPopUpOK", driver).click();
+
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
         }catch(Exception e){
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
             e.printStackTrace();
             fail();
         }
@@ -1052,6 +1132,8 @@ public class youtrip_ios_poc {
     public void regTC43_checkOrderReplacementCardPage() throws InterruptedException {
         IOSElement el;
         try {
+            testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatusAndCardStatus(CardType.PC.toString(), KYCStatus.Clear.toString(), CardStatus.Active.toString());
+
             subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
             UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnCard", driver).click();
             Thread.sleep(1000);
@@ -1081,7 +1163,16 @@ public class youtrip_ios_poc {
             UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "btnClose", driver).click();
 
             subProc.procVerifyInHomePage(Market.Singapore);
+
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
         }catch(Exception e){
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            subProc.api.data_updateTestCard(testAccountData.Card);
             e.printStackTrace();
             fail();
         }
