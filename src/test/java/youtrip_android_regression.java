@@ -3,51 +3,42 @@ import TestBased.YouTripAndroidUIElementKey.Market;
 import TestBased.YouTripAndroidUIElementKey.PageKey;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
-
+import org.testng.annotations.*;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import java.lang.*;
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 public class youtrip_android_regression {
 
     AndroidDriver driver;
-    YouAPI api;
     Utils utils;
     YouTripAndroidUIElementKey UIElementKeyDict;
     YouTripAndroidSubRoutine subProc;
     WebDriverWait wait;
 
-    @BeforeTest
+    @BeforeTest (alwaysRun = true)
     public void setUp() throws MalformedURLException {
 
-        api = new YouAPI();
         utils = new Utils();
         UIElementKeyDict = new YouTripAndroidUIElementKey();
         DesiredCapabilities capabilities = new DesiredCapabilities();
-
         /*
-         * ###### Desired Capabilities for Real Device ######
+         * ###### Desired Capabilities for Real Device (wireless) ######
          */
-        /*capabilities.setCapability("deviceName", "Nexus 5");
-        capabilities.setCapability(CapabilityType.VERSION, "6.0.1");
+        /*capabilities.setCapability("deviceName", "Galaxy Note9");
+        capabilities.setCapability("deviceId", "192.168.1.25:5555");
         capabilities.setCapability("automationName", "UiAutomator2");
         capabilities.setCapability("platformName", "Android");
         File filePath = new File(System.getProperty("user.dir"));
         File appDir = new File(filePath, "/apps");
-        File app = new File(appDir, "app-sit-release-master-3.3.0.1140.apk");
+        File app = new File(appDir, "app-sit-release-master-pre-3.5.1.1165.apk");
         capabilities.setCapability("app", app.getAbsolutePath());
-        capabilities.setCapability("appWaitPackage", "co.you.youapp.dev");
-        capabilities.setCapability("appWaitActivity", "co.you.youapp.ui.base.SingleFragmentActivity");*/
         /*
          * ###### Desired Capabilities for Real Device ######
          */
@@ -55,7 +46,7 @@ public class youtrip_android_regression {
         /*
          * ###### Desired Capabilities for Android Emulator ######
          */
-        capabilities.setCapability("deviceName", "Android Emulator");
+        /*capabilities.setCapability("deviceName", "Android Emulator");
         //capabilities.setCapability(CapabilityType.VERSION, "7.0.0");
         capabilities.setCapability("automationName", "UiAutomator2");
         capabilities.setCapability("platformName", "Android");
@@ -78,7 +69,6 @@ public class youtrip_android_regression {
         /*
          * ###### Desired Capabilities for AWS Device Farm ######
          */
-
         driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         subProc = new YouTripAndroidSubRoutine(UIElementKeyDict, driver);
@@ -87,7 +77,7 @@ public class youtrip_android_regression {
 
     }
 
-    @Test
+    @Test (groups = { "regression_test"})
     public void regTC01_selectTH() {
 
         try {
@@ -99,9 +89,9 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "sanity_test" })
     public void regTC02_selectSG() {
-
+        System.out.println("ANDROID REGRESSION TEST");
         try {
             //select SG from country selection
             subProc.procSelectCountry(Market.Singapore);
@@ -113,7 +103,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "sanity_test"})
     public void regTC03_login_new_user_OTP() {
         try {
             //TODO separate test data
@@ -122,7 +112,7 @@ public class youtrip_android_regression {
             String email = ("qa+sg" + mnumber + "@you.co");
 
             //enter mobile phone, get OTP and continue as new user
-            subProc.procOTPLogin(mprefix, mnumber, false);
+            subProc.procOTPLogin(mprefix, mnumber, true);
             //enter email address and continue to welcome page
             subProc.procEnterEmail(email);
         } catch (Exception e) {
@@ -131,7 +121,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "sanity_test"})
     public void regTC04_submit_PC_KYC_NRIC() {
         try {
             //TODO separate test data
@@ -159,7 +149,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "sanity_test"})
     public void regTC05_fullreject_PC_KYC_NRIC() {
         try {
             //perform full rejection
@@ -170,7 +160,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "sanity_test"})
     public void regTC06_resubmit_fullreject_PC_KYC_NRIC() {
         AndroidElement el;
         try {
@@ -192,7 +182,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "sanity_test"})
     public void regTC07_partialreject_PC_KYC_NRIC() {
         try {
             //perform partial rejection
@@ -203,7 +193,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "sanity_test"})
     public void regTC08_resubmit_partialreject_PC_KYC_NRIC() {
         AndroidElement el;
         try {
@@ -222,7 +212,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "sanity_test"})
     public void regTC09_approved_PC_KYC_NRIC() {
         try {
             //perform approval
@@ -233,7 +223,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "sanity_test"})
     public void regTC10_logout_PC_KYC_NRIC() {
         try {
             //logout of account
@@ -244,7 +234,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "not_ready" })
     public void regTC11_submit_NPC_KYC_forgeiner() {
         try {
             //TODO separate test data
@@ -257,7 +247,7 @@ public class youtrip_android_regression {
             String addressLine2 = "Auto Test Line 2";
             String postalCode = "123456";
 
-            String ynum = "8130934511";
+            String ynum = "8121922668";
 
             String mprefix = "123";
             String mnumber = utils.getTimestamp();
@@ -288,7 +278,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "not_ready" })
     public void regTC12_fullreject_NPC_KYC_forgeiner() {
         try {
             //perform full rejection
@@ -299,7 +289,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "not_ready" })
     public void regTC13_resubmit_fullreject_NPC_KYC_forgeiner() {
         AndroidElement el;
         try {
@@ -320,7 +310,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "not_ready" })
     public void regTC14_partialreject_NPC_KYC_forgeiner() {
         try {
             //perform partial rejection
@@ -331,10 +321,12 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "not_ready"})
     public void regTC15_resubmit_partialreject_NPC_KYC_forgeiner() {
         AndroidElement el;
         try {
+            String firstname = "Auto";
+
             //click retry button
             el = (AndroidElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnRetry", driver);
             el.click();
@@ -342,7 +334,7 @@ public class youtrip_android_regression {
             Thread.sleep(2000);
             //resubmit kyc after partial rejection
             subProc.procSubmitSGKYC(false, true, false, false,
-                    null, null, null, null, null, null,
+                    null, firstname, null, null, null, null,
                     null, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -350,7 +342,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test
+    @Test (groups = { "regression_test", "not_ready" })
     public void regTC16_approved_NPC_KYC_forgeiner() {
         try {
             //perform approval
@@ -362,12 +354,13 @@ public class youtrip_android_regression {
     }
 
     //TODO blocked on activation - need magic link api updates
-    /*@Test
+
+    @Test (groups = { "regression_test", "not_ready" })
     public void regTC17_activatecard_NPC_KYC_forgeiner() {
 
-    }*/
+    }
 
-    @Test
+    @Test (groups = { "regression_test", "not_ready" })
     public void regTC18_logout_NPC_KYC_forgeiner() {
         try {
             //logout of account
@@ -378,7 +371,7 @@ public class youtrip_android_regression {
         }
     }
 
-    /*@Test
+    @Test (groups = { "regression_test", "sanity_test", "not_ready" })
     public void regTC19_login_existing_user_OTP() {
         try {
             //TODO separate test data
@@ -398,7 +391,7 @@ public class youtrip_android_regression {
             fail();
         }
 
-    }*/
+    }
 
     /*@Test
     public void regTC20_topup_addcard_3DS_notsupported() {
@@ -435,8 +428,8 @@ public class youtrip_android_regression {
 
     }*/
 
-    @AfterClass
+    @AfterTest (alwaysRun = true)
     public void end() {
-        //driver.quit();
+        driver.quit();
     }
 }

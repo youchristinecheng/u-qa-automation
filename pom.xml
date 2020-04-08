@@ -34,7 +34,8 @@
                 <configuration>
                     <suiteXmlFiles>
                         <!-- TestNG suite XML files -->
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/resources/testng_android.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/resources/testng_ios.xml</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
             </plugin>
@@ -91,6 +92,7 @@
                 </executions>
             </plugin>
         </plugins>
+
     </build>
     <!--<properties>
         <testng.version>7.0.0</testng.version>
@@ -102,22 +104,22 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>3.141.5</version>
+            <version>3.141.0</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>7.0.0</version>
+            <version>7.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-support</artifactId>
-            <version>3.141.5</version>
+            <version>3.141.0</version>
         </dependency>
         <dependency>
             <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
-            <version>6.1.0</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
