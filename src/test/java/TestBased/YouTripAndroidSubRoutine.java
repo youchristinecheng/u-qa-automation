@@ -653,7 +653,7 @@ public class YouTripAndroidSubRoutine {
             }
 
             //back to the app - wait for reject to be updated
-            Thread.sleep(10000);
+            Thread.sleep(15000);
             wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
             System.out.println("TEST STEP: KYC rejection received");
             assertEquals(UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Attention");
@@ -672,7 +672,7 @@ public class YouTripAndroidSubRoutine {
             //call YP full reject with Ref Number
             api.yp_approve(kycRefNo);
 
-            //back to the app - wait for reject to be updated
+            //back to the app - wait for approval
             Thread.sleep(10000);
             wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
             System.out.println("TEST STEP: KYC rejection received");
