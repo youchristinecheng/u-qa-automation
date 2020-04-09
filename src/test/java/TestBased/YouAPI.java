@@ -396,10 +396,14 @@ public class YouAPI {
                 .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
                 .header("x-request-id", "createTestUser"+util.getTimestamp())
                 .header("Content-Type", "application/json")
-                .body(data.toRequestBodyString())
+                .body(data.toRequestBodyString(true))
                 .asJson();
 
         assertEquals(200, partialrejectKYCjsonResponse.getStatus());
+
+        if(data.Card.TestCardCardType.equals(CardType.NPC)) {
+            data_bindTestCardToTestUser(data.Id, data.Card.Id);
+        }
     }
 
     public void data_updateTestUser(TestAccountData data){
@@ -407,14 +411,17 @@ public class YouAPI {
 
         System.out.println("API CALL: " +url_updateUser);
 
-        HttpResponse<JsonNode> partialrejectKYCjsonResponse = Unirest.post(url_updateUser)
+        HttpResponse<JsonNode> updateTestUserjsonResponse = Unirest.post(url_updateUser)
                 .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
                 .header("x-request-id", "updateTestUser"+util.getTimestamp())
                 .header("Content-Type", "application/json")
-                .body(data.toRequestBodyString())
+                .body(data.toRequestBodyString(false))
                 .asJson();
 
-        assertEquals(200, partialrejectKYCjsonResponse.getStatus());
+        assertEquals(200, updateTestUserjsonResponse.getStatus());
+        if(data.Card != null){
+            this.data_updateTestCard(data.Card);
+        }
     }
 
     public TestAccountData data_getTestUserByUserID(String userID) throws NoSuchFieldException {
@@ -465,14 +472,14 @@ public class YouAPI {
 
         System.out.println("API CALL: " + url_updateCard);
 
-        HttpResponse<JsonNode> partialrejectKYCjsonResponse = Unirest.post(url_updateCard)
+        HttpResponse<JsonNode> updateTestCardjsonResponse = Unirest.post(url_updateCard)
                 .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
                 .header("x-request-id", "updateTestCard"+util.getTimestamp())
                 .header("Content-Type", "application/json")
                 .body(data.toRequestBodyString())
                 .asJson();
 
-        assertEquals(200, partialrejectKYCjsonResponse.getStatus());
+        assertEquals(200, updateTestCardjsonResponse.getStatus());
     }
 
     public TestCardData data_getTestCardByCardTypeAndStatus(String cardType, String cardStatus) throws NoSuchFieldException{
@@ -494,7 +501,7 @@ public class YouAPI {
 
         System.out.println("API CALL: " + url_updateTestUserCard);
 
-        HttpResponse<JsonNode> partialrejectKYCjsonResponse = Unirest.post(url_updateTestUserCard)
+        HttpResponse<JsonNode> bindTestCardToTestUserjsonResponse = Unirest.post(url_updateTestUserCard)
                 .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
                 .header("x-request-id", "updateTestCard"+util.getTimestamp())
                 .header("Content-Type", "application/json")
@@ -503,6 +510,6 @@ public class YouAPI {
                         "\t\"cardId\": \""+cardId+"\"\n" +
                         "}")
                 .asJson();
-
+        assertEquals(200, bindTestCardToTestUserjsonResponse.getStatus());
     }
 }

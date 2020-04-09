@@ -131,7 +131,7 @@ public class TestAccountData {
         Card = null;
     }
 
-    public String toRequestBodyString() {
+    public String toRequestBodyString( boolean isCreate) {
         System.out.println("ACCOUNT DATA EXPORT: Id - " + this.Id);
         System.out.println("ACCOUNT DATA EXPORT: MCC - " + this.MCC);
         System.out.println("ACCOUNT DATA EXPORT: PhoneNumber - " + this.PhoneNumber);
@@ -171,8 +171,12 @@ public class TestAccountData {
                 .append("\t\t\"CardType\":" + this.TestAccountCardType.getCodeCardType() + ",\n")
                 .append("\t\t\"UnderUse\":" + this.UnderUse + "\n")
                 .append("\t}");
-        if (this.Card != null && this.TestAccountCardType.equals(TestAccountCardType.PC)) {
-            builder.append(",\n").append(this.Card.toRequestSubBodyString());
+        if (this.Card != null) {
+            if (isCreate && this.TestAccountCardType.equals(TestAccountCardType.NPC)) {
+                builder.append("\n");
+            }else {
+                builder.append(",\n").append(this.Card.toRequestSubBodyString());
+            }
         } else {
             builder.append("\n");
         }
