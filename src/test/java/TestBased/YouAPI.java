@@ -417,6 +417,21 @@ public class YouAPI {
         assertEquals(200, partialrejectKYCjsonResponse.getStatus());
     }
 
+    public TestAccountData data_getTestUserByUserID(String userID) throws NoSuchFieldException {
+        String url_getTestUser = (this.dataBackDoorEndPoint + "/testUser/" +userID);
+
+        System.out.println("API CALL: " + url_getTestUser);
+
+        JSONObject Rspbody = Unirest.get(url_getTestUser)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .asJson()
+                .getBody()
+                .getObject();
+
+        return TestAccountData.toTestAccountData(Rspbody);
+
+    }
+
     public TestAccountData data_getTestUserByCardTypeAndKycStatus(String cardType, String kycStatus) throws NoSuchFieldException {
         String url_getTestUser = (this.dataBackDoorEndPoint + "/searchNoCardTestUser/" + cardType + "/" + kycStatus);
 
