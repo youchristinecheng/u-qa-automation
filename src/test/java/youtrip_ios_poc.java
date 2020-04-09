@@ -403,6 +403,7 @@ public class youtrip_ios_poc {
         try {
             testCardData = subProc.api.data_getTestCardByCardTypeAndStatus(CardType.NPC.toString(), CardStatus.NPCPending.toString());
             testAccountData.Card = testCardData;
+            testAccountData.Card.Status = CardStatus.Inactive;
 
             SimpleDateFormat formatter = new SimpleDateFormat("YYMMDDHHmmssSS");
             Date date = new Date(System.currentTimeMillis());
@@ -459,8 +460,8 @@ public class youtrip_ios_poc {
             testAccountData.Id = subProc.api.yp_getKYCdetails(kycRefNo).get("userId");
 
             subProc.api.data_createTestUser(testAccountData);
-
-            subProc.api.data_bindTestCardToTestUser(testAccountData.Id, testCardData.Id);
+            subProc.api.data_updateTestCard(testAccountData.Card);
+            subProc.api.data_bindTestCardToTestUser(testAccountData.Id, testAccountData.Card.Id);
         }catch (Exception e){
             testAccountData = null;
             if (testCardData != null){

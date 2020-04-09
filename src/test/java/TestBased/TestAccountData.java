@@ -171,7 +171,7 @@ public class TestAccountData {
                 .append("\t\t\"CardType\":" + this.TestAccountCardType.getCodeCardType() + ",\n")
                 .append("\t\t\"UnderUse\":" + this.UnderUse + "\n")
                 .append("\t}");
-        if (this.Card != null) {
+        if (this.Card != null && this.TestAccountCardType.equals(TestAccountCardType.PC)) {
             builder.append(",\n").append(this.Card.toRequestSubBodyString());
         } else {
             builder.append("\n");
