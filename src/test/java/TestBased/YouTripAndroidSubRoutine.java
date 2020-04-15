@@ -136,10 +136,9 @@ public class YouTripAndroidSubRoutine {
                 //wait till on enter email page
                 assertEquals((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.EmailPageElementDict, "lblTitle", driver)).getText(), "Enter Email Address");
                 System.out.println("TEST STEP: Enter Email Page - on page");
-            } else {
-                assertEquals((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, "lblTitle", driver)).getText(), "Unlock YouTrip");
-                System.out.println("TEST STEP: Unlock App Page - on page");
             }
+
+            Thread.sleep(2000);
 
         }catch(Exception e){
             throw e;
@@ -389,7 +388,7 @@ public class YouTripAndroidSubRoutine {
         }
 
     public void procSubmitSGKYC(boolean isFullRejectFlow, boolean isPartialRejectFlow, boolean isNRIC, boolean isPC,
-                                String surname, String firstname, String dob, String idNumber,
+                                String surname, String firstname, String nameOnCard, String dob, String idNumber,
                                 String nationality, String addressLine1, String addressLine2, String postalcode) throws Exception {
         AndroidElement el;
         try {
@@ -528,7 +527,7 @@ public class YouTripAndroidSubRoutine {
                     //clear name and enter new one
                     el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.NameOnCardElementDict, "txtCardName", driver);
                     el.clear();
-                    el.sendKeys("Editted " +firstname);
+                    el.sendKeys(nameOnCard);
                     System.out.println("TEST STEP: Preferred Name page - change name on card");
                 }
                 //confirm new name
