@@ -211,8 +211,8 @@ public class TestAccountData {
             data.TestAccountCardType = CardType.valueOf(jObj.getString(keyArray[13]));
             data.UnderUse = jObj.getBoolean(keyArray[14]);
 
-            if(jObj.has("card")){
-                JSONObject cardObj = jObj.getJSONObject("card");
+            if(jObj.optJSONObject("card") != null){
+                JSONObject cardObj = jObj.optJSONObject("card");
                 data.Card = TestCardData.toTestCardData(cardObj);
             }
 
