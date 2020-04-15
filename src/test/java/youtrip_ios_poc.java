@@ -94,7 +94,6 @@ public class youtrip_ios_poc {
         wait = subProc.getDriverWait();
         try {
             subProc.procHandleDevAlert();
-            subProc.api.data_getTestUserByUserID("123");
         }catch(Exception e){
             fail(e.getMessage());
         }
