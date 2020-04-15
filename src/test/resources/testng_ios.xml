@@ -11,6 +11,12 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="iOS Test Run">
     <test name="Regression">
+        <groups>
+            <run>
+                <include name="sanity_test"/>
+                <exclude name="not_ready"/>
+            </run>
+        </groups>
         <classes>
             <class name="youtrip_ios_poc">
                 <methods>
