@@ -53,21 +53,21 @@ public class youtrip_ios_poc {
         /*
          * ###### Desired Capabilities for Real iPhone ######
          */
-        capabilities.setCapability("deviceName", "YouTech iPhone");
-        capabilities.setCapability(CapabilityType.VERSION, "13.1.2");
-        capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
-//        capabilities.setCapability("deviceName", "YouTech QAs iPhone");
-//        capabilities.setCapability(CapabilityType.VERSION, "12.1.1");
-//        capabilities.setCapability("udid", "00008020-00026C2E3A46002E");
-        capabilities.setCapability("automationName", "XCUITest");
-        capabilities.setCapability("platformName", "iOS");
-        capabilities.setCapability("bundleId", "co.you.youapp");
-        File filePath = new File(System.getProperty("user.dir"));
-        File appDir = new File(filePath, "/apps");
-        File app = new File(appDir, "YOUTrip TH_SIT.ipa");
-        capabilities.setCapability("app", app.getAbsolutePath());
-        capabilities.setCapability("xcodeOrgId", "2HWNYH89R4");
-        capabilities.setCapability("xcodeSigningId", "iPhone Developer");
+//        capabilities.setCapability("deviceName", "YouTech iPhone");
+//        capabilities.setCapability(CapabilityType.VERSION, "13.1.2");
+//        capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
+////        capabilities.setCapability("deviceName", "YouTech QAs iPhone");
+////        capabilities.setCapability(CapabilityType.VERSION, "12.1.1");
+////        capabilities.setCapability("udid", "00008020-00026C2E3A46002E");
+//        capabilities.setCapability("automationName", "XCUITest");
+//        capabilities.setCapability("platformName", "iOS");
+//        capabilities.setCapability("bundleId", "co.you.youapp");
+//        File filePath = new File(System.getProperty("user.dir"));
+//        File appDir = new File(filePath, "/apps");
+//        File app = new File(appDir, "YOUTrip TH_SIT.ipa");
+//        capabilities.setCapability("app", app.getAbsolutePath());
+//        capabilities.setCapability("xcodeOrgId", "2HWNYH89R4");
+//        capabilities.setCapability("xcodeSigningId", "iPhone Developer");
         /*
          * ###### Desired Capabilities for Real Device ######
          */
@@ -1206,17 +1206,16 @@ public class youtrip_ios_poc {
 
     @AfterMethod
     public void TestMethodTeardown(){
-        /*((IOSDriver)driver).resetApp();
+        ((IOSDriver)driver).resetApp();
         try {
             subProc.procHandleDevAlert();
         }catch(Exception e){
             fail(e.getMessage());
-        }*/
+        }
     }
 
     @AfterTest
     public void End() {
-        //System.out.println(driver.getPageSource());
         ((IOSDriver)driver).closeApp();
         driver.quit();
     }

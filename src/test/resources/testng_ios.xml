@@ -16,6 +16,7 @@
                 <methods>
                     <include name="regTC03_selectTH" />
                     <include name="regTC04_selectSG" />
+                    <include name="regTC05_login_new_user_OTP"/>
                 </methods>
             </class>
         </classes>
