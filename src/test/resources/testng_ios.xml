@@ -20,9 +20,7 @@
         <classes>
             <class name="youtrip_ios_poc">
                 <methods>
-                    <include name="regTC03_selectTH" />
-                    <include name="regTC04_selectSG" />
-                    <include name="regTC05_login_new_user_OTP"/>
+                    <include name="regTC26_TopUpSuccess"/>
                 </methods>
             </class>
         </classes>

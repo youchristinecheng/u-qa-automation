@@ -401,7 +401,7 @@ public class YouAPI {
 
         assertEquals(200, partialrejectKYCjsonResponse.getStatus());
 
-        if(data.Card.TestCardCardType.equals(CardType.NPC)) {
+        if(data.TestAccountCardType.equals(CardType.NPC)) {
             data_bindTestCardToTestUser(data.Id, data.Card.Id);
         }
     }
@@ -440,7 +440,7 @@ public class YouAPI {
     }
 
     public TestAccountData data_getTestUserByCardTypeAndKycStatus(String cardType, String kycStatus) throws NoSuchFieldException {
-        String url_getTestUser = (this.dataBackDoorEndPoint + "/searchNoCardTestUser/" + cardType + "/" + kycStatus);
+        String url_getTestUser = (this.dataBackDoorEndPoint + "/testUser/searchNoCardTestUser/" + cardType + "/" + kycStatus);
 
         System.out.println("API CALL: " + url_getTestUser);
 
@@ -454,7 +454,7 @@ public class YouAPI {
     }
 
     public TestAccountData data_getTestUserByCardTypeAndKycStatusAndCardStatus(String cardType, String kycStatus, String cardStatus) throws NoSuchFieldException{
-        String url_getTestUser = (this.dataBackDoorEndPoint + "/searchTestUser/" + cardType + "/" + kycStatus + "/" + cardStatus);
+        String url_getTestUser = (this.dataBackDoorEndPoint + "/testUser/searchTestUser/" + cardType + "/" + kycStatus + "/" + cardStatus);
 
         System.out.println("API CALL: " + url_getTestUser);
 
@@ -483,7 +483,7 @@ public class YouAPI {
     }
 
     public TestCardData data_getTestCardByCardTypeAndStatus(String cardType, String cardStatus) throws NoSuchFieldException{
-        String url_getTestCaed = (this.dataBackDoorEndPoint + "/searchTestCard/" + cardType + "/" + cardStatus);
+        String url_getTestCaed = (this.dataBackDoorEndPoint + "/testCard/searchTestCard/" + cardType + "/" + cardStatus);
 
         System.out.println("API CALL: " + url_getTestCaed);
 

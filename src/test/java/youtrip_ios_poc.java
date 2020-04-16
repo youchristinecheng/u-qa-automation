@@ -53,9 +53,9 @@ public class youtrip_ios_poc {
         /*
          * ###### Desired Capabilities for Real iPhone ######
          */
-//        capabilities.setCapability("deviceName", "YouTech iPhone");
-//        capabilities.setCapability(CapabilityType.VERSION, "13.1.2");
-//        capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
+////        capabilities.setCapability("deviceName", "YouTech iPhone");
+////        capabilities.setCapability(CapabilityType.VERSION, "13.1.2");
+////        capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
         capabilities.setCapability("deviceName", "YouTech QAs iPhone");
         capabilities.setCapability(CapabilityType.VERSION, "12.1.1");
         capabilities.setCapability("udid", "00008020-00026C2E3A46002E");
@@ -679,9 +679,11 @@ public class youtrip_ios_poc {
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
         }catch(Exception e){
-            testAccountData.UnderUse = false;
-            testAccountData.Card.UnderUse = false;
-            subProc.api.data_updateTestUser(testAccountData);
+            if(testAccountData != null) {
+                testAccountData.UnderUse = false;
+                testAccountData.Card.UnderUse = false;
+                subProc.api.data_updateTestUser(testAccountData);
+            }
             e.printStackTrace();
             fail();
         }
@@ -714,10 +716,12 @@ public class youtrip_ios_poc {
             subProc.api.data_updateTestUser(testAccountData);
             subProc.api.data_updateTestCard(testAccountData.Card);
         }catch(Exception e){
-            testAccountData.UnderUse = false;
-            testAccountData.Card.UnderUse = false;
-            subProc.api.data_updateTestUser(testAccountData);
-            subProc.api.data_updateTestCard(testAccountData.Card);
+            if(testAccountData != null) {
+                testAccountData.UnderUse = false;
+                testAccountData.Card.UnderUse = false;
+                subProc.api.data_updateTestUser(testAccountData);
+                subProc.api.data_updateTestCard(testAccountData.Card);
+            }
             e.printStackTrace();
             fail();
         }
@@ -809,11 +813,13 @@ public class youtrip_ios_poc {
             subProc.api.data_updateTestCard(testAccountData.Card);
 
         }catch(Exception e){
-            testAccountData.UnderUse = false;
-            testAccountData.Card.Status = CardStatus.UnknownCardStatus;
-            testAccountData.Card.UnderUse = false;
-            subProc.api.data_updateTestUser(testAccountData);
-            subProc.api.data_updateTestCard(testAccountData.Card);
+            if(testAccountData != null) {
+                testAccountData.UnderUse = false;
+                testAccountData.Card.Status = CardStatus.UnknownCardStatus;
+                testAccountData.Card.UnderUse = false;
+                subProc.api.data_updateTestUser(testAccountData);
+                subProc.api.data_updateTestCard(testAccountData.Card);
+            }
             e.printStackTrace();
             fail();
         }
@@ -894,10 +900,12 @@ public class youtrip_ios_poc {
             subProc.api.data_updateTestUser(testAccountData);
             subProc.api.data_updateTestCard(testAccountData.Card);
         }catch(Exception e){
-            testAccountData.UnderUse = false;
-            testAccountData.Card.UnderUse = false;
-            subProc.api.data_updateTestUser(testAccountData);
-            subProc.api.data_updateTestCard(testAccountData.Card);
+            if(testAccountData != null) {
+                testAccountData.UnderUse = false;
+                testAccountData.Card.UnderUse = false;
+                subProc.api.data_updateTestUser(testAccountData);
+                subProc.api.data_updateTestCard(testAccountData.Card);
+            }
             e.printStackTrace();
             fail();
         }
@@ -983,9 +991,11 @@ public class youtrip_ios_poc {
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
         }catch(Exception e){
-            testAccountData.UnderUse = false;
-            testAccountData.Card.UnderUse = false;
-            subProc.api.data_updateTestUser(testAccountData);
+            if(testAccountData != null) {
+                testAccountData.UnderUse = false;
+                testAccountData.Card.UnderUse = false;
+                subProc.api.data_updateTestUser(testAccountData);
+            }
             e.printStackTrace();
             fail();
         }
@@ -1061,9 +1071,11 @@ public class youtrip_ios_poc {
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
         }catch(Exception e){
-            testAccountData.UnderUse = false;
-            testAccountData.Card.UnderUse = false;
-            subProc.api.data_updateTestUser(testAccountData);
+            if(testAccountData != null) {
+                testAccountData.UnderUse = false;
+                testAccountData.Card.UnderUse = false;
+                subProc.api.data_updateTestUser(testAccountData);
+            }
             e.printStackTrace();
             fail();
         }
@@ -1111,9 +1123,11 @@ public class youtrip_ios_poc {
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
         }catch(Exception e){
-            testAccountData.UnderUse = false;
-            testAccountData.Card.UnderUse = false;
-            subProc.api.data_updateTestUser(testAccountData);
+            if(testAccountData != null) {
+                testAccountData.UnderUse = false;
+                testAccountData.Card.UnderUse = false;
+                subProc.api.data_updateTestUser(testAccountData);
+            }
             e.printStackTrace();
             fail();
         }
@@ -1159,9 +1173,11 @@ public class youtrip_ios_poc {
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
         }catch(Exception e){
-            testAccountData.UnderUse = false;
-            testAccountData.Card.UnderUse = false;
-            subProc.api.data_updateTestUser(testAccountData);
+            if(testAccountData != null) {
+                testAccountData.UnderUse = false;
+                testAccountData.Card.UnderUse = false;
+                subProc.api.data_updateTestUser(testAccountData);
+            }
             e.printStackTrace();
             fail();
         }
