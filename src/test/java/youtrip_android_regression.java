@@ -429,7 +429,6 @@ public class youtrip_android_regression {
             //store test data
             subProc.api.data_createTestUser(testAccountData);
             subProc.api.data_updateTestCard(testAccountData.Card);
-            subProc.api.data_bindTestCardToTestUser(testAccountData.Id, testAccountData.Card.Id);
 
         } catch (Exception e) {
             testAccountData = null;
