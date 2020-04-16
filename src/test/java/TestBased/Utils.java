@@ -10,6 +10,8 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +24,7 @@ import java.util.regex.Pattern;
 public class Utils {
 
     Random rand = new Random();
+    String decimalAmtFormat = "#,###.00";
 
     //provide timestamp in format for mobile number/ email uniqueness
     public String getTimestamp() {
@@ -97,4 +100,16 @@ public class Utils {
         return screenshot.renameTo(new File(screenshotDirectory, String.format("%s.png", name)));
     }
 
+    public double formatStringAmountValueToDouble(String value){
+        DecimalFormat formatter = new DecimalFormat(this.decimalAmtFormat);
+        Number amountValue = formatter.parse(value, new ParsePosition(0));
+
+        return amountValue.doubleValue();
+    }
+
+    public String formatAmountValueToString(Double value){
+        DecimalFormat formatter = new DecimalFormat(this.decimalAmtFormat);
+        String amountValue = formatter.format(value);
+        return  amountValue;
+    }
 }

@@ -15,6 +15,8 @@ import org.testng.annotations.*;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -714,13 +716,11 @@ public class youtrip_ios_poc {
             testAccountData.UnderUse = false;
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
-            subProc.api.data_updateTestCard(testAccountData.Card);
         }catch(Exception e){
             if(testAccountData != null) {
                 testAccountData.UnderUse = false;
                 testAccountData.Card.UnderUse = false;
                 subProc.api.data_updateTestUser(testAccountData);
-                subProc.api.data_updateTestCard(testAccountData.Card);
             }
             e.printStackTrace();
             fail();
@@ -810,15 +810,12 @@ public class youtrip_ios_poc {
             testAccountData.Card.Status = CardStatus.Active;
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
-            subProc.api.data_updateTestCard(testAccountData.Card);
-
         }catch(Exception e){
             if(testAccountData != null) {
                 testAccountData.UnderUse = false;
                 testAccountData.Card.Status = CardStatus.UnknownCardStatus;
                 testAccountData.Card.UnderUse = false;
                 subProc.api.data_updateTestUser(testAccountData);
-                subProc.api.data_updateTestCard(testAccountData.Card);
             }
             e.printStackTrace();
             fail();
@@ -898,13 +895,11 @@ public class youtrip_ios_poc {
             testAccountData.UnderUse = false;
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
-            subProc.api.data_updateTestCard(testAccountData.Card);
         }catch(Exception e){
             if(testAccountData != null) {
                 testAccountData.UnderUse = false;
                 testAccountData.Card.UnderUse = false;
                 subProc.api.data_updateTestUser(testAccountData);
-                subProc.api.data_updateTestCard(testAccountData.Card);
             }
             e.printStackTrace();
             fail();
@@ -1009,6 +1004,7 @@ public class youtrip_ios_poc {
         double actualBalance = 0.0;
         double expectedBalance = 0.0;
         double topUpAmt = 20.00;
+        String expectedTxnDisplayVal="";
 
         JavascriptExecutor jsExec = (JavascriptExecutor) driver;
         try {
@@ -1020,10 +1016,13 @@ public class youtrip_ios_poc {
             balanceList = UIElementKeyDict.getHorizontalBalanceBlockList(driver);
             for(int i = 1; i < balanceList.size(); i++){
                 if(balanceList.get(i).getText().equals("SGD")){
-                    actualBalance = Double.parseDouble(balanceList.get(i + 1).getText());
+                    actualBalance = subProc.api.util.formatStringAmountValueToDouble(balanceList.get(i + 1).getText());
+                    //actualBalance = Double.parseDouble(balanceList.get(i + 1).getText());
                     expectedBalance = actualBalance + topUpAmt;
+                    expectedTxnDisplayVal = "+ " + subProc.api.util.formatAmountValueToString(topUpAmt) + " SGD";
                     System.out.println("TEST DATA: Home Page - Current SGD Balance: " + String.valueOf(actualBalance));
                     System.out.println("TEST DATA: Home Page - Expect SGD Balance After Top-up: " + String.valueOf(expectedBalance));
+                    System.out.println("TEST DATA: Home Page - Expect Top-up Transaction: " + String.valueOf(expectedTxnDisplayVal));
                     break;
                 }
             }
@@ -1062,9 +1061,10 @@ public class youtrip_ios_poc {
             Assert.assertEquals(expectedBalance, actualBalance);
 
             activityList = UIElementKeyDict.getRecentActivityBlockList(driver);
-            Assert.assertEquals(activityList.get(0).getText(), "+ " + String.format("%.2f", topUpAmt) + " SGD");
+
+            Assert.assertEquals(activityList.get(0).getText(), expectedTxnDisplayVal);
             Assert.assertEquals(activityList.get(2).getText(), "Top Up");
-            Assert.assertEquals(activityList.get(1).getText(), "1 min");
+            //Assert.assertEquals(activityList.get(1).getText(), "1 min");
 
 
             testAccountData.UnderUse = false;
@@ -1121,11 +1121,13 @@ public class youtrip_ios_poc {
 
             testAccountData.UnderUse = false;
             testAccountData.Card.UnderUse = false;
+            testAccountData.Card.Status = CardStatus.Locked;
             subProc.api.data_updateTestUser(testAccountData);
         }catch(Exception e){
             if(testAccountData != null) {
                 testAccountData.UnderUse = false;
                 testAccountData.Card.UnderUse = false;
+                testAccountData.Card.Status = CardStatus.UnknownCardStatus;
                 subProc.api.data_updateTestUser(testAccountData);
             }
             e.printStackTrace();
