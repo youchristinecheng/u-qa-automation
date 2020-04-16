@@ -49,6 +49,7 @@ public class YouAPI {
         this.isBackDoorRequireAuthen = true;
         backDoorAuthUserName = "qa";
         backDoorAuthPwd = "youtrip1@3";
+        Unirest.config().verifySsl(false);
     }
 
     public String getOTP(String mprefix, String mnumber) {
@@ -57,14 +58,12 @@ public class YouAPI {
         String otpCode = null;
 
         if (!isBackDoorRequireAuthen) {
-            Unirest.config().verifySsl(false);
             otpCode = Unirest.get(url_backdoorOTP)
                     .asJson()
                     .getBody()
                     .getObject()
                     .getString("password");
         }else{
-            Unirest.config().verifySsl(false);
             otpCode = Unirest.get(url_backdoorOTP)
                     .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
                     .asJson()
@@ -427,7 +426,6 @@ public class YouAPI {
                 .getBody()
                 .getObject();
         return TestAccountData.toTestAccountData(Rspbody);
-
     }
 
     public TestAccountData data_getTestUserByCardTypeAndKycStatus(String cardType, String kycStatus) throws NoSuchFieldException {
