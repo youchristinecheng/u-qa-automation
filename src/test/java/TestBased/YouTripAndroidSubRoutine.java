@@ -15,12 +15,11 @@ import static org.testng.Assert.assertTrue;
 public class YouTripAndroidSubRoutine {
 
     private YouTripAndroidUIElementKey UIElementKeyDict;
-    private WebDriver driver;
-    private AppiumDriver appiumDriver;
+    private AppiumDriver driver;
     private WebDriverWait wait;
     public YouAPI api;
 
-    public YouTripAndroidSubRoutine(YouTripAndroidUIElementKey UIElementKeyDict, WebDriver driver){
+    public YouTripAndroidSubRoutine(YouTripAndroidUIElementKey UIElementKeyDict, AppiumDriver driver){
         this.UIElementKeyDict = UIElementKeyDict;
         this.driver = driver;
         wait = new WebDriverWait(driver, 20);
@@ -98,6 +97,8 @@ public class YouTripAndroidSubRoutine {
             el.click();
             el.sendKeys(mnumber);
             System.out.println("TEST STEP: Mobile Number Page - inputted mobile number");
+            //hide keyboard
+            driver.hideKeyboard();
             //click next button
             el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.MobileNumberPageElementDict, "btnNext", driver);
             el.click();
@@ -154,9 +155,12 @@ public class YouTripAndroidSubRoutine {
             wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.EmailPageElementDict, "lblTitle", driver)), "Enter Email Address"));
             System.out.println("TEST STEP: Enter Email Page - on page");
             System.out.println("TEST DATA: Email address " +email);
-            //input email and click next button
+            //input email
             el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.EmailPageElementDict, "txtUserEmail", driver);
             el.sendKeys(email);
+            //hide keyboard
+            driver.hideKeyboard();
+            //click next button
             el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.EmailPageElementDict, "btnNext", driver);
             el.click();
             System.out.println("TEST STEP: Enter Email Page - click Next button");
@@ -501,6 +505,8 @@ public class YouTripAndroidSubRoutine {
                 el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.NamePageElementDict, "txtGivenName", driver);
                 el.sendKeys(firstname);
             }
+
+            driver.hideKeyboard();
             //continue to next page
             el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.NamePageElementDict, "btnNext", driver);
             el.click();
@@ -530,6 +536,8 @@ public class YouTripAndroidSubRoutine {
                     el.sendKeys(nameOnCard);
                     System.out.println("TEST STEP: Preferred Name page - change name on card");
                 }
+
+                driver.hideKeyboard();
                 //confirm new name
                 el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.NameOnCardElementDict, "btnNext", driver);
                 el.click();
@@ -567,7 +575,7 @@ public class YouTripAndroidSubRoutine {
                 el.click();
                 System.out.println("TEST STEP: Personal Information page - click sex as male");
             }
-            //appiumDriver.hideKeyboard();
+            driver.hideKeyboard();
             Thread.sleep(2000);
             el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.PersonalInformationElementDict, "btnNext", driver);
             el.click();
@@ -593,7 +601,7 @@ public class YouTripAndroidSubRoutine {
                 el.sendKeys(postalcode);
                 System.out.println("TEST STEP: Residential Address page - input postal code");
             }
-            //appiumDriver.hideKeyboard();
+            driver.hideKeyboard();
             Thread.sleep(2000);
             el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.ResidentialAddressElementDict, "btnNext", driver);
             el.click();
@@ -630,6 +638,7 @@ public class YouTripAndroidSubRoutine {
             driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
             assertEquals((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver)).getText(), "Thank You for Your Application");
             System.out.println("TEST STEP: KYC submitted successfully");
+            Thread.sleep(10000);
 
         }catch(Exception e){
             throw e;
