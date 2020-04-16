@@ -389,6 +389,10 @@ public class YouAPI {
                 .asJson();
 
         assertEquals(200, partialrejectKYCjsonResponse.getStatus());
+
+        if(data.TestAccountCardType.equals(CardType.NPC) && data.Card != null){
+            data_bindTestCardToTestUser(data.Id, data.Card.Id);
+        }
     }
 
     public void data_updateTestUser(TestAccountData data){

@@ -171,14 +171,16 @@ public class TestAccountData {
                 .append("\t\t\"CardType\":" + this.TestAccountCardType.getCodeCardType() + ",\n")
                 .append("\t\t\"UnderUse\":" + this.UnderUse);
         if (this.Card != null) {
-            if (isCreate && this.TestAccountCardType.equals(CardType.PC)){
+            if (isCreate && this.TestAccountCardType.equals(CardType.PC)) {
                 // When in Creation with Card (if in case), it will maintain the relationship by the Card section adding together for creation
                 builder.append("\n\t},\n").append(this.Card.toRequestSubBodyString());
+            }else if (isCreate && this.TestAccountCardType.equals(CardType.NPC)){
+                builder.append("\n\t}\n");
             }else {
                 // When in update case, it will maintain the relationship by the CardId field from update
                 // Or When in creation case of NPC(card is already exist, it will maintain the relationship by giving the CardId field
                 builder.append(",\n")
-                        .append("\t\t\"CardId\": \"" + this.Card.Id + "\"\n\t}");
+                        .append("\t\t\"CardId\": \"" + this.Card.Id + "\"\n\t}\n");
             }
         } else {
             // When case is PC creation without Card, or updating user which not yet has a card will fall to this condition.
