@@ -70,6 +70,7 @@ public class youtrip_android_regression {
          */
         capabilities.setCapability("appWaitPackage", "co.you.youapp.dev");
         capabilities.setCapability("appWaitActivity", "co.you.youapp.ui.base.SingleFragmentActivity");
+        capabilities.setCapability("autoGrantPermissions", "true");
         /*
          * ###### Desired Capabilities for AWS Device Farm ######
          */
@@ -82,7 +83,7 @@ public class youtrip_android_regression {
 
     }
 
-    @Test (groups = { "regression_test"})
+    @Test (groups = { "regression_test", "skipped"})
     public void regTC01_selectTH() {
         try {
             //select TH from country selection
@@ -93,7 +94,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "sanity_test" })
+    @Test (groups = { "regression_test", "sanity_test", "skipped"})
     public void regTC02_selectSG() {
         try {
             //select SG from country selection
@@ -106,7 +107,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "sanity_test"})
+    @Test (groups = { "regression_test", "sanity_test", "skipped"})
     public void regTC03_login_new_user_OTP() {
         try {
             String mprefix = "123";
@@ -127,7 +128,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "sanity_test"})
+    @Test (groups = { "regression_test", "sanity_test", "skipped"})
     public void regTC04_submit_PC_KYC_NRIC(ITestContext context) {
         testAccountData = new TestAccountData();
 
@@ -171,7 +172,6 @@ public class youtrip_android_regression {
                     testAccountData.AddressLineOne, testAccountData.AddressLineTwo,
                     testAccountData.PostalCode);
             //get KYC ID number
-            Thread.sleep(25000);
             String kycRefNo = (UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.LimitedHomePageElementDict, "referenceNum", driver)).getText();
             System.out.println("TEST DATA: KYC submission reference number is " +kycRefNo);
             //get user ID and store it as attribute and into data service
@@ -188,7 +188,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "sanity_test"}, dependsOnMethods = "regTC04_submit_PC_KYC_NRIC")
+    @Test (groups = { "regression_test", "sanity_test", "skipped"}, dependsOnMethods = "regTC04_submit_PC_KYC_NRIC")
     public void regTC05_fullreject_PC_KYC_NRIC(ITestContext context) {
         try {
             //recall user ID from previous test case
@@ -214,7 +214,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "sanity_test"}, dependsOnMethods = "regTC05_fullreject_PC_KYC_NRIC")
+    @Test (groups = { "regression_test", "sanity_test", "skipped"}, dependsOnMethods = "regTC05_fullreject_PC_KYC_NRIC")
     public void regTC06_resubmit_fullreject_PC_KYC_NRIC(ITestContext context) {
         AndroidElement el;
         try {
@@ -241,8 +241,9 @@ public class youtrip_android_regression {
             testAccountData.AddressLineOne = "Test Address Line 1";
 
             subProc.procSubmitSGKYC(true, false, true, true,
-                    testAccountData.LastName, null, null, null, null, null,
-                    testAccountData.AddressLineOne, null, null);
+                    testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
+                    testAccountData.Birthdate, testAccountData.NricNumber, "Singaporean",
+                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode);
 
             testAccountData.KycStatus = TestAccountData.KYCStatus.Submit;
             testAccountData.UnderUse = isContinueTest;
@@ -254,7 +255,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "sanity_test"},  dependsOnMethods = "regTC06_resubmit_fullreject_PC_KYC_NRIC")
+    @Test (groups = { "regression_test", "sanity_test", "skipped"},  dependsOnMethods = "regTC06_resubmit_fullreject_PC_KYC_NRIC")
     public void regTC07_partialreject_PC_KYC_NRIC(ITestContext context) {
         try {
             //recall user ID from previous test case
@@ -281,7 +282,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "sanity_test"},  dependsOnMethods = "regTC07_partialreject_PC_KYC_NRIC")
+    @Test (groups = { "regression_test", "sanity_test", "skipped"},  dependsOnMethods = "regTC07_partialreject_PC_KYC_NRIC")
     public void regTC08_resubmit_partialreject_PC_KYC_NRIC(ITestContext context) {
         AndroidElement el;
         try {
@@ -302,12 +303,13 @@ public class youtrip_android_regression {
             System.out.println("TEST STEP: Attention page - click retry button");
             Thread.sleep(2000);
             //resubmit kyc after partial rejection - change name on card and dob
-
             testAccountData.NameOnCard = "AUTOTESTER ANDROID";
             testAccountData.Birthdate = "02-01-1980";
+
             subProc.procSubmitSGKYC(false, true, true, true,
-                    null, null, testAccountData.NameOnCard, testAccountData.Birthdate,
-                    null, null, null, null, null);
+                    testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
+                    testAccountData.Birthdate, testAccountData.NricNumber, "Singaporean",
+                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode);
 
             testAccountData.KycStatus = TestAccountData.KYCStatus.Submit;
             testAccountData.UnderUse = isContinueTest;
@@ -319,7 +321,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "sanity_test"},  dependsOnMethods = "regTC08_resubmit_partialreject_PC_KYC_NRIC")
+    @Test (groups = { "regression_test", "sanity_test", "skipped"},  dependsOnMethods = "regTC08_resubmit_partialreject_PC_KYC_NRIC")
     public void regTC09_approved_PC_KYC_NRIC(ITestContext context) {
         try {
             //recall user ID from previous test case
@@ -347,7 +349,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "sanity_test"}, dependsOnMethods = "regTC09_approved_PC_KYC_NRIC")
+    @Test (groups = { "regression_test", "sanity_test", "skipped"}, dependsOnMethods = "regTC09_approved_PC_KYC_NRIC")
     public void regTC10_logout_PC_KYC_NRIC(ITestContext context) {
         try {
             //recall user ID from previous test case
@@ -368,7 +370,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready" })
+    @Test (groups = { "regression_test" })
     public void regTC11_submit_NPC_KYC_forgeiner(ITestContext context) {
         testAccountData = new TestAccountData();
         TestCardData testCardData = null;
@@ -393,7 +395,6 @@ public class youtrip_android_regression {
             testAccountData.AddressLineOne = "Auto Test Addresss Line 1";
             testAccountData.AddressLineTwo = "Android Device Line 2";
             testAccountData.PostalCode = "123456";
-            testAccountData.Card = null;
             testAccountData.UnderUse = isContinueTest;
             String nationality = "Singaporean";
 
@@ -442,7 +443,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready" }, dependsOnMethods = "regTC11_submit_NPC_KYC_forgeiner")
+    @Test (groups = { "regression_test"}, dependsOnMethods = "regTC11_submit_NPC_KYC_forgeiner")
     public void regTC12_fullreject_NPC_KYC_forgeiner(ITestContext context) {
         try {
 
@@ -470,7 +471,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready" }, dependsOnMethods = "regTC12_fullreject_NPC_KYC_forgeiner")
+    @Test (groups = { "regression_test"}, dependsOnMethods = "regTC12_fullreject_NPC_KYC_forgeiner")
     public void regTC13_resubmit_fullreject_NPC_KYC_forgeiner(ITestContext context) {
         AndroidElement el;
         try {
@@ -497,8 +498,9 @@ public class youtrip_android_regression {
             testAccountData.AddressLineOne = "Test Address Line 1";
 
             subProc.procSubmitSGKYC(true, false, false, false,
-                    testAccountData.LastName, null, null, null, null, null,
-                    testAccountData.AddressLineOne, null, null);
+                    testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
+                    testAccountData.Birthdate, testAccountData.NricNumber, "Singaporean",
+                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode);
 
             testAccountData.KycStatus = TestAccountData.KYCStatus.Submit;
             testAccountData.UnderUse = isContinueTest;
@@ -510,7 +512,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready" }, dependsOnMethods = "regTC13_resubmit_fullreject_NPC_KYC_forgeiner")
+    @Test (groups = { "regression_test"}, dependsOnMethods = "regTC13_resubmit_fullreject_NPC_KYC_forgeiner")
     public void regTC14_partialreject_NPC_KYC_forgeiner(ITestContext context) {
         try {
             //recall user ID from previous test case
@@ -537,7 +539,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready"}, dependsOnMethods = "regTC14_partialreject_NPC_KYC_forgeiner")
+    @Test (groups = { "regression_test"}, dependsOnMethods = "regTC14_partialreject_NPC_KYC_forgeiner")
     public void regTC15_resubmit_partialreject_NPC_KYC_forgeiner(ITestContext context) {
         AndroidElement el;
         try {
@@ -561,8 +563,9 @@ public class youtrip_android_regression {
             testAccountData.NameOnCard = "AUTOTESTER ANDROID";
             testAccountData.Birthdate = "02-01-1980";
             subProc.procSubmitSGKYC(false, true, false, true,
-                    null, null, testAccountData.NameOnCard, testAccountData.Birthdate,
-                    null, null, null, null, null);
+                    testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
+                    testAccountData.Birthdate, testAccountData.NricNumber, "Singaporean",
+                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode);
 
             testAccountData.KycStatus = TestAccountData.KYCStatus.Submit;
             testAccountData.UnderUse = isContinueTest;
@@ -574,7 +577,7 @@ public class youtrip_android_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready" }, dependsOnMethods = "regTC14_partialreject_NPC_KYC_forgeiner")
+    @Test (groups = { "regression_test" }, dependsOnMethods = "regTC14_partialreject_NPC_KYC_forgeiner")
     public void regTC16_approved_NPC_KYC_forgeiner(ITestContext context) {
         try {
             //recall user ID from previous test case
@@ -608,7 +611,7 @@ public class youtrip_android_regression {
         //TODO blocked on activation - need magic link api updates
     }
 
-    @Test (groups = { "regression_test", "not_ready" }, dependsOnMethods = "regTC16_approved_NPC_KYC_forgeiner")
+    @Test (groups = { "regression_test"}, dependsOnMethods = "regTC16_approved_NPC_KYC_forgeiner")
     public void regTC18_logout_NPC_KYC_forgeiner(ITestContext context) {
 
         //TODO once TC17 is enable need to update test to unlock app first then logout
