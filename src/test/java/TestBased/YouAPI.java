@@ -451,7 +451,7 @@ public class YouAPI {
     }
 
     public void data_updateTestCard(TestCardData data){
-        String url_updateCard = (this.dataBackDoorEndPoint + "/testCard/update/");
+        String url_updateCard = (this.dataBackDoorEndPoint + "/testCard/update");
 
         System.out.println("API CALL: " + url_updateCard);
 
