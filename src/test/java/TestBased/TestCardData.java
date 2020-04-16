@@ -31,7 +31,7 @@ public class TestCardData {
     }
 
     public String toRequestSubBodyString() {
-        System.out.println("CARD DATA EXPORT: Id - " + this.CardIDToken);
+        System.out.println("CARD DATA EXPORT: Id - " + this.Id);
         System.out.println("CARD DATA EXPORT: YouId - " + this.YouId);
         System.out.println("CARD DATA EXPORT: CardIDToken - " + this.CardIDToken);
         System.out.println("CARD DATA EXPORT: Status - " + this.Status);
