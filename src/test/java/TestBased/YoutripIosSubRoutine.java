@@ -1,8 +1,7 @@
 package TestBased;
 
-import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.ios.IOSElement;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -14,11 +13,11 @@ import static org.testng.Assert.assertEquals;
 public class YoutripIosSubRoutine {
 
     private YouTripIosUIElementKey UIElementKeyDict;
-    private WebDriver driver;
+    private AppiumDriver driver;
     private WebDriverWait wait;
     public YouAPI api;
 
-    public YoutripIosSubRoutine(YouTripIosUIElementKey UIElementKeyDict, WebDriver driver){
+    public YoutripIosSubRoutine(YouTripIosUIElementKey UIElementKeyDict, AppiumDriver driver){
         this.UIElementKeyDict = UIElementKeyDict;
         this.driver = driver;
         wait = new WebDriverWait(driver, 20);
@@ -193,11 +192,13 @@ public class YoutripIosSubRoutine {
             if(isFullRejectFlow) {
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtSurname", driver);
                 el.click();
-                el.clear();
+                //el.clear();
+                this.clearTextFieldValueForiOS12(el, surname.length());
                 el.sendKeys(newSurname);
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtGivenName", driver);
                 el.click();
-                el.clear();
+                //el.clear();
+                this.clearTextFieldValueForiOS12(el, givenName.length());
                 el.sendKeys(newGivenName);
             }
         }else {
@@ -223,7 +224,8 @@ public class YoutripIosSubRoutine {
         }
         if(isFullRejectFlow) {
             el.click();
-            el.clear();
+            //el.clear();
+            this.clearTextFieldValueForiOS12(el, newSurname.length() + newGivenName.length() + 1);
             el.sendKeys(newNameOnCard);
         }
         el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "btnNext", driver);
@@ -241,7 +243,8 @@ public class YoutripIosSubRoutine {
             if(isFullRejectFlow) {
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "txtDateOfBirth", driver);
                 el.click();
-                el.clear();
+                //el.clear();
+                this.clearTextFieldValueForiOS12(el, dateOfBirth.length());
                 el.sendKeys(newDateOfBirth);
             }
         } else {
@@ -396,11 +399,13 @@ public class YoutripIosSubRoutine {
             if(isFullRejectFlow) {
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtSurname", driver);
                 el.click();
-                el.clear();
+                //el.clear();
+                this.clearTextFieldValueForiOS12(el, surname.length());
                 el.sendKeys(newSurname);
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtGivenName", driver);
                 el.click();
-                el.clear();
+                //el.clear();
+                this.clearTextFieldValueForiOS12(el, givenName.length());
                 el.sendKeys(newGivenName);
             }
         }else {
@@ -429,6 +434,7 @@ public class YoutripIosSubRoutine {
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "txtDateOfBirth", driver);
                 el.click();
                 el.clear();
+                this.clearTextFieldValueForiOS12(el, dateOfBirth.length());
                 el.sendKeys(newDateOfBirth);
             }
         } else {
@@ -462,11 +468,13 @@ public class YoutripIosSubRoutine {
             if (isFullRejectFlow) {
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ResidentialAddressElementDict, "txtAddressLine1", driver);
                 el.click();
-                el.clear();
+                //el.clear();
+                this.clearTextFieldValueForiOS12(el, addressLine1.length());
                 el.sendKeys(newAddressLine1);
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ResidentialAddressElementDict, "txtAddressLine2", driver);
                 el.click();
-                el.clear();
+                //el.clear();
+                this.clearTextFieldValueForiOS12(el, addressLine1.length());
                 el.sendKeys(newAddressLine2);
             }
         } else {
