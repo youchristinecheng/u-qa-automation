@@ -268,17 +268,17 @@ public class YouTripAndroidSubRoutine {
             //wait till on enter Y-number page
             wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.YnumberPageElementDict, "lblTitle", driver)), "Enter Y-Number"));
             System.out.println("TEST STEP: Enter Y-Number Page - on page");
-            System.out.println("TEST DATA: Y-Number is Y-" +ynumber);
-            String ynum_digit1 = ynumber.substring(0);
-            String ynum_digit2 = ynumber.substring(1);
-            String ynum_digit3 = ynumber.substring(2);
-            String ynum_digit4 = ynumber.substring(3);
-            String ynum_digit5 = ynumber.substring(4);
-            String ynum_digit6 = ynumber.substring(5);
-            String ynum_digit7 = ynumber.substring(6);
-            String ynum_digit8 = ynumber.substring(7);
-            String ynum_digit9 = ynumber.substring(8);
-            String ynum_digit10 = ynumber.substring(9);
+            System.out.println("TEST DATA: Y-Number is " +ynumber);
+            String ynum_digit1 = ynumber.substring(2);
+            String ynum_digit2 = ynumber.substring(3);
+            String ynum_digit3 = ynumber.substring(4);
+            String ynum_digit4 = ynumber.substring(5);
+            String ynum_digit5 = ynumber.substring(6);
+            String ynum_digit6 = ynumber.substring(7);
+            String ynum_digit7 = ynumber.substring(8);
+            String ynum_digit8 = ynumber.substring(9);
+            String ynum_digit9 = ynumber.substring(10);
+            String ynum_digit10 = ynumber.substring(11);
             //enter y-number - note: need to enter each digit separately
             el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.YnumberPageElementDict, "yNumDigit1", driver);
             el.sendKeys(ynum_digit1);
