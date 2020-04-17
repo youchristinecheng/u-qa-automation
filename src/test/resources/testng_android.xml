@@ -5,10 +5,34 @@
             <run>
                 <include name="regression_test"/>
                 <exclude name="not_ready"/>
+                <exclude name="broken"/>
+                <exclude name="skipped"/>
             </run>
         </groups>
         <classes>
-            <class name="youtrip_android_regression"/>
+            <class name = "youtrip_android_regression">
+                <methods>
+                    <include name="regTC01_selectTH"/>
+                    <include name="regTC02_selectSG"/>
+                    <include name="regTC03_login_new_user_OTP"/>
+                    <include name="regTC04_submit_PC_KYC_NRIC"/>
+                    <include name="regTC05_fullreject_PC_KYC_NRIC"/>
+                    <include name="regTC06_resubmit_fullreject_PC_KYC_NRIC"/>
+                    <include name="regTC07_partialreject_PC_KYC_NRIC"/>
+                    <include name="regTC08_resubmit_partialreject_PC_KYC_NRIC"/>
+                    <include name="regTC09_approved_PC_KYC_NRIC"/>
+                    <include name="regTC10_logout_PC_KYC_NRIC"/>
+                    <include name="regTC11_submit_NPC_KYC_forgeiner"/>
+                    <include name="regTC12_fullreject_NPC_KYC_forgeiner"/>
+                    <include name="regTC13_resubmit_fullreject_NPC_KYC_forgeiner"/>
+                    <include name="regTC14_partialreject_NPC_KYC_forgeiner"/>
+                    <include name="regTC15_resubmit_partialreject_NPC_KYC_forgeiner"/>
+                    <include name="regTC16_approved_NPC_KYC_forgeiner"/>
+                    <include name="regTC17_activatecard_NPC_KYC_forgeiner"/>
+                    <include name="regTC18_logout_NPC_KYC_forgeiner"/>
+                    <include name="regTC19_login_existing_user_OTP"/>
+                </methods>
+            </class>
         </classes>
     </test>
 </suite>
