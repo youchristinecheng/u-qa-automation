@@ -52,7 +52,6 @@ public class Utils {
             Matcher m = r.matcher(nric);
             while (m.find()) {
                 String found = m.group();
-                System.out.println(found + " " + m.start() + " " + m.end());
                 int modDigit = ((int) ((char) found.charAt(0))) % 65;
                 if (m.start() == 0) {
                     nric = Integer.toString(modDigit) + nric.substring(1);

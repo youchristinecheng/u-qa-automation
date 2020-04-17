@@ -132,23 +132,7 @@ public class TestAccountData {
     }
 
     public String toRequestBodyString( boolean isCreate) {
-        System.out.println("ACCOUNT DATA EXPORT: Id - " + this.Id);
-        System.out.println("ACCOUNT DATA EXPORT: MCC - " + this.MCC);
-        System.out.println("ACCOUNT DATA EXPORT: PhoneNumber - " + this.PhoneNumber);
-        System.out.println("ACCOUNT DATA EXPORT: Email - " + this.Email);
-        System.out.println("ACCOUNT DATA EXPORT: KycStatus - " + this.KycStatus.toString());
-        System.out.println("ACCOUNT DATA EXPORT: CardType - " + this.TestAccountCardType.toString());
-        System.out.println("ACCOUNT DATA EXPORT: LastName - " + this.LastName);
-        System.out.println("ACCOUNT DATA EXPORT: FirstName - " + this.FirstName);
-        if (this.TestAccountCardType.equals(TestAccountCardType.PC)) {
-            System.out.println("ACCOUNT DATA EXPORT: NameOnCard - " + this.NameOnCard);
-        }
-        System.out.println("ACCOUNT DATA EXPORT: Birthdate - " + this.Birthdate);
-        System.out.println("ACCOUNT DATA EXPORT: NricNumber - " + this.NricNumber);
-        System.out.println("ACCOUNT DATA EXPORT: AddressLineOne - " + this.AddressLineOne);
-        System.out.println("ACCOUNT DATA EXPORT: AddressLineTwo - " + this.AddressLineTwo);
-        System.out.println("ACCOUNT DATA EXPORT: PostalCode - " + this.PostalCode);
-        System.out.println("ACCOUNT DATA EXPORT: UnderUse - " + this.UnderUse);
+        this.printTestAccountData("EXPORT");
         StringBuilder builder = new StringBuilder();
 
         builder.append("{\n")
@@ -216,6 +200,7 @@ public class TestAccountData {
             data.KycStatus = KYCStatus.valueOf(jObj.getString(keyArray[12]));
             data.TestAccountCardType = CardType.valueOf(jObj.getString(keyArray[13]));
             data.UnderUse = jObj.getBoolean(keyArray[14]);
+            data.printTestAccountData("IMPORT");
 
             if(jObj.optJSONObject("card") != null){
                 JSONObject cardObj = jObj.optJSONObject("card");
@@ -226,5 +211,24 @@ public class TestAccountData {
         }catch (JSONException jex){
             throw new NoSuchFieldException(jex.getMessage());
         }
+    }
+
+    public void printTestAccountData(String direction) {
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": Id - " + this.Id);
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": PhoneNumber - " + this.PhoneNumber);
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": Email - " + this.Email);
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": KycStatus - " + this.KycStatus.toString());
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": CardType - " + this.TestAccountCardType.toString());
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": LastName - " + this.LastName);
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": FirstName - " + this.FirstName);
+        if (this.TestAccountCardType.equals(CardType.PC)) {
+            System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": NameOnCard - " + this.NameOnCard);
+        }
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": Birthdate - " + this.Birthdate);
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": NricNumber - " + this.NricNumber);
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": AddressLineOne - " + this.AddressLineOne);
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": AddressLineTwo - " + this.AddressLineTwo);
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": PostalCode - " + this.PostalCode);
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": UnderUse - " + this.UnderUse);
     }
 }

@@ -31,12 +31,7 @@ public class TestCardData {
     }
 
     public String toRequestSubBodyString() {
-        System.out.println("CARD DATA EXPORT: Id - " + this.Id);
-        System.out.println("CARD DATA EXPORT: YouId - " + this.YouId);
-        System.out.println("CARD DATA EXPORT: CardIDToken - " + this.CardIDToken);
-        System.out.println("CARD DATA EXPORT: Status - " + this.Status);
-        System.out.println("CARD DATA EXPORT: NumOfReplace - " + this.NumOfReplace);
-        System.out.println("CARD DATA EXPORT: UnderUse - " + this.UnderUse);
+        this.printTestCardData("EXPORT");
         StringBuilder builder = new StringBuilder();
 
         builder.append("\t\"card\": {\n")
@@ -80,9 +75,19 @@ public class TestCardData {
             data.CardIDToken = jObj.getString(keyArray[5]);
             data.UnderUse = jObj.getBoolean(keyArray[6]);
 
+            data.printTestCardData("IMPORT");
             return data;
         }catch (JSONException jex){
             throw new NoSuchFieldException(jex.getMessage());
         }
+    }
+
+    public void printTestCardData(String direction) {
+        System.out.println("CARD DATA " + direction.toUpperCase() + ": Id - " + this.Id);
+        System.out.println("CARD DATA " + direction.toUpperCase() + ": YouId - " + this.YouId);
+        System.out.println("CARD DATA " + direction.toUpperCase() + ": CardIDToken - " + this.CardIDToken);
+        System.out.println("CARD DATA " + direction.toUpperCase() + ": Status - " + this.Status);
+        System.out.println("CARD DATA " + direction.toUpperCase() + ": NumOfReplace - " + this.NumOfReplace);
+        System.out.println("CARD DATA " + direction.toUpperCase() + ": UnderUse - " + this.UnderUse);
     }
 }
