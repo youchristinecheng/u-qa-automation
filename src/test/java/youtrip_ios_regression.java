@@ -5,25 +5,21 @@ import TestBased.YouTripIosUIElementKey.PageKey;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.*;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DecimalFormat;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.*;
 
-public class youtrip_ios_poc {
+public class youtrip_ios_regression {
 
     IOSDriver driver;
     YouTripIosUIElementKey UIElementKeyDict;
@@ -408,7 +404,7 @@ public class youtrip_ios_poc {
     }
 
     @Test (groups = { "regression_test"}, priority = 8)
-    public void reg19_submit_NPC_KYC_EmploymentPass() throws InterruptedException {
+    public void regTC19_submit_NPC_KYC_EmploymentPass() throws InterruptedException {
         System.out.println("Test STEP: Start \"reg19_submit_NPC_KYC_EmploymentPass\"");
         IOSElement el;
         testAccountData = new TestAccountData();
@@ -469,7 +465,10 @@ public class youtrip_ios_poc {
             Thread.sleep(25000);
             System.out.println("TEST STEP: Verify Back to Limited Home Page");
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver), "Thank You for Your Application"));
-            String kycRefNo = ((IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
+            String kycRefNo = el.getText();
+            System.out.println("TEST-DEBUG Element Exist:" + String.valueOf(el == null));
+            System.out.println("TEST-DEBUG: " + kycRefNo);
             testAccountData.Id = subProc.api.yp_getKYCdetails(kycRefNo).get("userId");
 
             subProc.api.data_updateTestCard(testAccountData.Card);
@@ -488,7 +487,7 @@ public class youtrip_ios_poc {
         System.out.println("debug");
     }
 
-    @Test (groups = { "regression_test"}, dependsOnMethods = "reg19_submit_NPC_KYC_EmploymentPass", priority = 9)
+    @Test (groups = { "regression_test"}, dependsOnMethods = "regTC19_submit_NPC_KYC_EmploymentPass", priority = 9)
     public void regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass() {
         System.out.println("Test STEP: Start \"regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass\"");
         IOSElement el;
@@ -566,7 +565,7 @@ public class youtrip_ios_poc {
         }
     }
 
-    @Test (groups = { "regression_test"}, dependsOnMethods = "reg19_submit_NPC_KYC_EmploymentPass", priority = 10)
+    @Test (groups = { "regression_test"}, dependsOnMethods = "regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass", priority = 10)
     public void regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass\"");
         IOSElement el;
@@ -628,7 +627,7 @@ public class youtrip_ios_poc {
         }
     }
 
-    @Test (groups = { "regression_test"}, dependsOnMethods = "reg19_submit_NPC_KYC_EmploymentPass", priority = 11)
+    @Test (groups = { "regression_test"}, dependsOnMethods = "regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass", priority = 11)
     public void regTC22_approved_NPC_KYC_EmploymentPass() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC22_approved_NPC_KYC_EmploymentPass\"");
         IOSElement el;

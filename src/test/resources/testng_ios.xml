@@ -11,14 +11,21 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="iOS Test Run">
     <test name="Regression">
-       <groups>
-            <run>
-                <include name="regression_test"/>
-                <exclude name="not_ready"/>
-            </run>
-        </groups>
         <classes>
-            <class name="youtrip_ios_poc">
+            <class name="youtrip_ios_regression">
+                <methods>
+                    <include name="regTC03_selectTH"/>
+                    <include name="regTC04_selectSG"/>
+                    <include name="regTC05_login_new_user_OTP"/>
+                    <include name="regTC08_submit_PC_KYC_NRIC"/>
+                    <include name="regTC09_fullreject_and_resubmit_PC_KYC_NRIC"/>
+                    <include name="regTC10_partialreject_and_resubmit_PC_KYC_NRIC"/>
+                    <include name="regTC11_approved_PC_KYC_NRIC"/>
+                    <include name="regTC19_submit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>
+                </methods>
             </class>
         </classes>
     </test>
