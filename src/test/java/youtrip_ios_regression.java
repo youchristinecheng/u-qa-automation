@@ -5,12 +5,14 @@ import TestBased.YouTripIosUIElementKey.PageKey;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.*;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -51,12 +53,12 @@ public class youtrip_ios_regression {
         /*
          * ###### Desired Capabilities for Real iPhone ######
          */
-////        capabilities.setCapability("deviceName", "YouTech iPhone");
-////        capabilities.setCapability(CapabilityType.VERSION, "13.1.2");
-////        capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
-//        capabilities.setCapability("deviceName", "YouTech QAs iPhone");
-//        capabilities.setCapability(CapabilityType.VERSION, "12.1.1");
-//        capabilities.setCapability("udid", "00008020-00026C2E3A46002E");
+//        capabilities.setCapability("deviceName", "YouTech iPhone");
+//        capabilities.setCapability(CapabilityType.VERSION, "13.1.2");
+//        capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
+////        capabilities.setCapability("deviceName", "YouTech QAs iPhone");
+////        capabilities.setCapability(CapabilityType.VERSION, "12.1.1");
+////        capabilities.setCapability("udid", "00008020-00026C2E3A46002E");
 //        capabilities.setCapability("automationName", "XCUITest");
 //        capabilities.setCapability("platformName", "iOS");
 //        capabilities.setCapability("bundleId", "co.you.youapp");
@@ -107,7 +109,7 @@ public class youtrip_ios_regression {
 
     }
 
-    @Test (groups = { "regression_test"}, priority = 1)
+    @Test (groups = { "regression_test"})
     public void regTC03_selectTH() {
         System.out.println("Test STEP: Start \"regTC03_selectTH\"");
         try {
@@ -118,7 +120,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test"}, priority = 2)
+    @Test (groups = { "regression_test"})
     public void regTC04_selectSG() {
         System.out.println("Test STEP: Start \"regTC04_selectSG\"");
         try {
@@ -129,7 +131,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test"}, priority = 3)
+    @Test (groups = { "regression_test"})
     public void regTC05_login_new_user_OTP() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC05_login_new_user_OTP\"");
         try {
@@ -152,7 +154,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test"}, priority = 4)
+    @Test (groups = { "regression_test"})
     public void regTC08_submit_PC_KYC_NRIC() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC08_submit_PC_KYC_NRIC\"");
         IOSElement el;
@@ -194,6 +196,7 @@ public class youtrip_ios_regression {
 
             subProc.procSelectCountry(Market.Singapore);
             subProc.procOTPLogin(mprefix, mnumber, email,true);
+            Thread.sleep(2000);
 
             System.out.println("TEST STEP: Welcome Page - on page");
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver), "Welcome"));
@@ -206,9 +209,10 @@ public class youtrip_ios_regression {
                     null, null, null, null, null, null);
 
 //            subProc.api.util.exportAccountTestData(testAccountData);
-            Thread.sleep(25000);
+            Thread.sleep(20000);
             System.out.println("TEST STEP: Verify Back to Limited Home Page");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver), "Thank You for Your Application"));
+            el = (IOSElement)UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver);
+            Assert.assertEquals(el.getText(), "Thank You for Your Application");
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             String kycRefNo = el.getText();
             testAccountData.Id = subProc.api.yp_getKYCdetails(kycRefNo).get("userId");
@@ -221,7 +225,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test"}, dependsOnMethods = "regTC08_submit_PC_KYC_NRIC", priority = 5)
+    @Test (groups = { "regression_test"})
     public void regTC09_fullreject_and_resubmit_PC_KYC_NRIC() {
         System.out.println("Test STEP: Start \"regTC09_fullreject_and_resubmit_PC_KYC_NRIC\"");
         IOSElement el;
@@ -242,18 +246,24 @@ public class youtrip_ios_regression {
         String newDateOfBirth = dateOfBirthFormatter.format(dateOfBirth);
         try {
             if (testAccountData == null) {
-                testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.PC.toString(), KYCStatus.Submit.toString());
+                //testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.PC.toString(), KYCStatus.Submit.toString());
+                fail("fail to load test account from previous test case in succeed");
             }
 
             subProc.procSelectCountry(Market.Singapore);
             subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
+            // Transition wait after OTP-login to Limited Home page
+            Thread.sleep(2000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
-            if (el != null)
+            if (el != null) {
                 el.click();
+                Thread.sleep(2000);
+            }
 
             // Limited Home Page
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver), "Thank You for Your Application"));
+            el= (IOSElement)UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
+            Assert.assertEquals(el.getText(), "Thank You for Your Application");
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             kycRefNo = el.getText();
 
@@ -286,7 +296,7 @@ public class youtrip_ios_regression {
             testAccountData.AddressLineTwo = newAddressLine2;
             testAccountData.UnderUse = isContinueTest;
 
-            Thread.sleep(25000);
+            Thread.sleep(20000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             String newKycRefNo = el.getText();
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
@@ -299,7 +309,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test"}, dependsOnMethods = "regTC09_fullreject_and_resubmit_PC_KYC_NRIC", priority = 6)
+    @Test (groups = { "regression_test"})
     public void regTC10_partialreject_and_resubmit_PC_KYC_NRIC() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC10_partialreject_and_resubmit_PC_KYC_NRIC\"");
         IOSElement el;
@@ -308,23 +318,28 @@ public class youtrip_ios_regression {
         try {
             if (testAccountData == null) {
                 //testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.PC.toString(), KYCStatus.Submit.toString());
-                testAccountData = subProc.api.data_getTestUserByUserID("1000977");
+                fail("fail to load test account from previous test case in succeed");
             }
 
             subProc.procSelectCountry(Market.Singapore);
             subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
+            // Transition wait after OTP-login to Limited Home page
+            Thread.sleep(2000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
-            if(el != null)
+            if(el != null) {
                 el.click();
+                Thread.sleep(2000);
+            }
 
             // Limited Home Page
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver), "Thank You for Your Application"));
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
+            Assert.assertEquals(el.getText(), "Thank You for Your Application");
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             kycRefNo = el.getText();
 
             subProc.api.yp_partialReject(kycRefNo);
-            Thread.sleep(20000);
+            Thread.sleep(25000);
             System.out.println("TEST STEP: KYC Partial rejection received");
 
             testAccountData.FirstName = "Auto YP Edit";
@@ -362,21 +377,26 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test"}, dependsOnMethods = "regTC10_partialreject_and_resubmit_PC_KYC_NRIC", priority = 7)
+    @Test (groups = { "regression_test"})
     public void regTC11_approved_PC_KYC_NRIC() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC11_approved_PC_KYC_NRIC\"");
         IOSElement el;
         try {
             if (testAccountData == null) {
-                testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.PC.toString(), KYCStatus.Submit.toString());
+//                testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.PC.toString(), KYCStatus.Submit.toString());
+                fail("fail to load test account from previous test case in succeed");
             }
 
             subProc.procSelectCountry(Market.Singapore);
             subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
+            // Transition wait after OTP-login to Limited Home page
+            Thread.sleep(2000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
-            if(el != null)
+            if(el != null) {
                 el.click();
+                Thread.sleep(2000);
+            }
 
             //get and store the KYC reference number
             String kycRefNo = (UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
@@ -386,8 +406,8 @@ public class youtrip_ios_regression {
             subProc.api.yp_approve(kycRefNo);
 
             //back to the app - wait for reject to be updated
-            Thread.sleep(20000);
-            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
+            Thread.sleep(25000);
+            //wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
             System.out.println("TEST STEP: KYC approval received");
             assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Your Card is On Its Way");
             assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver).getText(), "My Card Arrived");
@@ -403,7 +423,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test"}, priority = 8)
+    @Test (groups = { "regression_test"})
     public void regTC19_submit_NPC_KYC_EmploymentPass() throws InterruptedException {
         System.out.println("Test STEP: Start \"reg19_submit_NPC_KYC_EmploymentPass\"");
         IOSElement el;
@@ -450,6 +470,7 @@ public class youtrip_ios_regression {
 
             subProc.procSelectCountry(Market.Singapore);
             subProc.procOTPLogin(mprefix, mnumber, email,true);
+            Thread.sleep(2000);
 
             System.out.println("TEST STEP: Welcome Page - on page");
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver), "Welcome"));
@@ -462,13 +483,12 @@ public class youtrip_ios_regression {
                     testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
                     null, null, null, null, null);
 
-            Thread.sleep(25000);
+            Thread.sleep(20000);
             System.out.println("TEST STEP: Verify Back to Limited Home Page");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver), "Thank You for Your Application"));
+            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver);
+            Assert.assertEquals(el.getText(), "Thank You for Your Application");
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             String kycRefNo = el.getText();
-            System.out.println("TEST-DEBUG Element Exist:" + String.valueOf(el == null));
-            System.out.println("TEST-DEBUG: " + kycRefNo);
             testAccountData.Id = subProc.api.yp_getKYCdetails(kycRefNo).get("userId");
 
             subProc.api.data_updateTestCard(testAccountData.Card);
@@ -487,7 +507,7 @@ public class youtrip_ios_regression {
         System.out.println("debug");
     }
 
-    @Test (groups = { "regression_test"}, dependsOnMethods = "regTC19_submit_NPC_KYC_EmploymentPass", priority = 9)
+    @Test (groups = { "regression_test"})
     public void regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass() {
         System.out.println("Test STEP: Start \"regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass\"");
         IOSElement el;
@@ -508,22 +528,28 @@ public class youtrip_ios_regression {
 
         try {
             if (testAccountData == null) {
-                testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.NPC.toString(), KYCStatus.Submit.toString());
+                //testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.NPC.toString(), KYCStatus.Submit.toString());
+                fail("fail to load test account from previous test case in succeed");
             }
 
             subProc.procSelectCountry(Market.Singapore);
             subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
+            // Transition wait after OTP-login to Limited Home page
+            Thread.sleep(2000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
-            if(el != null)
+            if(el != null) {
                 el.click();
+                Thread.sleep(2000);
+            }
 
             // Limited Home Page
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver), "Thank You for Your Application"));
+            el = (IOSElement)UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
+            Assert.assertEquals(el.getText(), "Thank You for Your Application");
             kycRefNo = ((IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
 
             subProc.api.yp_fullReject(kycRefNo);
-            Thread.sleep(20000);
+            Thread.sleep(25000);
             System.out.println("TEST STEP: KYC rejection received");
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
@@ -550,7 +576,7 @@ public class youtrip_ios_regression {
             testAccountData.AddressLineOne = newAddressLine1;
             testAccountData.AddressLineTwo = newAddressLine2;
 
-            Thread.sleep(25000);
+            Thread.sleep(20000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             String newKycRefNo = el.getText();
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
@@ -565,7 +591,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test"}, dependsOnMethods = "regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass", priority = 10)
+    @Test (groups = { "regression_test"})
     public void regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass\"");
         IOSElement el;
@@ -573,23 +599,29 @@ public class youtrip_ios_regression {
         String kycRefNo;
         try {
             if (testAccountData == null) {
-                testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.NPC.toString(), KYCStatus.Submit.toString());
+                //testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.NPC.toString(), KYCStatus.Submit.toString());
+                fail("fail to load test account from previous test case in succeed");
             }
 
             subProc.procSelectCountry(Market.Singapore);
             subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
+            // Transition wait after OTP-login to Limited Home page
+            Thread.sleep(2000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
-            if(el != null)
+            if(el != null) {
                 el.click();
+                Thread.sleep(2000);
+            }
 
             // Limited Home Page
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver), "Thank You for Your Application"));
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
+            Assert.assertEquals(el.getText(), "Thank You for Your Application");
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             kycRefNo = el.getText();
 
             subProc.api.yp_partialReject(kycRefNo);
-            Thread.sleep(20000);
+            Thread.sleep(25000);
             System.out.println("TEST STEP: KYC Partial rejection received");
 
             testAccountData.FirstName = "Auto YP Edit";
@@ -612,7 +644,7 @@ public class youtrip_ios_regression {
                     testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
                     null, null, null, null, null);
 
-            Thread.sleep(25000);
+            Thread.sleep(20000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             String newKycRefNo = el.getText();
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
@@ -627,21 +659,26 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test"}, dependsOnMethods = "regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass", priority = 11)
+    @Test (groups = { "regression_test"})
     public void regTC22_approved_NPC_KYC_EmploymentPass() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC22_approved_NPC_KYC_EmploymentPass\"");
         IOSElement el;
         try {
             if (testAccountData == null) {
-                testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.NPC.toString(), KYCStatus.Submit.toString());
+                //testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.NPC.toString(), KYCStatus.Submit.toString());
+                fail("fail to load test account from previous test case in succeed");
             }
 
             subProc.procSelectCountry(Market.Singapore);
             subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
+            // Transition wait after OTP-login to Limited Home page
+            Thread.sleep(2000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
-            if(el != null)
+            if(el != null) {
                 el.click();
+                Thread.sleep(2000);
+            }
 
             //get and store the KYC reference number
             String kycRefNo = (UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
@@ -652,7 +689,7 @@ public class youtrip_ios_regression {
 
             //back to the app - wait for reject to be updated
             Thread.sleep(20000);
-            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
+            //wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
             System.out.println("TEST STEP: KYC approval received");
             assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Verification Complete");
             assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver).getText(), "Activate Card");
@@ -669,7 +706,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready"}, priority = 12)
+    @Test (groups = { "regression_test", "not_ready"})
     public void regTC07_Logout() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC07_Logout\"");
         IOSElement el;
@@ -702,7 +739,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready"}, priority = 13)
+    @Test (groups = { "regression_test", "not_ready"})
     public void regTC33_ChangePINFromSetting() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC33_ChangePINFromSetting\"");
         IOSElement el;
@@ -739,7 +776,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready"}, priority = 14)
+    @Test (groups = { "regression_test", "not_ready"})
     public void regTC24_AddCardFromTopUpPage() throws InterruptedException {
         IOSElement el;
         String toBeCard = "4000000000003089";
@@ -834,7 +871,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready"}, priority = 15)
+    @Test (groups = { "regression_test", "not_ready"})
     public void regTC25_UpdateCardFromTopUpPage() throws InterruptedException {
         IOSElement el;
         String currentCard = "";
@@ -918,7 +955,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready"}, priority = 16)
+    @Test (groups = { "regression_test", "not_ready"})
     public void regTC25_UpdateCardFromOrderCardReplacePage() throws InterruptedException {
         IOSElement el;
         String currentCard = "";
@@ -1008,7 +1045,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready"}, priority = 17)
+    @Test (groups = { "regression_test", "not_ready"})
     public void regTC26_TopUpSuccess() throws InterruptedException {
         IOSElement el;
         List<WebElement> balanceList;
@@ -1093,7 +1130,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready"}, priority = 18)
+    @Test (groups = { "regression_test", "not_ready"})
     public void regTC41_LockCard() throws InterruptedException {
         try {
             testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatusAndCardStatus(CardType.PC.toString(), KYCStatus.Clear.toString(), CardStatus.Active.toString());
@@ -1145,7 +1182,7 @@ public class youtrip_ios_regression {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready"}, priority = 19)
+    @Test (groups = { "regression_test", "not_ready"})
     public void regTC43_checkOrderReplacementCardPage() throws InterruptedException {
         IOSElement el;
         try {

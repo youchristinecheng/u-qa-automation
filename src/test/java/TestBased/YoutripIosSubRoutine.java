@@ -112,7 +112,7 @@ public class YoutripIosSubRoutine {
         el.sendKeys(otpCode);
         System.out.println("TEST STEP: OTP Page - Send OTP");
 
-        Thread.sleep(5000);
+        Thread.sleep(2000);
         if(isFirstTimeLogin) {
             System.out.println("TEST STEP: Enter Email Page - on page");
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EmailPageElementDict, "lblTitle", driver), "Enter Email Address"));
@@ -200,6 +200,11 @@ public class YoutripIosSubRoutine {
                 //el.clear();
                 this.clearTextFieldValueForiOS12(el, givenName.length());
                 el.sendKeys(newGivenName);
+                // by default app will update the NameOnCard as it has been updated
+                nameOnCard = newSurname + " " + newGivenName;
+                //Dismiss keyboard from UI
+                el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "lblTitle", driver);
+                el.click();
             }
         }else {
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtSurname", driver);
