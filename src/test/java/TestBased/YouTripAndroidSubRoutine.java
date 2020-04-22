@@ -64,7 +64,7 @@ public class YouTripAndroidSubRoutine {
             el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CountryPageElementDict, "btnConfirm", driver);
             el.click();
             System.out.println("TEST STEP: Country Page - click continue button");
-            Thread.sleep(2000);
+            Thread.sleep(10000);
             //wait till on get started page
             wait.until(ExpectedConditions.elementToBeClickable((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.GetStartedPageElementDict, "btnGetStarted", driver))));
             System.out.println("TEST STEP: Get Started Page - on page");
