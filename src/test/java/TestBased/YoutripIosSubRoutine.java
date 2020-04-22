@@ -123,6 +123,7 @@ public class YoutripIosSubRoutine {
             System.out.println("TEST STEP: Enter Email Page - click Next button");
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EmailPageElementDict, "btnNext", driver);
             el.click();
+            Thread.sleep(2000);
         }
     }
 
