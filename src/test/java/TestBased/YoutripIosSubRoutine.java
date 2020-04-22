@@ -202,9 +202,6 @@ public class YoutripIosSubRoutine {
                 el.sendKeys(newGivenName);
                 // by default app will update the NameOnCard as it has been updated
                 nameOnCard = newSurname + " " + newGivenName;
-                //Dismiss keyboard from UI
-                el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "lblTitle", driver);
-                el.click();
             }
         }else {
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtSurname", driver);
@@ -232,6 +229,8 @@ public class YoutripIosSubRoutine {
             //el.clear();
             this.clearTextFieldValueForiOS12(el, newSurname.length() + newGivenName.length() + 1);
             el.sendKeys(newNameOnCard);
+            //Dismiss keyboard from UI
+            driver.hideKeyboard();
         }
         el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "btnNext", driver);
         el.click();
