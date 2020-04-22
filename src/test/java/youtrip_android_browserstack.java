@@ -28,8 +28,8 @@ public class youtrip_android_browserstack {
     TestAccountData testAccountData;
     boolean isContinueTest;
 
-    public static String userName = "youtechyoutech1";
-    public static String accessKey = "xe5uxMLBNiz8dxLc3uJg";
+    public static String userName = "danielchan2";
+    public static String accessKey = "pWT7MCmWvUfYUsMNoQ9y";
 
     @BeforeTest (alwaysRun = true)
     public void setUp() throws MalformedURLException {
@@ -42,13 +42,43 @@ public class youtrip_android_browserstack {
         /*
          * ###### Desired Capabilities for BrowserStack ######
          */
+        //ANDROID 7
+        //capabilities.setCapability("device", "Samsung Galaxy S8");
+        //capabilities.setCapability("os_version", "7.0");
+
+        //ANDROID 7.1
+        //capabilities.setCapability("device", "Google Pixel");
+        //capabilities.setCapability("device", "Samsung Galaxy Note 8");
+        //capabilities.setCapability("os_version", "7.1");
+
+        //ANDROID 8
+        //capabilities.setCapability("device", "Google Pixel 2");
+        //capabilities.setCapability("device", "Samsung Galaxy S9");
+        //capabilities.setCapability("os_version", "8.0");
+
+        //ANDROID 8.1
+        //capabilities.setCapability("device", "Samsung Galaxy Note 9");
+        //capabilities.setCapability("os_version", "8.1");
+
+        //ANDROID 9
+        //capabilities.setCapability("device", "Samsung Galaxy Note 10");
+        //capabilities.setCapability("device", "Samsung Galaxy S10");
+        //capabilities.setCapability("device", "Xiaomi Redmi Note 8");
+        //capabilities.setCapability("device", "OnePlus 7");
+        //capabilities.setCapability("os_version", "9.0");
+
+        //ANDROID 10
+        //capabilities.setCapability("device", "Samsung Galaxy S20");
+        //capabilities.setCapability("device", "OnePlus 7T");
         capabilities.setCapability("device", "Google Pixel 3");
-        capabilities.setCapability("os_version", "9.0");
+        capabilities.setCapability("os_version", "10.0");
+
+
         capabilities.setCapability("project", "Test Project");
-        capabilities.setCapability("build", "App 3.5.0 - RC1");
+        capabilities.setCapability("build", "App 3.6.0 - RC1 - 1183 ");
         capabilities.setCapability("name", "Android Regression Suite");
-        capabilities.setCapability("app", "bs://25c25122873334c142e7e081869f9d42274115e2");
-        capabilities.setCapability("browserstack.appium_version", "1.16.0");
+        capabilities.setCapability("app", "bs://3f8448d822df61c77ffa13b38bcb9fc189eb0b00");
+        capabilities.setCapability("browserstack.appium_version", "1.17.0");
         capabilities.setCapability("browserstack.local", "false");
         capabilities.setCapability("real_mobile", "true");
         capabilities.setCapability("appWaitPackage", "co.you.youapp.dev");
@@ -70,9 +100,11 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test"})
     public void regTC01_selectTH() {
+        System.out.println("TEST CASE: Start \"regTC01_selectTH\"");
         try {
             //select TH from country selection
             subProc.procSelectCountry(Market.Thailand);
+            System.out.println("TEST CASE: Finish \"regTC01_selectTH\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -81,11 +113,13 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test", "sanity_test"})
     public void regTC02_selectSG() {
+        System.out.println("TEST CASE: Start \"regTC02_selectSG\"");
         try {
             //select SG from country selection
             subProc.procSelectCountry(Market.Singapore);
             //confirm country and continue to get started
             subProc.procConfirmCountry();
+            System.out.println("TEST CASE: Finish \"regTC02_selectSG\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -94,6 +128,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test", "sanity_test"})
     public void regTC03_login_new_user_OTP() {
+        System.out.println("TEST CASE: Start \"regTC03_login_new_user_OTP\"");
         try {
             String mprefix = "123";
             String mnumber = utils.getTimestamp();
@@ -107,6 +142,7 @@ public class youtrip_android_browserstack {
             subProc.procOTPLogin(mprefix, mnumber, true);
             //enter email address and continue to welcome page
             subProc.procEnterEmail(email);
+            System.out.println("TEST CASE: Finish \"regTC03_login_new_user_OTP\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -115,8 +151,8 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test", "sanity_test"})
     public void regTC04_submit_PC_KYC_NRIC(ITestContext context) {
+        System.out.println("TEST CASE: Start \"regTC04_submit_PC_KYC_NRIC\"");
         testAccountData = new TestAccountData();
-
         try {
             String mprefix = "123";
             String mnumber = utils.getTimestamp();
@@ -165,7 +201,7 @@ public class youtrip_android_browserstack {
             testAccountData.Id = userId;
             //store test data
             subProc.api.data_createTestUser(testAccountData);
-
+            System.out.println("TEST CASE: Finish \"regTC04_submit_PC_KYC_NRIC\"");
         } catch (Exception e) {
             testAccountData = null;
             e.printStackTrace();
@@ -175,6 +211,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test", "sanity_test"})
     public void regTC05_fullreject_PC_KYC_NRIC(ITestContext context) {
+        System.out.println("TEST CASE: Start \"regTC05_fullreject_PC_KYC_NRIC\"");
         try {
             //recall user ID from previous test case
             String userID = (String) context.getAttribute("userid");
@@ -188,11 +225,11 @@ public class youtrip_android_browserstack {
             subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, false);
             //perform full rejection
             subProc.procRejectKYC(true);
-
             //update test user
             testAccountData.KycStatus = TestAccountData.KYCStatus.Reject;
             testAccountData.UnderUse = isContinueTest;
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("TEST CASE: Finish \"regTC05_fullreject_PC_KYC_NRIC\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -201,6 +238,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test", "sanity_test"})
     public void regTC06_resubmit_fullreject_PC_KYC_NRIC(ITestContext context) {
+        System.out.println("TEST CASE: Start \"regTC06_resubmit_fullreject_PC_KYC_NRIC\"");
         AndroidElement el;
         try {
             //recall user ID from previous test case
@@ -233,7 +271,7 @@ public class youtrip_android_browserstack {
             testAccountData.KycStatus = TestAccountData.KYCStatus.Submit;
             testAccountData.UnderUse = isContinueTest;
             subProc.api.data_updateTestUser(testAccountData);
-
+            System.out.println("TEST CASE: Finish \"regTC06_resubmit_fullreject_PC_KYC_NRIC\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -242,6 +280,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test", "sanity_test"})
     public void regTC07_partialreject_PC_KYC_NRIC(ITestContext context) {
+        System.out.println("TEST CASE: Start \"regTC07_partialreject_PC_KYC_NRIC\"");
         try {
             //recall user ID from previous test case
             String userID = (String) context.getAttribute("userid");
@@ -260,7 +299,7 @@ public class youtrip_android_browserstack {
             testAccountData.KycStatus = TestAccountData.KYCStatus.PartialReject;
             testAccountData.UnderUse = isContinueTest;
             subProc.api.data_updateTestUser(testAccountData);
-
+            System.out.println("TEST CASE: Finish \"regTC07_partialreject_PC_KYC_NRIC\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -269,6 +308,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test", "sanity_test"})
     public void regTC08_resubmit_partialreject_PC_KYC_NRIC(ITestContext context) {
+        System.out.println("TEST CASE: Start \"regTC08_resubmit_partialreject_PC_KYC_NRIC\"");
         AndroidElement el;
         try {
             //recall user ID from previous test case
@@ -299,7 +339,7 @@ public class youtrip_android_browserstack {
             testAccountData.KycStatus = TestAccountData.KYCStatus.Submit;
             testAccountData.UnderUse = isContinueTest;
             subProc.api.data_updateTestUser(testAccountData);
-
+            System.out.println("TEST CASE: Finish \"regTC08_resubmit_partialreject_PC_KYC_NRIC\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -308,6 +348,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test", "sanity_test"})
     public void regTC09_approved_PC_KYC_NRIC(ITestContext context) {
+        System.out.println("TEST CASE: Start \"regTC09_approved_PC_KYC_NRIC\"");
         try {
             //recall user ID from previous test case
             String userID = (String) context.getAttribute("userid");
@@ -327,7 +368,7 @@ public class youtrip_android_browserstack {
             testAccountData.KycStatus = TestAccountData.KYCStatus.Clear;
             testAccountData.UnderUse = isContinueTest;
             subProc.api.data_updateTestUser(testAccountData);
-
+            System.out.println("TEST CASE: Finish \"regTC09_approved_PC_KYC_NRIC\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -336,6 +377,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test", "sanity_test"})
     public void regTC10_logout_PC_KYC_NRIC(ITestContext context) {
+        System.out.println("TEST CASE: Start \"regTC10_logout_PC_KYC_NRIC\"");
         try {
             //recall user ID from previous test case
             String userID = (String) context.getAttribute("userid");
@@ -349,6 +391,7 @@ public class youtrip_android_browserstack {
             subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, false);
             //logout of account
             subProc.procLogout();
+            System.out.println("TEST CASE: Finish \"regTC10_logout_PC_KYC_NRIC\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -357,6 +400,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test" })
     public void regTC11_submit_NPC_KYC_forgeiner(ITestContext context) {
+        System.out.println("TEST CASE: Start \"regTC11_submit_NPC_KYC_forgeiner\"");
         testAccountData = new TestAccountData();
         TestCardData testCardData = null;
         try {
@@ -414,6 +458,7 @@ public class youtrip_android_browserstack {
             //store test data
             subProc.api.data_updateTestCard(testAccountData.Card);
             subProc.api.data_createTestUser(testAccountData);
+            System.out.println("TEST CASE: Finish \"regTC11_submit_NPC_KYC_forgeiner\"");
 
         } catch (Exception e) {
             testAccountData = null;
@@ -429,6 +474,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test"})
     public void regTC12_fullreject_NPC_KYC_forgeiner(ITestContext context) {
+        System.out.println("TEST CASE: Start \"regTC12_fullreject_NPC_KYC_forgeiner\"");
         try {
 
             //recall user ID from previous test case
@@ -448,7 +494,7 @@ public class youtrip_android_browserstack {
             testAccountData.KycStatus = TestAccountData.KYCStatus.Reject;
             testAccountData.UnderUse = isContinueTest;
             subProc.api.data_updateTestUser(testAccountData);
-
+            System.out.println("TEST CASE: Finish \"regTC12_fullreject_NPC_KYC_forgeiner\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -457,6 +503,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test"})
     public void regTC13_resubmit_fullreject_NPC_KYC_forgeiner(ITestContext context) {
+        System.out.println("TEST CASE: Start \"regTC13_resubmit_fullreject_NPC_KYC_forgeiner\"");
         AndroidElement el;
         try {
             //recall user ID from previous test case
@@ -489,7 +536,7 @@ public class youtrip_android_browserstack {
             testAccountData.KycStatus = TestAccountData.KYCStatus.Submit;
             testAccountData.UnderUse = isContinueTest;
             subProc.api.data_updateTestUser(testAccountData);
-
+            System.out.println("TEST CASE: Finish \"regTC13_resubmit_fullreject_NPC_KYC_forgeiner\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -498,6 +545,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test"})
     public void regTC14_partialreject_NPC_KYC_forgeiner(ITestContext context) {
+        System.out.println("TEST CASE: Start \"regTC14_partialreject_NPC_KYC_forgeiner\"");
         try {
             //recall user ID from previous test case
             String userID = (String) context.getAttribute("userid");
@@ -516,7 +564,7 @@ public class youtrip_android_browserstack {
             testAccountData.KycStatus = TestAccountData.KYCStatus.PartialReject;
             testAccountData.UnderUse = isContinueTest;
             subProc.api.data_updateTestUser(testAccountData);
-
+            System.out.println("TEST CASE: Finish \"regTC14_partialreject_NPC_KYC_forgeiner\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -525,6 +573,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test"})
     public void regTC15_resubmit_partialreject_NPC_KYC_forgeiner(ITestContext context) {
+        System.out.println("TEST CASE: Start \"regTC15_resubmit_partialreject_NPC_KYC_forgeiner\"");
         AndroidElement el;
         try {
             //recall user ID from previous test case
@@ -554,7 +603,7 @@ public class youtrip_android_browserstack {
             testAccountData.KycStatus = TestAccountData.KYCStatus.Submit;
             testAccountData.UnderUse = isContinueTest;
             subProc.api.data_updateTestUser(testAccountData);
-
+            System.out.println("TEST CASE: Finish \"regTC15_resubmit_partialreject_NPC_KYC_forgeiner\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -563,6 +612,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test" })
     public void regTC16_approved_NPC_KYC_forgeiner(ITestContext context) {
+        System.out.println("TEST CASE: Start \"regTC16_approved_NPC_KYC_forgeiner\"");
         try {
             //recall user ID from previous test case
             String userID = (String) context.getAttribute("userid");
@@ -580,7 +630,7 @@ public class youtrip_android_browserstack {
             testAccountData.KycStatus = TestAccountData.KYCStatus.Clear;
             testAccountData.UnderUse = isContinueTest;
             subProc.api.data_updateTestUser(testAccountData);
-
+            System.out.println("TEST CASE: Finish \"regTC16_approved_NPC_KYC_forgeiner\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -594,8 +644,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test"})
     public void regTC18_logout_NPC_KYC_forgeiner(ITestContext context) {
-
-        //TODO once TC17 is enable need to update test to unlock app first then logout
+        System.out.println("TEST CASE: Start \"regTC18_logout_NPC_KYC_forgeiner\"");
         try {
             //recall user ID from previous test case
             String userID = (String) context.getAttribute("userid");
@@ -609,6 +658,7 @@ public class youtrip_android_browserstack {
             subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, false);
             //logout of account
             subProc.procLogout();
+            System.out.println("TEST CASE: Finish \"regTC18_logout_NPC_KYC_forgeiner\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -617,6 +667,7 @@ public class youtrip_android_browserstack {
 
     @Test (groups = { "regression_test", "sanity_test", "not_ready" })
     public void regTC19_login_existing_user_OTP() {
+        System.out.println("TEST CASE: Start \"regTC19_login_existing_user_OTP\"");
         AndroidElement el;
 
         try {
@@ -636,7 +687,7 @@ public class youtrip_android_browserstack {
             el = (AndroidElement) UIElementKeyDict.getElement(PageKey.HomePageElementDict, "logoYouTrip", driver);
             assertTrue(el.isDisplayed());
             System.out.println("TEST STEP: Home Page - on page");
-
+            System.out.println("TEST CASE: Finish \"regTC19_login_existing_user_OTP\"");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
