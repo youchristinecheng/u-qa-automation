@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Android Regression - Parallel Run" thread-count="3" parallel="tests">
+<suite name="Android Regression - Parallel Run">
     <test name="Android Regression OS7 Run">
         <parameter name="config" value="android_conf.json"/>
         <parameter name="device" value="galaxy_s8_os7"/>
