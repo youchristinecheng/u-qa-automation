@@ -1,8 +1,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Android Regression - Parallel Run" thread-count="3" parallel="tests">
-    <test name="Android Regression">
+    <test name="Android Regression OS7 Run">
         <parameter name="config" value="android_conf.json"/>
-        <parameter name="device" value="galaxy_s20_os10"/>
+        <parameter name="device" value="galaxy_s8_os7"/>
         <classes>
             <class name = "youtrip_android_sg_regressionTest">
                 <methods>
@@ -29,9 +29,9 @@
         </classes>
     </test>
 
-    <test name="Android Regression">
+    <test name="Android Regression OS8 Run">
         <parameter name="config" value="android_conf.json"/>
-        <parameter name="device" value="galaxy_note10_os9"/>
+        <parameter name="device" value="galaxy_s9_os8"/>
         <classes>
             <class name = "youtrip_android_sg_regressionTest">
                 <methods>
@@ -53,15 +53,14 @@
                     <include name="regTC16_approved_NPC_KYC_forgeiner"/>
                     <include name="regTC17_activatecard_NPC_KYC_forgeiner"/>
                     <include name="regTC18_logout_NPC_KYC_forgeiner"/>
-                    <include name="regTC19_login_existing_user_OTP"/>
                 </methods>
             </class>
         </classes>
     </test>
 
-    <test name="Android Regression">
+    <test name="Android Regression OS9 Run">
         <parameter name="config" value="android_conf.json"/>
-        <parameter name="device" value="pixel_2_os8"/>
+        <parameter name="device" value="oneplus_7_os9"/>
         <classes>
             <class name = "youtrip_android_sg_regressionTest">
                 <methods>
@@ -83,7 +82,6 @@
                     <include name="regTC16_approved_NPC_KYC_forgeiner"/>
                     <include name="regTC17_activatecard_NPC_KYC_forgeiner"/>
                     <include name="regTC18_logout_NPC_KYC_forgeiner"/>
-                    <include name="regTC19_login_existing_user_OTP"/>
                 </methods>
             </class>
         </classes>
