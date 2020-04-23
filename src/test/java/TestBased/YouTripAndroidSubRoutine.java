@@ -131,7 +131,7 @@ public class YouTripAndroidSubRoutine {
             el.sendKeys(otp6);
             System.out.println("TEST STEP: OTP Page - entered OTP");
 
-            Thread.sleep(2000);
+            Thread.sleep(3000);
 
             if(isFirstTimeLogin) {
                 //wait till on enter email page
@@ -139,7 +139,7 @@ public class YouTripAndroidSubRoutine {
                 System.out.println("TEST STEP: Enter Email Page - on page");
             }
 
-            Thread.sleep(2000);
+            Thread.sleep(3000);
 
         }catch(Exception e){
             throw e;
@@ -410,13 +410,13 @@ public class YouTripAndroidSubRoutine {
                 el.click();
                 System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click start now button");
                 Thread.sleep(3000);
-                //accept the Android camera permission if it appears
-                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CameraAccessAlertElementDict, "btnAccept", driver, true);
-                if (el != null) {
-                    el.click();
-                    System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click allow YouTrip access to camera button");
-                    Thread.sleep(3000);
-                }
+                //accept the Android camera permission if it appears (not needed permission allowed)
+                //el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CameraAccessAlertElementDict, "btnAccept", driver, true);
+                //if (el != null) {
+                //    el.click();
+                //    System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click allow YouTrip access to camera button");
+                //    Thread.sleep(3000);
+                //}
 
                 //--------------//
                 //KYC FRONT PHOTO//
