@@ -1,16 +1,10 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Regression Test Run">
+<suite name="Android Regression - Single Run">
     <test name="Android Regression">
-        <groups>
-            <run>
-                <include name="regression_test"/>
-                <exclude name="not_ready"/>
-                <exclude name="broken"/>
-                <exclude name="skipped"/>
-            </run>
-        </groups>
+        <parameter name="config" value="android_conf.json"/>
+        <parameter name="device" value="galaxy_note10_os9"/>
         <classes>
-            <class name = "youtrip_android_regression">
+            <class name = "youtrip_android_sg_regressionTest">
                 <methods>
                     <include name="regTC01_selectTH"/>
                     <include name="regTC02_selectSG"/>
@@ -30,7 +24,6 @@
                     <include name="regTC16_approved_NPC_KYC_forgeiner"/>
                     <include name="regTC17_activatecard_NPC_KYC_forgeiner"/>
                     <include name="regTC18_logout_NPC_KYC_forgeiner"/>
-                    <include name="regTC19_login_existing_user_OTP"/>
                 </methods>
             </class>
         </classes>

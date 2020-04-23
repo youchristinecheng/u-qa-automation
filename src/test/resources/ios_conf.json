@@ -1,0 +1,20 @@
+{
+  "server": "hub-cloud.browserstack.com",
+  "user": "danielchan",
+  "key": "pWT7MCmWvUfYUsMNoQ9y",
+
+  "capabilities": {
+    "project" : "Test Project",
+    "build": "App 3.5.0 - RC1 - XXXX",
+    "name": "iOS Regression Suite",
+    "browserstack.debug": true,
+    "app": "bs://3f8448d822df61c77ffa13b38bcb9fc189eb0b00"
+  },
+
+  "environments": {
+    "galaxy_s20_os10": {
+      "device": "Samsung Galaxy S20",
+      "os": "10.0"
+    }
+  }
+}
