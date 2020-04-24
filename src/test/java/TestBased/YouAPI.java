@@ -35,10 +35,13 @@ public class YouAPI {
             this.backDoorAuthUserName = "";
             this.backDoorAuthPwd = "";
         } else {
+            if (UserName != null && Password != null)
             this.backDoorAuthUserName = UserName;
             this.backDoorAuthPwd = Password;
         }
     }
+    public void setYPEndPoint(String value){ this.ypEndPoint = value; }
+    public void setDataBackDoorEndPoint(String value){ this.dataBackDoorEndPoint = value; }
 
     public YouAPI(){
         //TODO need to refactor end points

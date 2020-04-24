@@ -29,8 +29,8 @@ public class ios_browserstackTest {
     Integer osMainVerInt;
 
     @BeforeTest(alwaysRun = true)
-    @org.testng.annotations.Parameters(value={"config", "device"})
-    public void setUp(String config_file, String device) throws Exception {
+    @org.testng.annotations.Parameters(value={"config", "device", "env"})
+    public void setUp(String config_file, String device, String env) throws Exception {
 
         System.out.println("SETUP: iOS device setup starting");
 
@@ -41,6 +41,12 @@ public class ios_browserstackTest {
 
         UIElementKeyDict = new YouTripIosUIElementKey();
         DesiredCapabilities capabilities = new DesiredCapabilities();
+
+        //read environment config file
+        JSONObject envconfig = (JSONObject) parser.parse(new FileReader("src/test/resources/env.json"));
+        JSONObject environment = null;
+        if(envconfig.containsKey(env))
+            environment = (JSONObject) envconfig.get(env);
 
         //set device capabilites
         Map<String, String> deviceCapabilities = (Map<String, String>) devices.get(device);
@@ -87,6 +93,11 @@ public class ios_browserstackTest {
         UIElementKeyDict = new YouTripIosUIElementKey();
         defaultAPPPinCode = "1111";
         subProc =  new YoutripIosSubRoutine(UIElementKeyDict, driver);
+        if(environment != null){
+            subProc.api.setYPEndPoint(environment.get("sg_youportalEndPoint").toString());
+            subProc.api.setDataBackDoorEndPoint(environment.get("sg_databackdoorEndPoint").toString());
+            subProc.api.setBackDoorEndPoint(environment.get("sg_backdoorEndPoint").toString(), true, null, null);
+        }
 
 
         wait = subProc.getDriverWait();
