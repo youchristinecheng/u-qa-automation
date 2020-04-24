@@ -20,18 +20,26 @@ public class android_browserstackTest {
     WebDriverWait wait;
 
     @BeforeTest(alwaysRun = true)
-    @Parameters({"config", "device", "app", "build"})
-    public void setUp(String config_file, String device, String appUrl, String buildName) throws Exception {
+    @Parameters({"config", "device", "app", "build", "env"})
+    public void setUp(String config_file, String device, String appUrl, String buildName, String env) throws Exception {
 
         System.out.println("SETUP: Android device setup starting");
+        UIElementKeyDict = new YouTripAndroidUIElementKey();
+        DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        //read config file values
+        //read config file
         JSONParser parser = new JSONParser();
         JSONObject config = (JSONObject) parser.parse(new FileReader("src/test/resources/" + config_file));
         JSONObject devices = (JSONObject) config.get("device");
 
-        UIElementKeyDict = new YouTripAndroidUIElementKey();
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+        //read environment config file
+        JSONObject envconfig = (JSONObject) parser.parse(new FileReader("src/test/resources/env.json"));
+        JSONObject environment = null;
+        if (env.equals("sit")) {
+            environment = (JSONObject) envconfig.get("sit");
+        } else if (env.equals("dev")) {
+            environment = (JSONObject) envconfig.get("dev");
+        }
 
         //set device capabilites
         Map<String, String> deviceCapabilities = (Map<String, String>) devices.get(device);
@@ -60,11 +68,6 @@ public class android_browserstackTest {
         if(accessKey == null) {
             accessKey = (String) config.get("key");
         }
-
-        //String app = System.getenv("BROWSERSTACK_APP_ID");
-        //if(app != null && !app.isEmpty()) {
-        //    capabilities.setCapability("app", app);
-        //}
 
         //set dynamic capabilities for app hash value and build name
         capabilities.setCapability("app", appUrl);
