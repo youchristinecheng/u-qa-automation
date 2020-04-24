@@ -5,10 +5,8 @@
 
   "capabilities": {
     "project" : "Test Project",
-    "build": "App 3.6.0 - RC1 - 1183",
     "name": "Android Regression Suite",
     "browserstack.debug": true,
-    "app": "bs://3f8448d822df61c77ffa13b38bcb9fc189eb0b00",
     "browserstack.appium_version" : "1.17.0",
     "browserstack.local" : false,
     "real_mobile" : true
