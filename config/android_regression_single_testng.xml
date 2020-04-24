@@ -3,6 +3,9 @@
     <test name="Android Regression">
         <parameter name="config" value="android_conf.json"/>
         <parameter name="device" value="galaxy_note10_os9"/>
+        <parameter name="app" value="bs://3f8448d822df61c77ffa13b38bcb9fc189eb0b00"/>
+        <parameter name="build" value="App_3.6.0_RC1_1183"/>
+        <parameter name="environment" value=""/>
         <classes>
             <class name = "youtrip_android_sg_regressionTest">
                 <methods>

@@ -20,8 +20,8 @@ public class android_browserstackTest {
     WebDriverWait wait;
 
     @BeforeTest(alwaysRun = true)
-    @org.testng.annotations.Parameters(value={"config", "device"})
-    public void setUp(String config_file, String device) throws Exception {
+    @Parameters({"config", "device", "app", "build"})
+    public void setUp(String config_file, String device, String appUrl, String buildName) throws Exception {
 
         System.out.println("SETUP: Android device setup starting");
 
@@ -61,10 +61,14 @@ public class android_browserstackTest {
             accessKey = (String) config.get("key");
         }
 
-        String app = System.getenv("BROWSERSTACK_APP_ID");
-        if(app != null && !app.isEmpty()) {
-            capabilities.setCapability("app", app);
-        }
+        //String app = System.getenv("BROWSERSTACK_APP_ID");
+        //if(app != null && !app.isEmpty()) {
+        //    capabilities.setCapability("app", app);
+        //}
+
+        //set dynamic capabilities for app hash value and build name
+        capabilities.setCapability("app", appUrl);
+        capabilities.setCapability("build", buildName);
 
         //setup android specific capabiilties
         capabilities.setCapability("appWaitPackage", "co.you.youapp.dev");
@@ -74,6 +78,7 @@ public class android_browserstackTest {
         driver = new AndroidDriver<>(new URL("http://"+username+":"+accessKey+"@"+config.get("server")+"/wd/hub"), capabilities);
         subProc = new YouTripAndroidSubRoutine(UIElementKeyDict, driver);
         wait = subProc.getDriverWait();
+
         System.out.println("SETUP: Android device setup finished");
     }
 
