@@ -5,6 +5,7 @@ import kong.unirest.json.JSONObject;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.testng.annotations.ITestAnnotation;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.File;
@@ -110,5 +111,16 @@ public class Utils {
         DecimalFormat formatter = new DecimalFormat(this.decimalAmtFormat);
         String amountValue = formatter.format(value);
         return  amountValue;
+    }
+
+    public boolean isActivedTestAccountValid(CardType cardType, KYCStatus kycStatus, CardStatus cardstatus, TestAccountData data){
+        if(data != null) {
+            if (data.KycStatus.equals(kycStatus)) {
+                if (data.Card != null) {
+                    return data.Card.Status.equals(cardstatus) && data.TestAccountCardType.equals(cardType);
+                }
+            }
+        }
+        return false;
     }
 }

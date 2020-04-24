@@ -552,10 +552,10 @@ public class YoutripIosSubRoutine {
     }
 
     public void procLogoutFromHomePage()throws Exception {
-        System.out.println("TEST STEP: Logout");
+        System.out.println("TEST STEP: Logout From HomePage");
         UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnMenu", driver).click();
         UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "menuBtnSetting", driver).click();
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.SettingPageElementDict, "btnLogout", driver)));
         UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.SettingPageElementDict, "btnLogout", driver).click();
         Thread.sleep(3000);
@@ -589,5 +589,12 @@ public class YoutripIosSubRoutine {
         Thread.sleep(5000);
 
         this.procVerifyInHomePage(Market.Singapore);
+    }
+
+    public void unlockTestAccountData(TestAccountData testAccountData){
+        System.out.println("TEARDOWN: Release TestUser");
+        testAccountData.UnderUse = false;
+        testAccountData.Card.UnderUse = false;
+        this.api.data_updateTestUser(testAccountData);
     }
 }

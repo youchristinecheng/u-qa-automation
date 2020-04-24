@@ -23,7 +23,8 @@ public class ios_browserstackTest {
     WebDriverWait wait;
     TestAccountData testAccountData;
     boolean isRequriedReset;
-    boolean isAppResetted;
+    boolean isAppReset;
+    boolean isForebackEnable;
     String defaultAPPPinCode;
     Integer osMainVerInt;
 
@@ -74,9 +75,14 @@ public class ios_browserstackTest {
             capabilities.setCapability("app", app);
         }
 
-        driver = new IOSDriver<>(new URL("http://"+username+":"+accessKey+"@"+config.get("server")+"/wd/hub"), capabilities);
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        if(username.equals("") && accessKey.equals("")){
+            driver = new IOSDriver<>(new URL("http://"+ config.get("server") + "/wd/hub"), capabilities);
+        }else{
+            driver = new IOSDriver<>(new URL("http://" + username + ":" + accessKey + "@" + config.get("server") + "/wd/hub"), capabilities);
+        }
 
+
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         testAccountData = null;
         UIElementKeyDict = new YouTripIosUIElementKey();
         defaultAPPPinCode = "1111";
@@ -90,7 +96,8 @@ public class ios_browserstackTest {
             fail(e.getMessage());
         }
         isRequriedReset = false;
-        isAppResetted = true;
+        isAppReset = true;
+        isForebackEnable = true;
         osMainVerInt = -1;
         System.out.println("TEST PARAMETER: iOS Main Version(Default): " + osMainVerInt);
         Map<String, Object> caps = ((IOSDriver) driver).getSessionDetails();
@@ -103,15 +110,17 @@ public class ios_browserstackTest {
     public void TestMethodTeardown(ITestResult result){
         System.out.println("TEARDOWN: Resetting App");
         if(result.getStatus() == ITestResult.FAILURE) {
-            isAppResetted = true;
+            isRequriedReset = true;
+        }
+
+        if(isRequriedReset) {
+            isAppReset = true;
             driver.resetApp();
             try {
                 subProc.procHandleDevAlert();
             } catch (Exception e) {
                 fail(e.getMessage());
             }
-        }else{
-            isAppResetted = false;
         }
     }
 
@@ -121,5 +130,4 @@ public class ios_browserstackTest {
         driver.closeApp();
         driver.quit();
     }
-
 }
