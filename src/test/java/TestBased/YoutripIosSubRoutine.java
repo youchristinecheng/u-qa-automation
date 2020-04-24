@@ -512,10 +512,12 @@ public class YoutripIosSubRoutine {
         this.procSelectCountry(market);
         this.procOTPLogin(mprefix, phoneNumber, "", false);
 
-        Thread.sleep(500);
+        Thread.sleep(2000);
         el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
-        if(el != null)
+        if(el != null) {
             el.click();
+            Thread.sleep(2000);
+        }
         this.procEnterAPPPinCode(appPinCode);
 
         Thread.sleep(2000);
@@ -547,6 +549,19 @@ public class YoutripIosSubRoutine {
         }else{
             Assert.assertTrue(ele.isDisplayed());
         }
+    }
+
+    public void procLogoutFromHomePage()throws Exception {
+        System.out.println("TEST STEP: Logout");
+        UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnMenu", driver).click();
+        UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "menuBtnSetting", driver).click();
+        Thread.sleep(1000);
+        wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.SettingPageElementDict, "btnLogout", driver)));
+        UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.SettingPageElementDict, "btnLogout", driver).click();
+        Thread.sleep(3000);
+        System.out.println("TEST STEP: Back to Country Selection page");
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CountryPageElementDict, "lblTitle", driver), "Where do you live?"));
+        Assert.assertTrue(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CountryPageElementDict, "optionCountry", driver).isDisplayed());
     }
 
     public void clearTextFieldValueForiOS12(IOSElement el, Integer existingTextLength) {

@@ -9,22 +9,21 @@
 -->
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="iOS Test Run">
-    <test name="Regression">
+<suite name="iOS Regression - Single Run">
+    <test name="iOS Regression">
+        <parameter name="config" value="ios_conf.json"/>
+        <parameter name="device" value="iphone_7"/>
         <classes>
-            <class name="youtrip_ios_regression">
+            <class name="youtrip_ios_sg_regressionTest">
                 <methods>
                     <include name="regTC03_selectTH"/>
                     <include name="regTC04_selectSG"/>
                     <include name="regTC05_login_new_user_OTP"/>
-                    <include name="regTC08_submit_PC_KYC_NRIC"/>
-                    <include name="regTC09_fullreject_and_resubmit_PC_KYC_NRIC"/>
-                    <include name="regTC10_partialreject_and_resubmit_PC_KYC_NRIC"/>
-                    <include name="regTC11_approved_PC_KYC_NRIC"/>
-                    <include name="regTC19_submit_NPC_KYC_EmploymentPass"/>
-                    <include name="regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass"/>
-                    <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>
-                    <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC07_Logout"/>
+                    <include name="regTC33_ChangePINFromSetting"/>
+                    <include name="regTC25_UpdateCardFromTopUpPage"/>
+                    <include name="regTC25_UpdateCardFromOrderCardReplacePage"/>
+                    <include name="regTC43_checkOrderReplacementCardPage"/>
                 </methods>
             </class>
         </classes>

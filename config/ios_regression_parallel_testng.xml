@@ -1,0 +1,100 @@
+<!--
++===============================================******** NOTICE ********================================================+
+| This testng is for iOS enabled to run separately.                                                                     |
+| The run of this test scope ON AWS DEVICE FARM REQUIRED to modify the yaml file during configuration no run            |
+| The modification on yaml file has guide within itself                                                                 |
+| It also required to update the maven xmlfile in section maven-surefire-plugin to specify this testng xml file for run |
++=======================================================================================================================+
+
+-->
+
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="iOS Regression Parallel Run">
+    <test name="iOS Regression iOS 10 Run">
+        <parameter name="config" value="ios_conf.json"/>
+        <parameter name="device" value="iphone_7"/>
+        <classes>
+            <class name="youtrip_ios_sg_regressionTest">
+                <methods>
+                    <include name="regTC03_selectTH"/>
+                    <include name="regTC04_selectSG"/>
+                    <include name="regTC05_login_new_user_OTP"/>
+                    <include name="regTC08_submit_PC_KYC_NRIC"/>
+                    <include name="regTC09_fullreject_and_resubmit_PC_KYC_NRIC"/>
+                    <include name="regTC10_partialreject_and_resubmit_PC_KYC_NRIC"/>
+                    <include name="regTC11_approved_PC_KYC_NRIC"/>
+                    <include name="regTC19_submit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="iOS Regression iOS 11 Run">
+        <parameter name="config" value="ios_conf.json"/>
+        <parameter name="device" value="iphone_8"/>
+        <classes>
+            <class name="youtrip_ios_sg_regressionTest">
+                <methods>
+                    <include name="regTC03_selectTH"/>
+                    <include name="regTC04_selectSG"/>
+                    <include name="regTC05_login_new_user_OTP"/>
+                    <include name="regTC08_submit_PC_KYC_NRIC"/>
+                    <include name="regTC09_fullreject_and_resubmit_PC_KYC_NRIC"/>
+                    <include name="regTC10_partialreject_and_resubmit_PC_KYC_NRIC"/>
+                    <include name="regTC11_approved_PC_KYC_NRIC"/>
+                    <include name="regTC19_submit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="iOS Regression iOS 12 Run">
+        <parameter name="config" value="ios_conf.json"/>
+        <parameter name="device" value="iphone_xs"/>
+        <classes>
+            <class name="youtrip_ios_sg_regressionTest">
+                <methods>
+                    <include name="regTC03_selectTH"/>
+                    <include name="regTC04_selectSG"/>
+                    <include name="regTC05_login_new_user_OTP"/>
+                    <include name="regTC08_submit_PC_KYC_NRIC"/>
+                    <include name="regTC09_fullreject_and_resubmit_PC_KYC_NRIC"/>
+                    <include name="regTC10_partialreject_and_resubmit_PC_KYC_NRIC"/>
+                    <include name="regTC11_approved_PC_KYC_NRIC"/>
+                    <include name="regTC19_submit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="iOS Regression iOS 13 Run">
+        <parameter name="config" value="ios_conf.json"/>
+        <parameter name="device" value="iphone_11_pro_msx"/>
+        <classes>
+            <class name="youtrip_ios_sg_regressionTest">
+                <methods>
+                    <include name="regTC03_selectTH"/>
+                    <include name="regTC04_selectSG"/>
+                    <include name="regTC05_login_new_user_OTP"/>
+                    <include name="regTC08_submit_PC_KYC_NRIC"/>
+                    <include name="regTC09_fullreject_and_resubmit_PC_KYC_NRIC"/>
+                    <include name="regTC10_partialreject_and_resubmit_PC_KYC_NRIC"/>
+                    <include name="regTC11_approved_PC_KYC_NRIC"/>
+                    <include name="regTC19_submit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

@@ -3,148 +3,33 @@ import TestBased.TestAccountData.CardStatus;
 import TestBased.TestAccountData.CardType;
 import TestBased.TestAccountData.KYCStatus;
 import TestBased.TestCardData;
-import TestBased.YouTripIosUIElementKey;
 import TestBased.YouTripIosUIElementKey.Market;
 import TestBased.YouTripIosUIElementKey.PageKey;
-import TestBased.YoutripIosSubRoutine;
-import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.*;
 
-public class youtrip_ios_regression_browserstack {
-
-    IOSDriver driver;
-    YouTripIosUIElementKey UIElementKeyDict;
-    YoutripIosSubRoutine subProc;
-    WebDriverWait wait;
-    TestAccountData testAccountData;
-    boolean isContinueTest;
-    String defaultAPPPinCode;
-    Integer osMainVerInt;
-
-    public static String userName = "youtechyoutech1";
-    public static String accessKey = "xe5uxMLBNiz8dxLc3uJg";
-
-    @BeforeTest (alwaysRun = true)
-    public void setUp() throws MalformedURLException {
-        testAccountData = null;
-        UIElementKeyDict = new YouTripIosUIElementKey();
-        defaultAPPPinCode = "1111";
-        // Created object of DesiredCapabilities class.
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        /*
-         * ###### Desired Capabilities for iOS Emulator ######
-         */
-        /*capabilities.setCapability("deviceName", "iPhone Simulator");
-        capabilities.setCapability(CapabilityType.VERSION, "11.4.1");
-        capabilities.setCapability("automationName", "XCUITest");
-        capabilities.setCapability("platformName", "iOS");*/
-        /*
-         * ###### Desired Capabilities for iOS Emulator ######
-         */
-
-        /*
-         * ###### Desired Capabilities for Real iPhone ######
-         */
-//        capabilities.setCapability("deviceName", "YouTech iPhone");
-//        capabilities.setCapability(CapabilityType.VERSION, "13.1.2");
-//        capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
-////        capabilities.setCapability("deviceName", "YouTech QAs iPhone");
-////        capabilities.setCapability(CapabilityType.VERSION, "12.1.1");
-////        capabilities.setCapability("udid", "00008020-00026C2E3A46002E");
-//        capabilities.setCapability("automationName", "XCUITest");
-//        capabilities.setCapability("platformName", "iOS");
-//        capabilities.setCapability("bundleId", "co.you.youapp");
-//        File filePath = new File(System.getProperty("user.dir"));
-//        File appDir = new File(filePath, "/apps");
-//        File app = new File(appDir, "YOUTrip_SIT_3.6.0-sit_1411.ipa");
-//        capabilities.setCapability("app", app.getAbsolutePath());
-//        capabilities.setCapability("xcodeOrgId", "2HWNYH89R4");
-//        capabilities.setCapability("xcodeSigningId", "iPhone Developer");
-//        capabilities.setCapability("fullReset", true);
-        /*
-         * ###### Desired Capabilities for Real Device ######
-         */
-
-        /*
-         * ###### Desired Capabilities for AWS Device Farm ######
-         * AWS Device Farm require setup as Default value.
-         * No Desired Capabilities configuration should be done.
-         * Reminded that this default setting ONLY allow with Appium 1.9.1 with iOS 12 on aws device farm
-         */
-
-        /*
-         * ###### Desired Capabilities for BrowserStack ######
-         */
-        capabilities.setCapability("device", "iPhone 11 Pro");
-        capabilities.setCapability("os_version", "13");
-        capabilities.setCapability("project", "Test Project");
-        capabilities.setCapability("build", "App 3.5.1 - RC1");
-        capabilities.setCapability("name", "iOS Regression Suite");
-        capabilities.setCapability("app", "bs://a4bb74dd3b5c4b27356e1aeea797e3aaea960ec9");
-        capabilities.setCapability("browserstack.appium_version", "1.12.0");
-        capabilities.setCapability("browserstack.local", "false");
-        capabilities.setCapability("real_mobile", "true");
-
-        driver = new IOSDriver<>(new URL("https://"+userName+":"+accessKey+"@hub-cloud.browserstack.com/wd/hub"), capabilities);
-
-        /*
-         * ###### Desired Capabilities for BrowserStack ######
-         */
-
-        //co.you.youapp.ui.home.HomeActivity
-        //co.you.youapp.ui.home.limited.LimitedHomeActivity
-        //co.you.youapp.ui.magiclink.MagicLinkActivity
-        //co.you.youapp.ui.base.SingleFragmentActivity
-
-        // Created object of RemoteWebDriver will all set capabilities.
-        // Set appium server address and port number in URL string.
-        // It will launch calculator app in android device.
-
-        //driver = new IOSDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        subProc =  new YoutripIosSubRoutine(UIElementKeyDict, driver);
-        wait = subProc.getDriverWait();
-        try {
-            subProc.procHandleDevAlert();
-        }catch(Exception e){
-            fail(e.getMessage());
-        }
-        isContinueTest = true;
-        osMainVerInt = -1;
-        System.out.println("TEST PARAMETER: iOS Main Version(Default): " + osMainVerInt);
-        Map<String, Object> caps = ((IOSDriver) driver).getSessionDetails();
-        String verStr = caps.get("sdkVersion").toString();
-        osMainVerInt = Integer.parseInt(verStr.substring(0, verStr.indexOf(".")));
-        System.out.println("TEST PARAMETER: iOS Main Version(In Session): " + osMainVerInt);
-
-
-    }
+public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
 
     @Test (groups = { "regression_test"})
     public void regTC03_selectTH() {
+        isAppResetted = false;
+        isRequriedReset = true;
         System.out.println("Test STEP: Start \"regTC03_selectTH\"");
         try {
             subProc.procSelectCountry(Market.Thailand);
+            System.out.println("TEST CASE: Finish \"regTC01_selectTH\"");
         }catch(Exception e){
+            System.out.println("TEST CASE: Fail \"regTC01_selectTH\"");
             e.printStackTrace();
             fail();
         }
@@ -152,10 +37,14 @@ public class youtrip_ios_regression_browserstack {
 
     @Test (groups = { "regression_test"})
     public void regTC04_selectSG() {
+        isAppResetted = true;
+        isRequriedReset = true;
         System.out.println("Test STEP: Start \"regTC04_selectSG\"");
         try {
             subProc.procSelectCountry(Market.Singapore);
+            System.out.println("Test STEP: Finish \"regTC04_selectSG\"");
         } catch (Exception e) {
+            System.out.println("Test STEP: Fail \"regTC04_selectSG\"");
             e.printStackTrace();
             fail();
         }
@@ -164,21 +53,32 @@ public class youtrip_ios_regression_browserstack {
     @Test (groups = { "regression_test"})
     public void regTC05_login_new_user_OTP() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC05_login_new_user_OTP\"");
+        testAccountData = new TestAccountData();
+        SimpleDateFormat formatter = new SimpleDateFormat("YYMMDDHHmmssSS");
+        Date date = new Date(System.currentTimeMillis());
+        System.out.println(formatter.format(date));
+        String mprefix = "123";
+        String mnumber = formatter.format(date);
+        String email = ("qa+sg" + mnumber + "@you.co");
+        System.out.println("TEST DATA: Mobile Number is " + mprefix + " " + mnumber);
+        System.out.println("TEST DATA: Email address is " + email);
+        testAccountData.PhoneNumber = mnumber;
+        testAccountData.MCC = mprefix;
+        testAccountData.Email = email;
+        isAppResetted = false;
+        isRequriedReset = false;
+
         try {
-            SimpleDateFormat formatter = new SimpleDateFormat("YYMMDDHHmmssSS");
-            Date date = new Date(System.currentTimeMillis());
-            System.out.println(formatter.format(date));
-            String mprefix = "123";
-            String mnumber = formatter.format(date);
-            String email = ("qa+sg" + mnumber + "@you.co");
-            System.out.println("TEST DATA: Mobile Number is " + mprefix + " " + mnumber);
-            System.out.println("TEST DATA: Email address is " + email);
+
             subProc.procSelectCountry(Market.Singapore);
             subProc.procOTPLogin(mprefix, mnumber, email, true);
 
             System.out.println("TEST STEP: Welcome Page - on page");
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver), "Welcome"));
+            System.out.println("Test STEP: Finish \"regTC05_login_new_user_OTP\"");
         }catch (Exception e){
+            System.out.println("Test STEP: Fail \"regTC05_login_new_user_OTP\"");
+            isRequriedReset = true;
             e.printStackTrace();
             fail();
         }
@@ -188,44 +88,79 @@ public class youtrip_ios_regression_browserstack {
     public void regTC08_submit_PC_KYC_NRIC() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC08_submit_PC_KYC_NRIC\"");
         IOSElement el;
-        testAccountData = new TestAccountData();
-        try {
+
+        Date date = new Date(System.currentTimeMillis());
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.YEAR, -20);
+        Date dateOfBirth = c.getTime();
+        SimpleDateFormat dateOfBirthFormatter = new SimpleDateFormat("ddMMYYYY");
+
+        if (!isAppResetted) {
+            testAccountData = new TestAccountData();
             SimpleDateFormat formatter = new SimpleDateFormat("YYMMDDHHmmssSS");
-            Date date = new Date(System.currentTimeMillis());
             System.out.println(formatter.format(date));
             String mprefix = "123";
             String mnumber = formatter.format(date);
             String email = ("qa+sg" + mnumber + "@you.co");
 
-            Calendar c = Calendar.getInstance();
-            c.setTime(date);
-            c.add(Calendar.YEAR, -20);
-            Date dateOfBirth = c.getTime();
-            SimpleDateFormat dateOfBirthFormatter = new SimpleDateFormat("ddMMYYYY");
-
             testAccountData.PhoneNumber = mnumber;
             testAccountData.MCC = mprefix;
             testAccountData.Email = email;
-            testAccountData.KycStatus = KYCStatus.Submit;
-            testAccountData.TestAccountCardType = CardType.PC;
-            testAccountData.LastName = "TESTER";;
-            testAccountData.FirstName = "AUTO";;
-            testAccountData.NameOnCard = testAccountData.LastName + " " + testAccountData.FirstName;
-            testAccountData.NricNumber = subProc.api.util.getNRIC();
-            testAccountData.Birthdate = dateOfBirthFormatter.format(dateOfBirth);
-            testAccountData.AddressLineOne = "1";
-            testAccountData.AddressLineTwo = "2";
-            testAccountData.PostalCode = "000000";
-            testAccountData.Card = null;
-            testAccountData.UnderUse = isContinueTest;
+        }
+
+        testAccountData.KycStatus = KYCStatus.Submit;
+        testAccountData.TestAccountCardType = CardType.PC;
+        testAccountData.LastName = "TESTER";;
+        testAccountData.FirstName = "AUTO";;
+        testAccountData.NameOnCard = testAccountData.LastName + " " + testAccountData.FirstName;
+        testAccountData.NricNumber = subProc.api.util.getNRIC();
+        testAccountData.Birthdate = dateOfBirthFormatter.format(dateOfBirth);
+        testAccountData.AddressLineOne = "1";
+        testAccountData.AddressLineTwo = "2";
+        testAccountData.PostalCode = "000000";
+        testAccountData.Card = null;
+        testAccountData.UnderUse = true;
+
+        isRequriedReset = true;
+
+        try {
+//            SimpleDateFormat formatter = new SimpleDateFormat("YYMMDDHHmmssSS");
+//            Date date = new Date(System.currentTimeMillis());
+//            System.out.println(formatter.format(date));
+//            String mprefix = "123";
+//            String mnumber = formatter.format(date);
+//            String email = ("qa+sg" + mnumber + "@you.co");
+//
+//            Calendar c = Calendar.getInstance();
+//            c.setTime(date);
+//            c.add(Calendar.YEAR, -20);
+//            Date dateOfBirth = c.getTime();
+//            SimpleDateFormat dateOfBirthFormatter = new SimpleDateFormat("ddMMYYYY");
+//
+//            testAccountData.PhoneNumber = mnumber;
+//            testAccountData.MCC = mprefix;
+//            testAccountData.Email = email;
+//            testAccountData.KycStatus = KYCStatus.Submit;
+//            testAccountData.TestAccountCardType = CardType.PC;
+//            testAccountData.LastName = "TESTER";;
+//            testAccountData.FirstName = "AUTO";;
+//            testAccountData.NameOnCard = testAccountData.LastName + " " + testAccountData.FirstName;
+//            testAccountData.NricNumber = subProc.api.util.getNRIC();
+//            testAccountData.Birthdate = dateOfBirthFormatter.format(dateOfBirth);
+//            testAccountData.AddressLineOne = "1";
+//            testAccountData.AddressLineTwo = "2";
+//            testAccountData.PostalCode = "000000";
+//            testAccountData.Card = null;
+//            testAccountData.UnderUse = isContinueTest;
 
             System.out.println("PRESET TEST DATA: Mobile Number is " + testAccountData.MCC + " " + testAccountData.PhoneNumber);
-            System.out.println("PRESET TEST DATA: Email address is " + email);
+            System.out.println("PRESET TEST DATA: Email address is " + testAccountData.Email);
             System.out.println("PRESET TEST DATA: Surname - " + testAccountData.LastName + ";Firstname - " + testAccountData.FirstName + ";");
             System.out.println("PRESET TEST DATA: NRIC Number: " + testAccountData.NricNumber + "DateOfBirth:" + testAccountData.Birthdate);
 
             subProc.procSelectCountry(Market.Singapore);
-            subProc.procOTPLogin(mprefix, mnumber, email,true);
+            subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email,true);
             Thread.sleep(2000);
 
             System.out.println("TEST STEP: Welcome Page - on page");
@@ -248,7 +183,9 @@ public class youtrip_ios_regression_browserstack {
             testAccountData.Id = subProc.api.yp_getKYCdetails(kycRefNo).get("userId");
 
             subProc.api.data_createTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC08_submit_PC_KYC_NRIC\"");
         }catch (Exception e){
+            System.out.println("Test STEP: Fail \"regTC08_submit_PC_KYC_NRIC\"");
             testAccountData = null;
             e.printStackTrace();
             fail();
@@ -324,7 +261,7 @@ public class youtrip_ios_regression_browserstack {
             testAccountData.Birthdate = newDateOfBirth;
             testAccountData.AddressLineOne = newAddressLine1;
             testAccountData.AddressLineTwo = newAddressLine2;
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = isRequriedReset;
 
             Thread.sleep(20000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
@@ -332,7 +269,9 @@ public class youtrip_ios_regression_browserstack {
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
 
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC09_fullreject_and_resubmit_PC_KYC_NRIC\"");
         }catch (Exception e){
+            System.out.println("Test STEP: Fail \"regTC09_fullreject_and_resubmit_PC_KYC_NRIC\"");
             testAccountData = null;
             e.printStackTrace();
             fail();
@@ -398,9 +337,11 @@ public class youtrip_ios_regression_browserstack {
             String newKycRefNo = el.getText();
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
 
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = isRequriedReset;
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC10_partialreject_and_resubmit_PC_KYC_NRIC\"");
         }catch (Exception e){
+            System.out.println("Test STEP: Fail \"regTC10_partialreject_and_resubmit_PC_KYC_NRIC\"");
             testAccountData = null;
             e.printStackTrace();
             fail();
@@ -446,7 +387,9 @@ public class youtrip_ios_regression_browserstack {
             testAccountData.UnderUse = false;
 
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC11_approved_PC_KYC_NRIC\"");
         }catch(Exception e){
+            System.out.println("Test STEP: Fail \"regTC11_approved_PC_KYC_NRIC\"");
             testAccountData = null;
             e.printStackTrace();
             fail();
@@ -491,7 +434,7 @@ public class youtrip_ios_regression_browserstack {
             testAccountData.AddressLineOne = "1";
             testAccountData.AddressLineTwo = "2";
             testAccountData.PostalCode = "000000";
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = isRequriedReset;
 
             System.out.println("PRESET TEST DATA: Mobile Number is " + testAccountData.MCC + " " + testAccountData.PhoneNumber);
             System.out.println("PRESET TEST DATA: Email address is " + email);
@@ -523,7 +466,9 @@ public class youtrip_ios_regression_browserstack {
 
             subProc.api.data_updateTestCard(testAccountData.Card);
             subProc.api.data_createTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"reg19_submit_NPC_KYC_EmploymentPass\"");
         }catch (Exception e){
+            System.out.println("Test STEP: Fail \"reg19_submit_NPC_KYC_EmploymentPass\"");
             testAccountData = null;
             if (testCardData != null){
                 testCardData.Status = CardStatus.UnknownCardStatus;
@@ -533,8 +478,6 @@ public class youtrip_ios_regression_browserstack {
             e.printStackTrace();
             fail();
         }
-
-        System.out.println("debug");
     }
 
     @Test (groups = { "regression_test"})
@@ -611,10 +554,12 @@ public class youtrip_ios_regression_browserstack {
             String newKycRefNo = el.getText();
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
 
-            testAccountData.UnderUse = isContinueTest;
-            testAccountData.Card.UnderUse = isContinueTest;
+            testAccountData.UnderUse = isRequriedReset;
+            testAccountData.Card.UnderUse = isRequriedReset;
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass\"");
         }catch (Exception e){
+            System.out.println("Test STEP: Fail \"regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass\"");
             testAccountData = null;
             e.printStackTrace();
             fail();
@@ -679,10 +624,12 @@ public class youtrip_ios_regression_browserstack {
             String newKycRefNo = el.getText();
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
 
-            testAccountData.UnderUse = isContinueTest;
-            testAccountData.Card.UnderUse = isContinueTest;
+            testAccountData.UnderUse = isRequriedReset;
+            testAccountData.Card.UnderUse = isRequriedReset;
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass\"");
         }catch (Exception e){
+            System.out.println("Test STEP: Fail \"regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass\"");
             testAccountData = null;
             e.printStackTrace();
             fail();
@@ -729,7 +676,9 @@ public class youtrip_ios_regression_browserstack {
             testAccountData.Card.UnderUse = false;
 
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC22_approved_NPC_KYC_EmploymentPass\"");
         }catch(Exception e){
+            System.out.println("Test STEP: Fail \"regTC22_approved_NPC_KYC_EmploymentPass\"");
             testAccountData = null;
             e.printStackTrace();
             fail();
@@ -744,7 +693,7 @@ public class youtrip_ios_regression_browserstack {
             testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatusAndCardStatus(CardType.PC.toString(), KYCStatus.Clear.toString(), CardStatus.Active.toString());
 
             subProc.procLoginToHomePage(Market.Singapore, testAccountData.MCC, testAccountData.PhoneNumber, defaultAPPPinCode);
-            System.out.println("TEST STEP: Logout");
+            /*System.out.println("TEST STEP: Logout");
             UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnMenu", driver).click();
             UIElementKeyDict.getElement(PageKey.HomePageElementDict, "menuBtnSetting", driver).click();
             Thread.sleep(1000);
@@ -753,12 +702,15 @@ public class youtrip_ios_regression_browserstack {
             Thread.sleep(3000);
             System.out.println("TEST STEP: Back to Country Selection page");
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.CountryPageElementDict, "lblTitle", driver), "Where do you live?"));
-            Assert.assertTrue(UIElementKeyDict.getElement(PageKey.CountryPageElementDict, "optionCountry", driver).isDisplayed());
+            Assert.assertTrue(UIElementKeyDict.getElement(PageKey.CountryPageElementDict, "optionCountry", driver).isDisplayed());*/
+            subProc.procLogoutFromHomePage();
 
             testAccountData.UnderUse = false;
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC07_Logout\"");
         }catch(Exception e){
+            System.out.println("Test STEP: Fail \"regTC07_Logout\"");
             if(testAccountData != null) {
                 testAccountData.UnderUse = false;
                 testAccountData.Card.UnderUse = false;
@@ -789,13 +741,15 @@ public class youtrip_ios_regression_browserstack {
             UIElementKeyDict.getElement(PageKey.SettingPageElementDict, "btnLogout", driver).click();
             Thread.sleep(3000);
             System.out.println("TEST STEP: Re-Login with new App Pin Code");
-            subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", newAPPPinCode);
+            subProc.procLoginToHomePage(Market.Singapore, testAccountData.MCC, testAccountData.PhoneNumber, newAPPPinCode);
             subProc.procChangeAppPinFromHomePage(newAPPPinCode, defaultAPPPinCode);
 
             testAccountData.UnderUse = false;
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC33_ChangePINFromSetting\"");
         }catch(Exception e){
+            System.out.println("Test STEP: Fail \"regTC33_ChangePINFromSetting\"");
             if(testAccountData != null) {
                 testAccountData.UnderUse = false;
                 testAccountData.Card.UnderUse = false;
@@ -808,6 +762,7 @@ public class youtrip_ios_regression_browserstack {
 
     @Test (groups = { "regression_test", "not_ready"})
     public void regTC24_AddCardFromTopUpPage() throws InterruptedException {
+        System.out.println("Test STEP: Start \"regTC24_AddCardFromTopUpPage\"");
         IOSElement el;
         String toBeCard = "4000000000003089";
         String defaultCVV = "000";
@@ -889,7 +844,9 @@ public class youtrip_ios_regression_browserstack {
             testAccountData.Card.Status = CardStatus.Active;
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC24_AddCardFromTopUpPage\"");
         }catch(Exception e){
+            System.out.println("Test STEP: Fail \"regTC24_AddCardFromTopUpPage\"");
             if(testAccountData != null) {
                 testAccountData.UnderUse = false;
                 testAccountData.Card.Status = CardStatus.UnknownCardStatus;
@@ -903,6 +860,7 @@ public class youtrip_ios_regression_browserstack {
 
     @Test (groups = { "regression_test", "not_ready"})
     public void regTC25_UpdateCardFromTopUpPage() throws InterruptedException {
+        System.out.println("Test STEP: Start \"regTC25_UpdateCardFromTopUpPage\"");
         IOSElement el;
         String currentCard = "";
         String toBeCard = "";
@@ -974,7 +932,9 @@ public class youtrip_ios_regression_browserstack {
             testAccountData.UnderUse = false;
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC25_UpdateCardFromTopUpPage\"");
         }catch(Exception e){
+            System.out.println("Test STEP: Fail \"regTC25_UpdateCardFromTopUpPage\"");
             if(testAccountData != null) {
                 testAccountData.UnderUse = false;
                 testAccountData.Card.UnderUse = false;
@@ -987,6 +947,7 @@ public class youtrip_ios_regression_browserstack {
 
     @Test (groups = { "regression_test", "not_ready"})
     public void regTC25_UpdateCardFromOrderCardReplacePage() throws InterruptedException {
+        System.out.println("Test STEP: Start \"regTC25_UpdateCardFromOrderCardReplacePage\"");
         IOSElement el;
         String currentCard = "";
         String toBeCard = "";
@@ -1064,7 +1025,9 @@ public class youtrip_ios_regression_browserstack {
             testAccountData.UnderUse = false;
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC25_UpdateCardFromOrderCardReplacePage\"");
         }catch(Exception e){
+            System.out.println("Test STEP: Fail \"regTC25_UpdateCardFromOrderCardReplacePage\"");
             if(testAccountData != null) {
                 testAccountData.UnderUse = false;
                 testAccountData.Card.UnderUse = false;
@@ -1077,6 +1040,7 @@ public class youtrip_ios_regression_browserstack {
 
     @Test (groups = { "regression_test", "not_ready"})
     public void regTC26_TopUpSuccess() throws InterruptedException {
+        System.out.println("Test STEP: Start \"regTC26_TopUpSuccess\"");
         IOSElement el;
         List<WebElement> balanceList;
         List<WebElement> activityList;
@@ -1149,7 +1113,9 @@ public class youtrip_ios_regression_browserstack {
             testAccountData.UnderUse = false;
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC26_TopUpSuccess\"");
         }catch(Exception e){
+            System.out.println("Test STEP: Fail \"regTC26_TopUpSuccess\"");
             if(testAccountData != null) {
                 testAccountData.UnderUse = false;
                 testAccountData.Card.UnderUse = false;
@@ -1163,6 +1129,7 @@ public class youtrip_ios_regression_browserstack {
     @Test (groups = { "regression_test", "not_ready"})
     public void regTC41_LockCard() throws InterruptedException {
         try {
+            System.out.println("Test STEP: Start \"regTC41_LockCard\"");
             testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatusAndCardStatus(CardType.PC.toString(), KYCStatus.Clear.toString(), CardStatus.Active.toString());
 
             subProc.procLoginToHomePage(Market.Singapore, "123", "1110687", defaultAPPPinCode);
@@ -1200,7 +1167,9 @@ public class youtrip_ios_regression_browserstack {
             testAccountData.Card.UnderUse = false;
             testAccountData.Card.Status = CardStatus.Locked;
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC41_LockCard\"");
         }catch(Exception e){
+            System.out.println("Test STEP: Fail \"regTC41_LockCard\"");
             if(testAccountData != null) {
                 testAccountData.UnderUse = false;
                 testAccountData.Card.UnderUse = false;
@@ -1214,6 +1183,7 @@ public class youtrip_ios_regression_browserstack {
 
     @Test (groups = { "regression_test", "not_ready"})
     public void regTC43_checkOrderReplacementCardPage() throws InterruptedException {
+        System.out.println("Test STEP: Start \"regTC43_checkOrderReplacementCardPage\"");
         IOSElement el;
         try {
             testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatusAndCardStatus(CardType.PC.toString(), KYCStatus.Clear.toString(), CardStatus.Active.toString());
@@ -1251,7 +1221,9 @@ public class youtrip_ios_regression_browserstack {
             testAccountData.UnderUse = false;
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC43_checkOrderReplacementCardPage\"");
         }catch(Exception e){
+            System.out.println("Test STEP: Fail \"regTC43_checkOrderReplacementCardPage\"");
             if(testAccountData != null) {
                 testAccountData.UnderUse = false;
                 testAccountData.Card.UnderUse = false;
@@ -1262,19 +1234,4 @@ public class youtrip_ios_regression_browserstack {
         }
     }
 
-    @AfterMethod (alwaysRun = true)
-    public void TestMethodTeardown(){
-        driver.resetApp();
-        try {
-            subProc.procHandleDevAlert();
-        }catch(Exception e){
-            fail(e.getMessage());
-        }
-    }
-
-    @AfterTest (alwaysRun = true)
-    public void End() {
-        driver.closeApp();
-        driver.quit();
-    }
 }
