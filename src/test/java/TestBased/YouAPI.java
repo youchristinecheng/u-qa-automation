@@ -35,9 +35,11 @@ public class YouAPI {
             this.backDoorAuthUserName = "";
             this.backDoorAuthPwd = "";
         } else {
-            if (UserName != null && Password != null)
-            this.backDoorAuthUserName = UserName;
-            this.backDoorAuthPwd = Password;
+            // Remain to its default value as if not given
+            if (UserName != null && Password != null) {
+                this.backDoorAuthUserName = UserName;
+                this.backDoorAuthPwd = Password;
+            }
         }
     }
     public void setYPEndPoint(String value){ this.ypEndPoint = value; }
