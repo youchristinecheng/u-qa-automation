@@ -132,6 +132,8 @@ public class ios_browserstackTest {
             } catch (Exception e) {
                 fail(e.getMessage());
             }
+        }else{
+            isAppReset = false;
         }
     }
 

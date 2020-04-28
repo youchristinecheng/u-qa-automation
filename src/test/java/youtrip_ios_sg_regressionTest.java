@@ -64,7 +64,6 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         testAccountData.PhoneNumber = mnumber;
         testAccountData.MCC = mprefix;
         testAccountData.Email = email;
-        isAppReset = false;
         isRequriedReset = false;
 
         try {
@@ -216,7 +215,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             testAccountData.Birthdate = newDateOfBirth;
             testAccountData.AddressLineOne = newAddressLine1;
             testAccountData.AddressLineTwo = newAddressLine2;
-            testAccountData.UnderUse = isRequriedReset;
+            testAccountData.UnderUse = true;
 
             Thread.sleep(20000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
@@ -228,6 +227,9 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         }catch (Exception e){
             System.out.println("Test STEP: Fail \"regTC09_fullreject_and_resubmit_PC_KYC_NRIC\"");
             if(!isForebackEnable) {
+                testAccountData.UnderUse = false;
+                testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
+                subProc.api.data_updateTestUser(testAccountData);
                 testAccountData = null;
             }
             e.printStackTrace();
@@ -299,12 +301,15 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             String newKycRefNo = el.getText();
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
 
-            testAccountData.UnderUse = isRequriedReset;
+            testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("Test STEP: Finish \"regTC10_partialreject_and_resubmit_PC_KYC_NRIC\"");
         }catch (Exception e){
             System.out.println("Test STEP: Fail \"regTC10_partialreject_and_resubmit_PC_KYC_NRIC\"");
             if(!isForebackEnable) {
+                testAccountData.UnderUse = false;
+                testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
+                subProc.api.data_updateTestUser(testAccountData);
                 testAccountData = null;
             }
             e.printStackTrace();
@@ -358,6 +363,9 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             testAccountData = null;
         }catch(Exception e){
             System.out.println("Test STEP: Fail \"regTC11_approved_PC_KYC_NRIC\"");
+            testAccountData.UnderUse = false;
+            testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
+            subProc.api.data_updateTestUser(testAccountData);
             testAccountData = null;
             e.printStackTrace();
             fail();
@@ -404,7 +412,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             testAccountData.AddressLineOne = "1";
             testAccountData.AddressLineTwo = "2";
             testAccountData.PostalCode = "000000";
-            testAccountData.UnderUse = isRequriedReset;
+            testAccountData.UnderUse = true;
             testAccountData.printTestAccountData("NEW GEN");
 
             subProc.procSelectCountry(Market.Singapore);
@@ -513,13 +521,17 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             String newKycRefNo = el.getText();
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
 
-            testAccountData.UnderUse = isRequriedReset;
-            testAccountData.Card.UnderUse = isRequriedReset;
+            testAccountData.UnderUse = true;
+            testAccountData.Card.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("Test STEP: Finish \"regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass\"");
         }catch (Exception e){
             System.out.println("Test STEP: Fail \"regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass\"");
             if(!isForebackEnable) {
+                testAccountData.UnderUse = false;
+                testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
+                testAccountData.Card.UnderUse = false;
+                subProc.api.data_updateTestUser(testAccountData);
                 testAccountData = null;
             }
             e.printStackTrace();
@@ -599,6 +611,10 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         }catch (Exception e){
             System.out.println("Test STEP: Fail \"regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass\"");
             if(!isForebackEnable) {
+                testAccountData.UnderUse = false;
+                testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
+                testAccountData.Card.UnderUse = false;
+                subProc.api.data_updateTestUser(testAccountData);
                 testAccountData = null;
             }
             e.printStackTrace();
@@ -654,6 +670,10 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             testAccountData = null;
         }catch(Exception e){
             System.out.println("Test STEP: Fail \"regTC22_approved_NPC_KYC_EmploymentPass\"");
+            testAccountData.UnderUse = false;
+            testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
             testAccountData = null;
             e.printStackTrace();
             fail();
@@ -1016,14 +1036,17 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             subProc.procVerifyInHomePage(Market.Singapore);
             subProc.procLogoutFromHomePage();
 
+            subProc.unlockTestAccountData(testAccountData);
+            testAccountData = null;
             System.out.println("Test STEP: Finish \"regTC25_UpdateCardFromOrderCardReplacePage\"");
         }catch(Exception e){
             System.out.println("Test STEP: Fail \"regTC25_UpdateCardFromOrderCardReplacePage\"");
+            subProc.unlockTestAccountData(testAccountData);
+            testAccountData = null;
             e.printStackTrace();
             fail();
         }
-        subProc.unlockTestAccountData(testAccountData);
-        testAccountData = null;
+
     }
 
     @Test (groups = { "regression_test", "not_ready"})
@@ -1188,7 +1211,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             System.out.println("TEST STEP: Card Lock Page - on page");
             Assert.assertTrue(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "toggleLockCard", driver).isDisplayed());
             Assert.assertEquals(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "lblOrderCardTitle", driver).getText(), "Replacement Card");
-            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "lblOrderCardDesc", driver).getText(), "Card lost or stolen?\nGet a replacement card for S$10.00.");
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "lblOrderCardDesc", driver).getText(), "Card lost or stolen? Get a replacement card for S$10.00.");
             Assert.assertTrue(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "btnOrderCard", driver).isDisplayed());
             UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "btnOrderCard", driver).click();
             Thread.sleep(2000);

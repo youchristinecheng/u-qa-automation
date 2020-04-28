@@ -31,6 +31,8 @@
                     <include name="regTC07_Logout"/>
                     <include name="regTC25_UpdateCardFromTopUpPage"/>
                     <include name="regTC25_UpdateCardFromOrderCardReplacePage"/>
+                    <include name="regTC26_TopUpSuccess"/>
+                    <include name="regTC43_checkOrderReplacementCardPage"/>
                 </methods>
             </class>
         </classes>

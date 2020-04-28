@@ -1,5 +1,5 @@
 {
-  "server": "127.0.0.1",
+  "server": "127.0.0.1:4723",
   "user": "",
   "key": "",
 
@@ -9,7 +9,7 @@
     "bundleId": "co.you.youapp",
     "xcodeOrgId": "2HWNYH89R4",
     "xcodeSigningId": "iPhone Developer",
-    "app": "/Users/rexwong/Documents/gitrepos/appautomatedtests/apps/YOUTrip_SIT_3.6.0-sit_1411.ipa"
+    "app": "/Users/rexwong/Documents/gitrepos/appautomatedtests/apps/YOUTrip TH_SIT.ipa"
   },
 
   "device": {

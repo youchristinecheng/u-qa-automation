@@ -20,7 +20,7 @@ public class YoutripIosSubRoutine {
     public YoutripIosSubRoutine(YouTripIosUIElementKey UIElementKeyDict, AppiumDriver driver){
         this.UIElementKeyDict = UIElementKeyDict;
         this.driver = driver;
-        wait = new WebDriverWait(driver, 20);
+        wait = new WebDriverWait(driver, 30);
         api = new YouAPI();
     }
 
@@ -552,12 +552,14 @@ public class YoutripIosSubRoutine {
     }
 
     public void procLogoutFromHomePage()throws Exception {
+        IOSElement el;
         System.out.println("TEST STEP: Logout From HomePage");
         UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnMenu", driver).click();
+        Thread.sleep(2000);
         UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "menuBtnSetting", driver).click();
         Thread.sleep(2000);
-        wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.SettingPageElementDict, "btnLogout", driver)));
-        UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.SettingPageElementDict, "btnLogout", driver).click();
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.SettingPageElementDict, "btnLogout", driver);
+        el.click();
         Thread.sleep(3000);
         System.out.println("TEST STEP: Back to Country Selection page");
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CountryPageElementDict, "lblTitle", driver), "Where do you live?"));
