@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import TestBased.TestAccountData.*;
 
+import javax.swing.*;
+
 
 public class YouAPI {
 
@@ -503,5 +505,42 @@ public class YouAPI {
                         "}")
                 .asJson();
         assertEquals(200, bindTestCardToTestUserjsonResponse.getStatus());
+    }
+
+    public String data_getTestUserRegisteredDeviceId(String userID, String deviceName, String platform, String osVersion) throws NoSuchFieldException {
+        String url_getTestUserRegisteredDeviceId = (this.dataBackDoorEndPoint + "/testUserData/getDeviceID/" +  userID);
+
+        System.out.println("API CALL: " + url_getTestUserRegisteredDeviceId);
+
+        JSONObject Rspbody = Unirest.get(url_getTestUserRegisteredDeviceId)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .asJson()
+                .getBody()
+                .getObject();
+        /*
+        * "ID": "",
+        * "DeviceID": "45BDCD5B-098E-4A00-85FA-737292992CF4",
+        * "DeviceName": "iPhone 8 Plus",
+        * "Platform": "iOS",
+        * "OSVersion": "13.1.2",
+        * "AppID": "YouTrip",
+        * "AppVersion": "3.6.0-sit",
+        * "Language": "en-SG",
+        * "Timezone": "GMT+8",
+        * "IsFound": true
+        * */
+        
+        String _deviceId = Rspbody.getString("DeviceID");
+        String _deviceName = Rspbody.getString("DeviceName");
+        String _platform = Rspbody.getString("Platform");
+        String _osversion = Rspbody.getString("OSVersion");
+        Boolean _isFound = Rspbody.getBoolean("IsFound");
+
+        if(!_isFound)
+            throw new NoSuchFieldException("Device Id with given UserID: \"" + userID + "\" is not found.");
+        else if(!_deviceName.equals(deviceName) || !_platform.equals(platform) || !_osversion.equals(osVersion))
+            throw new NoSuchFieldException("Device Id found with given UserID: \"" + userID + "\" is not match to given device: \"" + deviceName + "\".");
+        else
+            return _deviceId;
     }
 }
