@@ -13,6 +13,7 @@
     <test name="iOS Regression iOS 10 Run">
         <parameter name="config" value="ios_conf.json"/>
         <parameter name="device" value="iphone_7"/>
+        <parameter name="env" value="sgsit"/>
         <classes>
             <class name="youtrip_ios_sg_regressionTest">
                 <methods>
@@ -27,6 +28,7 @@
                     <include name="regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC07_Logout"/>
                 </methods>
             </class>
         </classes>
@@ -35,6 +37,7 @@
     <test name="iOS Regression iOS 11 Run">
         <parameter name="config" value="ios_conf.json"/>
         <parameter name="device" value="iphone_8"/>
+        <parameter name="env" value="sgsit"/>
         <classes>
             <class name="youtrip_ios_sg_regressionTest">
                 <methods>
@@ -49,6 +52,7 @@
                     <include name="regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC07_Logout"/>
                 </methods>
             </class>
         </classes>
@@ -57,6 +61,7 @@
     <test name="iOS Regression iOS 12 Run">
         <parameter name="config" value="ios_conf.json"/>
         <parameter name="device" value="iphone_xs"/>
+        <parameter name="env" value="sgsit"/>
         <classes>
             <class name="youtrip_ios_sg_regressionTest">
                 <methods>
@@ -71,6 +76,7 @@
                     <include name="regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC07_Logout"/>
                 </methods>
             </class>
         </classes>
@@ -79,6 +85,7 @@
     <test name="iOS Regression iOS 13 Run">
         <parameter name="config" value="ios_conf.json"/>
         <parameter name="device" value="iphone_11_pro_msx"/>
+        <parameter name="env" value="sgsit"/>
         <classes>
             <class name="youtrip_ios_sg_regressionTest">
                 <methods>
@@ -93,6 +100,7 @@
                     <include name="regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>
+                    <include name="regTC07_Logout"/>
                 </methods>
             </class>
         </classes>
