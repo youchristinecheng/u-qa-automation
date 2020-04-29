@@ -9,18 +9,18 @@
     "bundleId": "co.you.youapp",
     "xcodeOrgId": "2HWNYH89R4",
     "xcodeSigningId": "iPhone Developer",
-    "app": "/Users/rexwong/Documents/gitrepos/appautomatedtests/apps/YOUTrip TH_SIT.ipa"
+    "app": "/Users/rexwong/Documents/gitrepos/appautomatedtests/apps/YOUTrip_SIT_3.6.0-sit_1423.ipa"
   },
 
   "device": {
     "iphone_13": {
       "deviceName": "YouTech iPhone",
-      "version": "13.1.2",
+      "platformVersion": "13.1.2",
       "udid": "cbfc3c66708111e5a48ad06f8917b951007bcb9e"
     },
     "iphone_12": {
       "deviceName": "YouTech QAs iPhone",
-      "version": "12.1.1",
+      "platformVersion": "12.1.1",
       "udid": "00008020-00026C2E3A46002E"
     }
   }

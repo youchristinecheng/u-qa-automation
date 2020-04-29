@@ -680,7 +680,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready"})
+    @Test (groups = { "regression_test"})
     public void regTC07_Logout() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC07_Logout\"");
         isRequriedReset = false;
@@ -721,8 +721,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
 
             subProc.procLoginToHomePage(Market.Singapore, testAccountData.MCC, testAccountData.PhoneNumber, defaultAPPPinCode);
 
-            isForebackEnable = false;
-            subProc.procChangeAppPinFromHomePage(defaultAPPPinCode, newAPPPinCode);
+            isForebackEnable = subProc.procChangeAppPinFromHomePage(defaultAPPPinCode, newAPPPinCode);
 
             subProc.procLogoutFromHomePage();
             System.out.println("TEST STEP: Re-Login with new App Pin Code");
@@ -749,7 +748,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready"})
+    @Test (groups = { "regression_test"})
     public void regTC24_AddCardFromTopUpPage() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC24_AddCardFromTopUpPage\"");
         isRequriedReset = true;
@@ -850,7 +849,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready"})
+    @Test (groups = { "regression_test"})
     public void regTC25_UpdateCardFromTopUpPage() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC25_UpdateCardFromTopUpPage\"");
         isRequriedReset = false;
@@ -945,7 +944,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         }
     }
 
-    @Test (groups = { "regression_test", "not_ready"})
+    @Test (groups = { "regression_test"})
     public void regTC25_UpdateCardFromOrderCardReplacePage() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC25_UpdateCardFromOrderCardReplacePage\"");
         isRequriedReset = false;
@@ -1049,7 +1048,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
 
     }
 
-    @Test (groups = { "regression_test", "not_ready"})
+    @Test (groups = { "regression_test"})
     public void regTC26_TopUpSuccess() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC26_TopUpSuccess\"");
         isRequriedReset = false;
@@ -1211,7 +1210,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             System.out.println("TEST STEP: Card Lock Page - on page");
             Assert.assertTrue(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "toggleLockCard", driver).isDisplayed());
             Assert.assertEquals(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "lblOrderCardTitle", driver).getText(), "Replacement Card");
-            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "lblOrderCardDesc", driver).getText(), "Card lost or stolen? Get a replacement card for S$10.00.");
+            Assert.assertEquals(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "lblOrderCardDesc", driver).getText(), "Card lost or stolen?\nGet a replacement card for S$10.00.");
             Assert.assertTrue(UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "btnOrderCard", driver).isDisplayed());
             UIElementKeyDict.getElement(PageKey.LockCardPageElementDict, "btnOrderCard", driver).click();
             Thread.sleep(2000);
@@ -1249,5 +1248,4 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             fail();
         }
     }
-
 }

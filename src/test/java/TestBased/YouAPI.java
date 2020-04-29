@@ -529,7 +529,7 @@ public class YouAPI {
         * "Timezone": "GMT+8",
         * "IsFound": true
         * */
-        
+
         String _deviceId = Rspbody.getString("DeviceID");
         String _deviceName = Rspbody.getString("DeviceName");
         String _platform = Rspbody.getString("Platform");

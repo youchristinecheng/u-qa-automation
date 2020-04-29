@@ -571,26 +571,35 @@ public class YoutripIosSubRoutine {
             el.sendKeys("\b");
     }
 
-    public void procChangeAppPinFromHomePage(String oldAPPPinCode, String newAPPPINCode)throws Exception{
-        UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnMenu", driver).click();
-        UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "menuBtnSetting", driver).click();
-        Thread.sleep(1000);
-        wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.SettingPageElementDict, "btnLogout", driver)));
-        UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.SettingPageElementDict, "btnChangePIN", driver).click();
+    public boolean procChangeAppPinFromHomePage(String oldAPPPinCode, String newAPPPINCode)throws Exception{
+        boolean isForebackEnable = true;
+        IOSElement el;
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnMenu", driver);
+        el.click();
+        Thread.sleep(2000);
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "menuBtnSetting", driver);
+        el.click();
+        Thread.sleep(2000);
+
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.SettingPageElementDict, "btnChangePIN", driver, true);
+        el.click();
         Thread.sleep(3000);
+
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "lblChangePinTitle", driver), "Enter Current PIN"));
         this.procEnterAPPPinCode(oldAPPPinCode);
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "lblChangePinNewPinTitle", driver), "Create New PIN"));
         this.procEnterAPPPinCode(newAPPPINCode);
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "lblChangePinConfirmPinTitle", driver), "Confirm New PIN"));
         this.procEnterAPPPinCode(newAPPPINCode);
         Thread.sleep(5000);
+        isForebackEnable = false;
 
         this.procVerifyInHomePage(Market.Singapore);
+        return isForebackEnable;
     }
 
     public void unlockTestAccountData(TestAccountData testAccountData){

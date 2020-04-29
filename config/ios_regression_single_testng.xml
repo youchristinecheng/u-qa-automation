@@ -33,6 +33,7 @@
                     <include name="regTC25_UpdateCardFromOrderCardReplacePage"/>
                     <include name="regTC26_TopUpSuccess"/>
                     <include name="regTC43_checkOrderReplacementCardPage"/>
+                    <include name="regTC33_ChangePINFromSetting"/>
                 </methods>
             </class>
         </classes>
