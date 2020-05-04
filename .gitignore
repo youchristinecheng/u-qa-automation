@@ -1,4 +1,3 @@
-
 # Created by https://www.gitignore.io/api/java,maven,intellij
 # Edit at https://www.gitignore.io/?templates=java,maven,intellij
 
@@ -125,3 +124,5 @@ buildNumber.properties
 .screenshot/
 /.apps/
 /.idea/
+# https://github.com/takari/maven-wrapper#usage-without-binary-jar
+.mvn/wrapper/maven-wrapper.jar
