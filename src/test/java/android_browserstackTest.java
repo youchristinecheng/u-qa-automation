@@ -10,6 +10,7 @@ import java.net.URL;
 import java.io.FileReader;
 import java.util.Map;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 
 public class android_browserstackTest {
@@ -18,10 +19,11 @@ public class android_browserstackTest {
     YouTripAndroidUIElementKey UIElementKeyDict;
     YouTripAndroidSubRoutine subProc;
     WebDriverWait wait;
+    TestAccountData testAccountData;
 
     @BeforeTest(alwaysRun = true)
     @Parameters({"config", "device", "app", "build", "env"})
-    public void setUp(String config_file, String device, String appUrl, String buildName, String env) throws Exception {
+    public void setUp(String config_file, String device, @Optional() String appUrl, @Optional() String buildName, String env) throws Exception {
 
         System.out.println("SETUP: Android device setup starting");
         UIElementKeyDict = new YouTripAndroidUIElementKey();
@@ -35,11 +37,8 @@ public class android_browserstackTest {
         //read environment config file
         JSONObject envconfig = (JSONObject) parser.parse(new FileReader("src/test/resources/env.json"));
         JSONObject environment = null;
-        if (env.equals("sit")) {
-            environment = (JSONObject) envconfig.get("sit");
-        } else if (env.equals("dev")) {
-            environment = (JSONObject) envconfig.get("dev");
-        }
+        if(envconfig.containsKey(env))
+            environment = (JSONObject) envconfig.get(env);
 
         //set device capabilites
         Map<String, String> deviceCapabilities = (Map<String, String>) devices.get(device);
@@ -70,18 +69,34 @@ public class android_browserstackTest {
         }
 
         //set dynamic capabilities for app hash value and build name
-        capabilities.setCapability("app", appUrl);
-        capabilities.setCapability("build", buildName);
+        //if local config then use those in config file
+        if (config_file.equals("android_conf_debug_local.json")) {
+            capabilities.setCapability("app", commonCapabilities.get("app"));
+        } else {
+            capabilities.setCapability("app", appUrl);
+            capabilities.setCapability("build", buildName);
+        }
 
         //setup android specific capabiilties
         capabilities.setCapability("appWaitPackage", "co.you.youapp.dev");
         capabilities.setCapability("appWaitActivity", "co.you.youapp.ui.base.SingleFragmentActivity");
         capabilities.setCapability("autoGrantPermissions", "true");
 
-        driver = new AndroidDriver<>(new URL("http://"+username+":"+accessKey+"@"+config.get("server")+"/wd/hub"), capabilities);
+        //connect to appium server
+        if(username.equals("") && accessKey.equals("")){
+            driver = new AndroidDriver<>(new URL("http://"+ config.get("server") + "/wd/hub"), capabilities);
+        }else{
+            driver = new AndroidDriver<>(new URL("http://" + username + ":" + accessKey + "@" + config.get("server") + "/wd/hub"), capabilities);
+        }
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        testAccountData = null;
         subProc = new YouTripAndroidSubRoutine(UIElementKeyDict, driver);
+        if(environment != null){
+            subProc.api.setYPEndPoint(environment.get("sg_youportalEndPoint").toString());
+            subProc.api.setDataBackDoorEndPoint(environment.get("sg_databackdoorEndPoint").toString());
+            subProc.api.setBackDoorEndPoint(environment.get("sg_backdoorEndPoint").toString(), true, null, null);
+        }
         wait = subProc.getDriverWait();
-
         System.out.println("SETUP: Android device setup finished");
     }
 
