@@ -1,0 +1,29 @@
+{
+  "server": "127.0.0.1:4723",
+  "user": "",
+  "key": "",
+
+  "capabilities": {
+    "automationName": "UiAutomator2",
+    "platformName": "Android",
+    "app": "/Users/danielchan/IdeaProjects/appautomatedtests/apps/app-sit-release-HEAD-3.5.0.1238-dirty.apk"
+  },
+
+  "device": {
+    "note9_wireless": {
+      "deviceName": "Galaxy Note 9",
+      "deviceId" : "192.168.1.25:5555",
+      "version": "9.0.0"
+    },
+    "note9_wired": {
+      "deviceName": "Galaxy Note 9",
+      "deviceId" : "335730444f413498",
+      "version": "9.0.0"
+    },
+    "emulator": {
+      "deviceName": "Android Emulator",
+      "version": "9.0.0"
+    }
+  }
+}
+
