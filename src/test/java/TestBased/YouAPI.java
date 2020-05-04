@@ -59,6 +59,9 @@ public class YouAPI {
         Unirest.config().verifySsl(false);
     }
 
+    /*
+     * ###### Backdoor API calls######
+     */
     public String getOTP(String mprefix, String mnumber) {
 
         String url_backdoorOTP = (backDoorEndPoint + "/onboarding/otp/"+mprefix+"/"+mnumber);
@@ -142,6 +145,32 @@ public class YouAPI {
         return result;
     }
 
+    public String getActivateCardEmailLink (String userID) throws InterruptedException {
+
+        //get device ID
+        String deviceID = data_getTestUserDeviceID(userID);
+        Thread.sleep(5000);
+        //magic link API call
+        String url_activateCardMagicLink = (backDoorEndPoint + "/onboarding/magicLink/YouTrip/"+deviceID+"/activateCard");
+
+        String token = Unirest.get(url_activateCardMagicLink)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .asJson()
+                .getBody()
+                .getObject()
+                .getString("token");
+
+        System.out.println("API CALL: " +url_activateCardMagicLink);
+
+        //setup email url for activate card and return it
+        String activateCardEmailURL = ("https://api.sit.you.co/v2/link/token-activate-card/"+token);
+        return activateCardEmailURL;
+    }
+
+    /*
+     * ###### YouPortal API calls ######
+     */
+
     public String yp_getToken() {
         String url_backdoorYP = (backDoorEndPoint + "/youportal/token?scopes=https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile,openid");
         System.out.println("API CALL: " +url_backdoorYP);
@@ -166,7 +195,6 @@ public class YouAPI {
                     .getString("token");
 
         }
-
         return ypToken;
     }
 
@@ -383,6 +411,10 @@ public class YouAPI {
         assertEquals(200, acceptKYCjsonResponse.getStatus());
     }
 
+    /*
+     * ###### Test Data API calls ######
+     */
+
     public void data_createTestUser(TestAccountData data) {
         String url_createUser = (this.dataBackDoorEndPoint + "/testUser/create");
 
@@ -543,4 +575,22 @@ public class YouAPI {
         else
             return _deviceId;
     }
+
+    public String data_getTestUserDeviceID(String userID) {
+        String url_getTestUserRegisteredDeviceId = (this.dataBackDoorEndPoint + "/testUserData/getDeviceID/" +  userID);
+
+        System.out.println("API CALL: " + url_getTestUserRegisteredDeviceId);
+
+        JSONObject Rspbody = Unirest.get(url_getTestUserRegisteredDeviceId)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .asJson()
+                .getBody()
+                .getObject();
+
+        String _deviceId = Rspbody.getString("DeviceID");
+        return _deviceId;
+    }
+
+
+
 }
