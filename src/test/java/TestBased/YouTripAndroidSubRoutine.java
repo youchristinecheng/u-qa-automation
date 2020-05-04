@@ -735,16 +735,11 @@ public class YouTripAndroidSubRoutine {
             String webBrowserAppPackage = "com.sec.android.app.sbrowser";
             String webBrowserAppActivity = "com.sec.android.app.sbrowser.SBrowserMainActivity";
 
-            System.out.println("DANIEL: driver before change " +driver.getCapabilities().toString());
-
             //utilise android driver
             AndroidDriver androidDriver = (AndroidDriver) driver;
-            System.out.println("DANIEL: use android driver");
-            System.out.println("DANIEL: driver after change " +driver.getCapabilities().toString());
             Activity activity = new Activity(webBrowserAppPackage, webBrowserAppActivity);
             activity.setStopApp(false);
             androidDriver.startActivity(activity);
-            System.out.println("DANIEL: start chrome");
             Thread.sleep(2000);
             //androidDriver.get(activateCardEmailURL);
 
