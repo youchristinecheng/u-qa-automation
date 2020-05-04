@@ -10,8 +10,6 @@ import static org.testng.Assert.fail;
 public class youtrip_android_sg_regressionTest extends android_browserstackTest {
 
     Utils utils = new Utils();
-    TestAccountData testAccountData = null;
-    boolean isContinueTest = true;
 
     @Test
     public void regTC01_selectTH() {
@@ -89,7 +87,7 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             testAccountData.AddressLineTwo = "Android Device Line 2";
             testAccountData.PostalCode = "123456";
             testAccountData.Card = null;
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = true;
             String nationality = "Singaporean";
 
             //select PC card
@@ -131,7 +129,7 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             subProc.procRejectKYC(true);
             //update test user
             testAccountData.KycStatus = TestAccountData.KYCStatus.Reject;
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("TEST CASE: Finish \"regTC05_fullreject_PC_KYC_NRIC\"");
         } catch (Exception e) {
@@ -166,7 +164,7 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
                     testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode);
             //update test user
             testAccountData.KycStatus = TestAccountData.KYCStatus.Submit;
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("TEST CASE: Finish \"regTC06_resubmit_fullreject_PC_KYC_NRIC\"");
         } catch (Exception e) {
@@ -187,7 +185,7 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             subProc.procRejectKYC(false);
             //update test user
             testAccountData.KycStatus = TestAccountData.KYCStatus.PartialReject;
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("TEST CASE: Finish \"regTC07_partialreject_PC_KYC_NRIC\"");
         } catch (Exception e) {
@@ -219,7 +217,7 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
                     testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode);
             //update test user
             testAccountData.KycStatus = TestAccountData.KYCStatus.Submit;
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("TEST CASE: Finish \"regTC08_resubmit_partialreject_PC_KYC_NRIC\"");
         } catch (Exception e) {
@@ -240,7 +238,7 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             subProc.procApproveKYC(true);
             //update test user
             testAccountData.KycStatus = TestAccountData.KYCStatus.Clear;
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("TEST CASE: Finish \"regTC09_approved_PC_KYC_NRIC\"");
         } catch (Exception e) {
@@ -293,7 +291,7 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             testAccountData.AddressLineOne = "Auto Test Addresss Line 1";
             testAccountData.AddressLineTwo = "Android Device Line 2";
             testAccountData.PostalCode = "123456";
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = true;
             String nationality = "Singaporean";
 
             //select SG from country selection
@@ -352,7 +350,7 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             subProc.procRejectKYC(true);
             //update test user
             testAccountData.KycStatus = TestAccountData.KYCStatus.Reject;
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("TEST CASE: Finish \"regTC12_fullreject_NPC_KYC_forgeiner\"");
         } catch (Exception e) {
@@ -387,7 +385,7 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
                     testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode);
             //update test user
             testAccountData.KycStatus = TestAccountData.KYCStatus.Submit;
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("TEST CASE: Finish \"regTC13_resubmit_fullreject_NPC_KYC_forgeiner\"");
         } catch (Exception e) {
@@ -408,7 +406,7 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             subProc.procRejectKYC(false);
             //update test user
             testAccountData.KycStatus = TestAccountData.KYCStatus.PartialReject;
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("TEST CASE: Finish \"regTC14_partialreject_NPC_KYC_forgeiner\"");
         } catch (Exception e) {
@@ -440,7 +438,7 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
                     testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode);
             //update test user
             testAccountData.KycStatus = TestAccountData.KYCStatus.Submit;
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("TEST CASE: Finish \"regTC15_resubmit_partialreject_NPC_KYC_forgeiner\"");
         } catch (Exception e) {
@@ -461,7 +459,7 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             subProc.procApproveKYC(false);
             //update test user
             testAccountData.KycStatus = TestAccountData.KYCStatus.Clear;
-            testAccountData.UnderUse = isContinueTest;
+            testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("TEST CASE: Finish \"regTC16_approved_NPC_KYC_forgeiner\"");
         } catch (Exception e) {
@@ -473,7 +471,41 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
 
     @Test
     public void regTC17_activatecard_NPC_KYC_forgeiner() {
-        //TODO blocked on activation - need magic link api updates
+        System.out.println("TEST CASE: Start \"regTC17_activatecard_NPC_KYC_forgeiner\"");
+        AndroidElement el;
+        try {
+            /////////////////////
+            //using SIT Profile account for testing
+            String userID = "1000955";
+            String pin = "1111";
+            testAccountData = subProc.api.data_getTestUserByUserID(userID);
+            //select SG from country selection
+            subProc.procSelectCountry(Market.Singapore);
+            //confirm country and continue to get started
+            subProc.procConfirmCountry();
+            //otp login using existing account
+            subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, false);
+            ////////////////////////
+            //above is for testing direct login and activation
+            //for follow on ot 16 assume the customer is on the verification page already
+            subProc.procActivateCard(false, userID, null, "1111");
+
+            //
+            el = (AndroidElement) UIElementKeyDict.getElement(PageKey.HomePageElementDict, "logoYouTrip", driver);
+            assertTrue(el.isDisplayed());
+            System.out.println("TEST STEP: Home Page - on page");
+
+
+
+
+
+            System.out.println("TEST CASE: Finish \"regTC17_activatecard_NPC_KYC_forgeiner\"");
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+            System.out.println("TEST CASE: Fail \"regTC17_activatecard_NPC_KYC_forgeiner\"");
+        }
+
     }
 
     @Test

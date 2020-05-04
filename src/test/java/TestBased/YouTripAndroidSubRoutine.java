@@ -1,9 +1,12 @@
 package TestBased;
 
 import TestBased.YouTripAndroidUIElementKey.Market;
+import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.WebDriver;
+import io.appium.java_client.android.Activity;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -16,6 +19,7 @@ public class YouTripAndroidSubRoutine {
 
     private YouTripAndroidUIElementKey UIElementKeyDict;
     private AppiumDriver driver;
+    private AndroidDriver androidDriver;
     private WebDriverWait wait;
     public YouAPI api;
 
@@ -64,7 +68,7 @@ public class YouTripAndroidSubRoutine {
             el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CountryPageElementDict, "btnConfirm", driver);
             el.click();
             System.out.println("TEST STEP: Country Page - click continue button");
-            Thread.sleep(10000);
+            Thread.sleep(15000);
             //wait till on get started page
             wait.until(ExpectedConditions.elementToBeClickable((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.GetStartedPageElementDict, "btnGetStarted", driver))));
             System.out.println("TEST STEP: Get Started Page - on page");
@@ -689,7 +693,125 @@ public class YouTripAndroidSubRoutine {
             } else {
                 assertEquals(UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Verification Complete");
             }
+            Thread.sleep(2000);
         }catch(Exception e){
+            throw e;
+        }
+    }
+
+    public void procActivateCard(boolean isPC, String userID, String ynumber, String pin) throws Exception {
+        AndroidElement el;
+        boolean pinConfirmed = false;
+        try {
+            //click activate card button
+            el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.LimitedHomePageElementDict, "btnActivate", driver);
+            el.click();
+            Thread.sleep(2000);
+            System.out.println("TEST STEP: Limited Home Page - click activate card button");
+
+            //handle y-number entry for PC
+            if (isPC) {
+                //TODO write method for PC flow
+            }
+
+            //wait till on confirm email page and continue
+            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.ConfirmEmailPageElementDict, "lblTitle", driver)), "Confirm Email Address"));
+            System.out.println("TEST STEP: Confirm Email Page - on page");
+            el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.EmailPageElementDict, "btnNext", driver);
+            el.click();
+            System.out.println("TEST STEP: Confirm Email Page - click Next button");
+            Thread.sleep(2000);
+
+            //wait till on check email page
+            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CheckSentEmailPageElementDict, "lblTitle", driver)), "Check Your Email"));
+            System.out.println("TEST STEP: Check Your Email Page - on page");
+
+            //call API to get device ID
+            String activateCardEmailURL = api.getActivateCardEmailLink(userID);
+
+            //open webpage and go to email link
+            //String webBrowserAppPackage = "com.android.chrome";
+            //String webBrowserAppActivity = "com.google.android.apps.chrome.Main";
+            String webBrowserAppPackage = "com.sec.android.app.sbrowser";
+            String webBrowserAppActivity = "com.sec.android.app.sbrowser.SBrowserMainActivity";
+
+            System.out.println("DANIEL: driver before change " +driver.getCapabilities().toString());
+
+            //utilise android driver
+            AndroidDriver androidDriver = (AndroidDriver) driver;
+            System.out.println("DANIEL: use android driver");
+            System.out.println("DANIEL: driver after change " +driver.getCapabilities().toString());
+            Activity activity = new Activity(webBrowserAppPackage, webBrowserAppActivity);
+            activity.setStopApp(false);
+            androidDriver.startActivity(activity);
+            System.out.println("DANIEL: start chrome");
+            Thread.sleep(2000);
+            //androidDriver.get(activateCardEmailURL);
+
+            WebElement url = androidDriver.findElement(By.id("com.sec.android.app.sbrowser:id/location_bar_edit_text"));
+            url.click();
+            url.clear();
+            url.sendKeys(activateCardEmailURL);
+            Thread.sleep(2000);
+
+            //set PIN
+            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblTitle", driver)), "Create a PIN"));
+            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblSummary", driver)), "For both unlocking the app and using the card in ATM"));
+            //for each PIN click corresponding number on keypad
+            String[] pinArray = new String[pin.length()];
+            for (String i : pinArray) {
+                if (i.equals("1")) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn1", driver);
+                    el.click();
+                    System.out.println("TEST STEP: Create App PIN Page - click digit 1");
+                } else if (i.equals("2")) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn2", driver);
+                    el.click();
+                    System.out.println("TEST STEP: Create App PIN Page - click digit 2");
+                } else if (i.equals("3")) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn3", driver);
+                    el.click();
+                    System.out.println("TEST STEP: Create App PIN Page - click digit 3");
+                } else if (i.equals("4")) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn4", driver);
+                    el.click();
+                    System.out.println("TEST STEP: Create App PIN Page - click digit 4");
+                } else if (i.equals("5")) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn5", driver);
+                    el.click();
+                    System.out.println("TEST STEP: Create App PIN Page - click digit 5");
+                } else if (i.equals("6")) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn6", driver);
+                    el.click();
+                    System.out.println("TEST STEP: Create App PIN Page - click digit 6");
+                } else if (i.equals("7")) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn7", driver);
+                    el.click();
+                    System.out.println("TEST STEP: Create App PIN Page - click digit 7");
+                } else if (i.equals("8")) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn8", driver);
+                    el.click();
+                    System.out.println("TEST STEP: Create App PIN Page - click digit 8");
+                } else if (i.equals("9")) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn9", driver);
+                    el.click();
+                    System.out.println("TEST STEP: Create App PIN Page - click digit 9");
+                } else if (i.equals("0")) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn0", driver);
+                    el.click();
+                    System.out.println("TEST STEP: Create App PIN Page - click digit 0");
+                }
+            }
+            System.out.println("TEST STEP: Create App PIN Page - PIN entered");
+            Thread.sleep(5000);
+
+            //Confirm PIN
+            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblTitle", driver)), "Confirm Your PIN"));
+
+
+
+
+        }catch(Exception e) {
             throw e;
         }
     }
