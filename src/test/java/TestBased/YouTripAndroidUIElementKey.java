@@ -44,6 +44,7 @@ public class YouTripAndroidUIElementKey {
         SettingPageElementDict,
         ConfirmEmailPageElementDict,
         CheckSentEmailPageElementDict,
+        CreateConfirmPinPageElementDict,
         UnlockAppPageElementDict,
         HomePageElementDict
     }
@@ -77,6 +78,7 @@ public class YouTripAndroidUIElementKey {
     private HashMap<String, UIElementData> SettingPageElementDict;
     private HashMap<String, UIElementData> ConfirmEmailPageElementDict;
     private HashMap<String, UIElementData> CheckSentEmailPageElementDict;
+    private HashMap<String, UIElementData> CreateConfirmPinPageElementDict;
     private HashMap<String, UIElementData> UnlockAppPageElementDict;
     private HashMap<String, UIElementData> HomePageElementDict;
 
@@ -113,6 +115,7 @@ public class YouTripAndroidUIElementKey {
         this.SettingPageElementDict = new HashMap<>();
         this.ConfirmEmailPageElementDict = new HashMap<>();
         this.CheckSentEmailPageElementDict = new HashMap<>();
+        this.CreateConfirmPinPageElementDict = new HashMap<>();
         this.UnlockAppPageElementDict = new HashMap<>();
         this.HomePageElementDict = new HashMap<>();
 
@@ -306,6 +309,22 @@ public class YouTripAndroidUIElementKey {
         //Check Sent Email Page
         this.CheckSentEmailPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
         this.Container.put(PageKey.CheckSentEmailPageElementDict.ordinal(), this.CheckSentEmailPageElementDict);
+
+        //CreatePINPage/ Confirm Page
+        this.CreateConfirmPinPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
+        this.CreateConfirmPinPageElementDict.put("lblSummary", new UIElementData("co.you.youapp.dev:id/textInputHint", FindMethod.ID));
+        this.CreateConfirmPinPageElementDict.put("btn1", new UIElementData("co.you.youapp.dev:id/input1", FindMethod.ID));
+        this.CreateConfirmPinPageElementDict.put("btn2", new UIElementData("co.you.youapp.dev:id/input2", FindMethod.ID));
+        this.CreateConfirmPinPageElementDict.put("btn3", new UIElementData("co.you.youapp.dev:id/input3", FindMethod.ID));
+        this.CreateConfirmPinPageElementDict.put("btn4", new UIElementData("co.you.youapp.dev:id/input4", FindMethod.ID));
+        this.CreateConfirmPinPageElementDict.put("btn5", new UIElementData("co.you.youapp.dev:id/input4", FindMethod.ID));
+        this.CreateConfirmPinPageElementDict.put("btn6", new UIElementData("co.you.youapp.dev:id/input6", FindMethod.ID));
+        this.CreateConfirmPinPageElementDict.put("btn7", new UIElementData("co.you.youapp.dev:id/input7", FindMethod.ID));
+        this.CreateConfirmPinPageElementDict.put("btn8", new UIElementData("co.you.youapp.dev:id/input8", FindMethod.ID));
+        this.CreateConfirmPinPageElementDict.put("btn9", new UIElementData("co.you.youapp.dev:id/input9", FindMethod.ID));
+        this.CreateConfirmPinPageElementDict.put("btn0", new UIElementData("co.you.youapp.dev:id/input0", FindMethod.ID));
+        this.CreateConfirmPinPageElementDict.put("btnDelete", new UIElementData("co.you.youapp.dev:id/clickDelete", FindMethod.ID));
+        this.Container.put(PageKey.CreateConfirmPinPageElementDict.ordinal(), this.CreateConfirmPinPageElementDict);
 
         //Unlock App Page
         this.UnlockAppPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
