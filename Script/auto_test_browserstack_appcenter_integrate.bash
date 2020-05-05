@@ -6,7 +6,7 @@ APPNAME=""
 
 if [ ! "$PLATFORM" = "IOS" ] && [ ! "$PLATFORM" = "ANDROID" ]
 then
-	echo "platform is not match"
+	echo "Given platform from argument is not match. Only allow for 'IOS' or 'ANDROID'. Now exit..."
 	exit 1
 fi
 

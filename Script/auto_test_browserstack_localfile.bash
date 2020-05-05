@@ -2,6 +2,12 @@
 
 FPATH="$1"
 APPVER="$2"
+
+if [ -z ${FPATH} ];then
+	echo "No file is given from argument. Now exit..."
+	exit 0
+fi
+
 EXTENSION=${FPATH##*.}
 PLATFORM=""
 
