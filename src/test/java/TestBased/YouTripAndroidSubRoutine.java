@@ -185,58 +185,15 @@ public class YouTripAndroidSubRoutine {
             //wait till on enter mobile number page
             wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, "lblTitle", driver)), "Unlock YouTrip"));
             System.out.println("TEST STEP: Unlock App Page - on page");
-            //create String array from PIN
-            String[] pinArray = new String[pin.length()];
-            for (int i = 0; i < pin.length(); i++) {
-                pinArray[i] = pin.substring(i);
+            //for each PIN digit click corresponding number on keypad
+            for (char i : pin.toCharArray()) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, ("btn"+Character.toString(i)), driver);
+                    el.click();
+                    System.out.println("TEST STEP: Unlock App Page - click digit " +Character.toString(i));
             }
 
-            //for each PIN digit click corresponding number on keypad
-            for (String i : pinArray) {
-                if (i.equals("1")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, "btn1", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Unlock App Page - click digit 1");
-                } else if (i.equals("2")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, "btn2", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Unlock App Page - click digit 2");
-                } else if (i.equals("3")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, "btn3", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Unlock App Page - click digit 3");
-                } else if (i.equals("4")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, "btn4", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Unlock App Page - click digit 4");
-                } else if (i.equals("5")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, "btn5", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Unlock App Page - click digit 5");
-                } else if (i.equals("6")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, "btn6", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Unlock App Page - click digit 6");
-                } else if (i.equals("7")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, "btn7", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Unlock App Page - click digit 7");
-                } else if (i.equals("8")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, "btn8", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Unlock App Page - click digit 8");
-                } else if (i.equals("9")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, "btn9", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Unlock App Page - click digit 9");
-                } else if (i.equals("0")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, "btn0", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Unlock App Page - click digit 0");
-                }
-                System.out.println("TEST STEP: Unlock App Page - PIN entered");
-                Thread.sleep(4000);
-            }
+            System.out.println("TEST STEP: Unlock App Page - PIN entered");
+            Thread.sleep(4000);
         }catch(Exception e){
             throw e;
         }
@@ -753,56 +710,24 @@ public class YouTripAndroidSubRoutine {
             wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblTitle", driver)), "Create a PIN"));
             wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblSummary", driver)), "For both unlocking the app and using the card in ATM"));
             //for each PIN click corresponding number on keypad
-            String[] pinArray = new String[pin.length()];
-            for (String i : pinArray) {
-                if (i.equals("1")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn1", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Create App PIN Page - click digit 1");
-                } else if (i.equals("2")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn2", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Create App PIN Page - click digit 2");
-                } else if (i.equals("3")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn3", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Create App PIN Page - click digit 3");
-                } else if (i.equals("4")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn4", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Create App PIN Page - click digit 4");
-                } else if (i.equals("5")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn5", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Create App PIN Page - click digit 5");
-                } else if (i.equals("6")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn6", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Create App PIN Page - click digit 6");
-                } else if (i.equals("7")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn7", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Create App PIN Page - click digit 7");
-                } else if (i.equals("8")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn8", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Create App PIN Page - click digit 8");
-                } else if (i.equals("9")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn9", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Create App PIN Page - click digit 9");
-                } else if (i.equals("0")) {
-                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "btn0", driver);
-                    el.click();
-                    System.out.println("TEST STEP: Create App PIN Page - click digit 0");
-                }
+            for (char i : pin.toCharArray()) {
+                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, ("btn"+Character.toString(i)), driver);
+                el.click();
+                System.out.println("TEST STEP: Create App PIN Page - click digit " +Character.toString(i));
             }
             System.out.println("TEST STEP: Create App PIN Page - PIN entered");
             Thread.sleep(5000);
 
             //Confirm PIN
             wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblTitle", driver)), "Confirm Your PIN"));
+            for (char i : pin.toCharArray()) {
+                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, ("btn"+Character.toString(i)), driver);
+                el.click();
+                System.out.println("TEST STEP: Confirm App PIN Page - click digit " +Character.toString(i));
+            }
 
+            System.out.println("TEST STEP: Confirm App PIN Page - PIN entered");
+            Thread.sleep(5000);
 
 
 
