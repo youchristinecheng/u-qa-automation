@@ -1161,7 +1161,12 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             subProc.procVerifyInHomePage(Market.Singapore);
             Assert.assertEquals(UIElementKeyDict.getElement(PageKey.HomePageElementDict, "lblCardStatus", driver).getText(), "Your Card is Locked");
 
-            //TODO: Checking FIS card status  eqaul to card blocked by user via API Calls
+            // Checking FIS card status; which is only avaiable while in sit env; Yet Checking the code directly is not ideal.
+            if(fisapi != null){
+                List<String> cardStatusCodeList = fisapi.getCardStatusFromService(testAccountData.Card.CardIDToken);
+                Assert.assertEquals(cardStatusCodeList.get(0), "21");
+                Assert.assertEquals(cardStatusCodeList.get(1), "00");
+            }
 
             System.out.println("TEST STEP: Home Page - Check Main Buttons Disabled");
             UIElementKeyDict.getElement(PageKey.HomePageElementDict, "btnTopUp", driver).click();

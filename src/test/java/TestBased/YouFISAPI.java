@@ -7,6 +7,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.Vector;
 
 import org.testng.Assert;
 import org.w3c.dom.Document;
@@ -106,7 +108,7 @@ public class YouFISAPI {
     }
 
 
-    public String[] getCardStatusFromService(String cardIdToken){
+    public List<String> getCardStatusFromService(String cardIdToken){
         try {
             String responseStr = this.doCardHolderEnquiry(cardIdToken);
             Document doc = this.loadXMLFromResponseString(responseStr);
@@ -116,7 +118,11 @@ public class YouFISAPI {
             node = doc.getElementsByTagName("statCode").item(0);
             String statCode = node.getTextContent();
 
-            return new String[]{statCode, prevStatCode};
+            List<String> result= new Vector<String>();
+            result.add(statCode);
+            result.add(prevStatCode);
+
+            return result;
         }catch (Exception e){
             return null;
         }
