@@ -42,7 +42,7 @@ APPHASH=$(echo $(curl -u "rexwong1:SyJxysLVtf8VSETXzTrd" -X POST "https://api-cl
 echo "BrowserStack returned AppHash: ${APPHASH}"
 
 if [ ${PLATFORM} = "ANDROID" ];then
-	echo "mvn clean test -Pandroid_regression_single -Dapp=${APPHASH} -Dbuild=${APPVER} -Denv=sgsit"
+	mvn clean test -Pandroid_regression_single -Dapp=${APPHASH} -Dbuild=${APPVER} -Denv=sgsit
 else
-	echo "mvn clean test -Pios_regression_single -Dapp=${APPHASH} -Dbuild=${APPVER} -Denv=sgsit"
+	mvn clean test -Pios_regression_single -Dapp=${APPHASH} -Dbuild=${APPVER} -Denv=sgsit
 fi

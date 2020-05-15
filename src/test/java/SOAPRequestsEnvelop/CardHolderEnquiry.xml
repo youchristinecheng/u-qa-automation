@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:urn="urn:CardHolderEnquiry" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <urn:CardHolderEnquiry soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+            <pobjCardHolderEnquiryRqstInfo xsi:type="wsv:CardHolderEnquiryRqstInfo" xmlns:wsv="http://wsvalueobj.CardHolderEnquiry.prepaid.webservices.cortex.com">
+                <!-- Unique Identifier for messages, need to be differernt for each fire-->
+                <messageID>0000010</messageID>
+                <instCode>YTG</instCode>
+                <txnType>14</txnType>
+                <localDate>2020-05-13</localDate>
+                <localTime>143651</localTime>
+                <authMethod>1</authMethod>
+                <!-- Here you set your card-->
+                <cardID>000</cardID>
+                <track2 xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+                <DOB xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+                <CVV xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+                <accessCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+                <lastName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+                <loginID xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+                <itemSrc xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+                <secDet xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+            </pobjCardHolderEnquiryRqstInfo>
+        </urn:CardHolderEnquiry>
+    </soapenv:Body>
+</soapenv:Envelope>

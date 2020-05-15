@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:urn="urn:BalanceAdjustment" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <urn:BalanceAdjustment soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+            <pobjBalanceAdjustmentRqstInfo xsi:type="wsv:BalanceAdjustmentRqstInfo" xmlns:wsv="http://wsvalueobj.BalanceAdjustment.prepaid.webservices.cortex.com">
+                <!-- Unique Identifier for messages, need to be differernt for each fire-->
+                <messageID>0000005</messageID>
+                <instCode>YTG</instCode>
+                <txnType>16</txnType>
+                <authMethod>1</authMethod>
+                <PAN xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+                <cardID>1863782725622762</cardID>
+                <track2 xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+                <DOB xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+                <CVV xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+                <accessCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+                <lastName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+                <localDate>2020-05-13</localDate>
+                <localTime>103651</localTime>
+                <loginID xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+                <!-- Here you set your amount to adjust in absolute value-->
+                <amtAdjustment>500</amtAdjustment>
+                <!-- Here you set which wallet you are going to adjust in Currency Name in Short Form-->
+                <currCode>SGD</currCode>
+                <!-- Here you set your amount is add to wallet or deduct from wallet, 0=Debit, 1=Credit-->
+                <debOrCred>1</debOrCred>
+                <description>adjustment test</description>
+                <forcePost xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+                <secDet xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+                <extCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+            </pobjBalanceAdjustmentRqstInfo>
+        </urn:BalanceAdjustment>
+    </soapenv:Body>
+</soapenv:Envelope>
