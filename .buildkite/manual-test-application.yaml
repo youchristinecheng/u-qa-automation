@@ -1,0 +1,38 @@
+steps:
+  - block: "Testing Parameters"
+    fields:
+      - select: "platform"
+        key: "PLATFORM"
+        options:
+          - label: "ios"
+            value: "IOS"
+          - label: "android"
+            value: "ANDROID"
+      - select: "env"
+        key: "ENV"
+        options:
+          - label: "SG - SIT"
+            value: "sgsit"
+      - text: "build version"
+        key: "BUILDVER"
+        default: "latest"
+  - label: "Run Test and Send Test"
+    commands: 
+      - "./Script/auto_test_browserstack_appcenter_integrate.bash \
+      $(buildkite-agent meta-data get PLATFORM) \
+      $(buildkite-agent meta-data get BUILDVER) \
+      $(buildkite-agent meta-data get ENV)"
+      - "./.buildkite/scripts/send-slack-notification.sh"
+    agents:
+      queue: "${BUILDKITE_AGENT_META_DATA_QUEUE}"
+    plugins:
+      - docker#v3.5.0:
+          image: "929795455535.dkr.ecr.ap-southeast-1.amazonaws.com/devops/u-qa-automation:latest"
+          always-pull: true
+          environment:
+            - BROWSERSTACK_USER
+            - BROWSERSTACK_PWD
+            - APPCENTER_TOKEN
+            - BUILDKITE_SLACK_TOKEN
+    artifact_paths: "./target/surefire-reports/emailable-report.html"
+

@@ -27,17 +27,18 @@ echo "Assumed platform to be execute in: ${PLATFORM}"
 
 if [ -z ${APPVER} ];then
 	echo "No build name is given. apply with default guessing:"
-	APPVER=$(basename -- ${FPATH%.*})
+	APPVER="[localfile]$(basename -- ${FPATH%.*})"
 	echo ${APPVER}
 else
+	APPVER="[localfile]${APPVER}"
 	echo "Use given build name:${APPVER}"
 fi
 
-APPHASH=$(curl -u "rexwong1:SyJxysLVtf8VSETXzTrd" -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "file=@${FPATH}" | jq .app_url | sed -e 's/^"//' -e 's/"$//')
+APPHASH=$(curl -u "${BROWSERSTACK_USER}:${BROWSERSTACK_PWD}" -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "file=@${FPATH}" | jq .app_url | sed -e 's/^"//' -e 's/"$//')
 
 echo "BrowserStack returned AppHash: ${APPHASH}"
 
-if [${PLATFORM} = "ANDROID"];then
+if [ ${PLATFORM} = "ANDROID" ];then
 	echo "mvn clean test -Pandroid_regression_single -Dapp=${APPHASH} -Dbuild=${APPVER} -Denv=sgsit"
 else
 	echo "mvn clean test -Pios_regression_single -Dapp=${APPHASH} -Dbuild=${APPVER} -Denv=sgsit"

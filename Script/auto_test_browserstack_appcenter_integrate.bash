@@ -1,4 +1,5 @@
 #!/bin/bash
+
 PLATFORM=$( echo "$1" | tr a-z A-Z)
 BUILDVER=$2
 APPNAME=""
@@ -26,18 +27,20 @@ fi
 echo "get ${APPNAME} build ${BUILDVER}"
 DISTRIBUTE=$(curl -sX GET  "https://api.appcenter.ms/v0.1/apps/youco/${APPNAME}/releases/${BUILDVER}" \
 -H "Content-Type: application/json" \
--H "X-Api-Token: cf3182d2b3197a0a6809fa0a5a3945336331ff45")
+-H "X-Api-Token: ${APPCENTER_API_TOKEN}")
 
 
 jq . <<< ${DISTRIBUTE}
 
+SHORTVER=$(jq .short_version <<< ${DISTRIBUTE}| sed -e 's/^"//' -e 's/"$//')
+VER=$(jq .version <<< ${DISTRIBUTE}| sed -e 's/^"//' -e 's/"$//')
+APPVER="${APPNAME}-${SHORTVER}-${VER}"
 DLURL=$(jq .download_url <<< ${DISTRIBUTE})
-APPVER=$(jq .short_version <<< ${DISTRIBUTE} | sed -e 's/^"//' -e 's/"$//')
 echo "AppCenter downlaod url: ${DLURL}" 
-echo "AppCenter  build display version: ${APPNAME}"
+echo "AppCenter  build display version: ${APPVER}"
 
 echo "Upload build to browserStack"
-APPHASH=$(echo $(curl -u "rexwong1:SyJxysLVtf8VSETXzTrd" -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "data={\"url\": ${DLURL}}") | jq .app_url | sed -e 's/^"//' -e 's/"$//')
+APPHASH=$(echo $(curl -u "${BROWSERSTACK_USER}:${BROWSERSTACK_PWD}" -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "data={\"url\": ${DLURL}}") | jq .app_url | sed -e 's/^"//' -e 's/"$//')
 
 echo "BrowserStack returned AppHash: ${APPHASH}"
 
