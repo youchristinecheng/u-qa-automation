@@ -22,7 +22,6 @@
                     <include name="regTC14_partialreject_NPC_KYC_forgeiner"/>
                     <include name="regTC15_resubmit_partialreject_NPC_KYC_forgeiner"/>
                     <include name="regTC16_approved_NPC_KYC_forgeiner"/>
-                    <include name="regTC17_activatecard_NPC_KYC_forgeiner"/>
                     <include name="regTC18_logout_NPC_KYC_forgeiner"/>
                 </methods>
             </class>
