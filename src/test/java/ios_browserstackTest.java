@@ -30,8 +30,8 @@ public class ios_browserstackTest {
     YouFISAPI fisapi;
 
     @BeforeTest(alwaysRun = true)
-    @org.testng.annotations.Parameters(value={"config", "device", "env"})
-    public void setUp(String config_file, String device, String env) throws Exception {
+    @org.testng.annotations.Parameters(value={"config", "device", "app", "build", "env"})
+    public void setUp(String config_file, String device, @Optional() String appUrl, @Optional() String buildName, String env) throws Exception {
 
         System.out.println("SETUP: iOS device setup starting");
 
@@ -77,10 +77,8 @@ public class ios_browserstackTest {
             accessKey = (String) config.get("key");
         }
 
-        String app = System.getenv("BROWSERSTACK_APP_ID");
-        if(app != null && !app.isEmpty()) {
-            capabilities.setCapability("app", app);
-        }
+        capabilities.setCapability("app", appUrl);
+        capabilities.setCapability("build", buildName);
 
         if(username.equals("") && accessKey.equals("")){
             driver = new IOSDriver<>(new URL("http://"+ config.get("server") + "/wd/hub"), capabilities);
