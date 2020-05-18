@@ -1,14 +1,12 @@
 {
   "server": "hub-cloud.browserstack.com",
-  "user": "rexwong1",
-  "key": "SyJxysLVtf8VSETXzTrd",
+  "user": "youtechtester1",
+  "key": "gsd7RxWwJpCJHm94fRfu",
 
   "capabilities": {
-    "project" : "Test Project",
-    "build": "3.6.0-sit.1411",
+    "project" : "iOS YouTrip",
     "name": "iOS Regression Suite",
     "browserstack.debug": true,
-    "app": "bs://86db556026f36da68210142701799b4ab8a586f8",
     "browserstack.local" : false,
     "real_mobile" : true
   },

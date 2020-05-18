@@ -1,10 +1,10 @@
 {
   "server": "hub-cloud.browserstack.com",
-  "user": "danielchan2",
-  "key": "pWT7MCmWvUfYUsMNoQ9y",
+  "user": "youtechtester1",
+  "key": "gsd7RxWwJpCJHm94fRfu",
 
   "capabilities": {
-    "project" : "Test Project",
+    "project" : "Android YouTrip",
     "name": "Android Regression Suite",
     "browserstack.debug": true,
     "browserstack.appium_version" : "1.17.0",
