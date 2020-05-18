@@ -13,7 +13,6 @@
     <test name="iOS Regression">
         <parameter name="config" value="ios_conf.json"/>
         <parameter name="device" value="iphone_xs"/>
-        <parameter name="env" value="sgsit"/>
         <classes>
             <class name="youtrip_ios_sg_regressionTest">
                 <methods>
