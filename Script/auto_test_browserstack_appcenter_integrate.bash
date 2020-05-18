@@ -27,7 +27,7 @@ fi
 echo "get ${APPNAME} build ${BUILDVER}"
 DISTRIBUTE=$(curl -sX GET  "https://api.appcenter.ms/v0.1/apps/youco/${APPNAME}/releases/${BUILDVER}" \
 -H "Content-Type: application/json" \
--H "X-Api-Token: ${APPCENTER_API_TOKEN}")
+-H "X-Api-Token: ${APPCENTER_TOKEN}")
 
 
 jq . <<< ${DISTRIBUTE}
