@@ -1,0 +1,14 @@
+env:
+  APP_NAME: u-qa-automation
+  APP_IMAGE_NAME: devops/${APP_NAME}
+  BASE_IMAGE_REPO_PATH: ${BUILDKITE_AGENT_META_DATA_AWS_ACCOUNT_ID?}.dkr.ecr.${BUILDKITE_AGENT_META_DATA_AWS_REGION?}.amazonaws.com
+  APP_IMAGE_REPO_PATH: ${BASE_IMAGE_REPO_PATH}/${APP_IMAGE_NAME}
+
+steps:
+  - label: "Compile and Build image"
+    agents:
+      queue: "${BUILDKITE_AGENT_META_DATA_QUEUE}"
+    commands:
+      - "git config --global url.\"git@github.com:\".insteadOf \"https://github.com/\""
+      - "docker build -f .container/Dockerfile -t ${APP_IMAGE_REPO_PATH}:latest ."
+      - "docker push ${APP_IMAGE_REPO_PATH}:latest"
