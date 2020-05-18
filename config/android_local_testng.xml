@@ -6,7 +6,7 @@
         <classes>
             <class name = "youtrip_android_sg_regressionTest">
                 <methods>
-                    <include name="regTC17_activatecard_NPC_KYC_forgeiner"/>
+                    <include name="regTC19_login_existing_user_OTP"/>
                 </methods>
             </class>
         </classes>
