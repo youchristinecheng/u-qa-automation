@@ -27,6 +27,7 @@ public class ios_browserstackTest {
     boolean isForebackEnable;
     String defaultAPPPinCode;
     Integer osMainVerInt;
+    YouFISAPI fisapi;
 
     @BeforeTest(alwaysRun = true)
     @org.testng.annotations.Parameters(value={"config", "device", "env"})
@@ -98,6 +99,12 @@ public class ios_browserstackTest {
             subProc.api.setDataBackDoorEndPoint(environment.get("sg_databackdoorEndPoint").toString());
             subProc.api.setBackDoorEndPoint(environment.get("sg_backdoorEndPoint").toString(), true, null, null);
         }
+        if(env.equals("dev")) {
+            fisapi = null;
+        }else{
+            fisapi = new YouFISAPI();
+        }
+
 
 
         wait = subProc.getDriverWait();
