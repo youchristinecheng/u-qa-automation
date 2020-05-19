@@ -1,6 +1,6 @@
 package TestBased;
 
-import TestBased.YouTripAndroidUIElementKey.Market;
+import TestBased.TestAccountData.Market;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.AppiumDriver;
@@ -21,14 +21,16 @@ public class YouTripAndroidSubRoutine {
     private AppiumDriver driver;
     private AndroidDriver androidDriver;
     private WebDriverWait wait;
+    private Market currentMarket;
     public YouAPI api;
 
-    public YouTripAndroidSubRoutine(YouTripAndroidUIElementKey UIElementKeyDict, AppiumDriver driver){
+    public YouTripAndroidSubRoutine(Market market, YouTripAndroidUIElementKey UIElementKeyDict, AppiumDriver driver){
         this.UIElementKeyDict = UIElementKeyDict;
         this.driver = driver;
         wait = new WebDriverWait(driver, 20);
         api = new YouAPI();
-
+        currentMarket = market;
+        api.setMarket(this.currentMarket);
     }
 
     public WebDriverWait getDriverWait() {

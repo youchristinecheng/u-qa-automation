@@ -7,6 +7,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TestAccountData {
+    public enum Market{
+        UnknownMarket(0),
+        Singapore(1),
+        Thailand(2);
+
+        private final int codeMarket;
+        private static Map marketMap = new HashMap<>();
+        Market(int codeMarket){
+            this.codeMarket=codeMarket;
+        }
+
+        static {
+            for (Market m : Market.values()) {
+                marketMap.put(m.codeMarket, m);
+            }
+        }
+
+        public static Market valueOf(int codeMarket) {
+            return (Market) marketMap.get(codeMarket);
+        }
+
+        public int getCodeMarket(){
+            return this.codeMarket;
+        }
+    }
+
     public enum CardStatus{
         UnknownCardStatus(0),
         Inactive(1),
@@ -108,6 +134,8 @@ public class TestAccountData {
     public String AddressLineOne;
     public String AddressLineTwo;
     public String PostalCode;
+    public Market TestAccountMarket;
+    public Boolean IsExplorerModeOn;
 
     public TestCardData Card;
 
@@ -127,6 +155,9 @@ public class TestAccountData {
         AddressLineTwo = "";
         PostalCode = "";
         UnderUse = false;
+        TestAccountMarket = null;
+        IsExplorerModeOn = false;
+
 
         Card = null;
     }
@@ -153,7 +184,9 @@ public class TestAccountData {
                 .append("\t\t\"AddressLineTwo\":\"" + this.AddressLineTwo + "\",\n")
                 .append("\t\t\"KycStatus\":" + this.KycStatus.getCodeKYCStatus() + ",\n")
                 .append("\t\t\"CardType\":" + this.TestAccountCardType.getCodeCardType() + ",\n")
-                .append("\t\t\"UnderUse\":" + this.UnderUse);
+                .append("\t\t\"UnderUse\":" + this.UnderUse + ",\n")
+                .append("\t\t\"Market\":" + this.TestAccountMarket.getCodeMarket() + ",\n")
+                .append("\t\t\"IsExplorerModeOn\":" + this.IsExplorerModeOn);
         if (this.Card != null) {
             if (isCreate && this.TestAccountCardType.equals(CardType.PC)) {
                 // When in Creation with Card (if in case), it will maintain the relationship by the Card section adding together for creation
@@ -178,7 +211,7 @@ public class TestAccountData {
         TestAccountData data = new TestAccountData();
         String[] keyArray= new String[] {"Id", "MCC", "PhoneNumber", "NricNumber", "Email",
                 "FirstName", "LastName", "NameOnCard", "Birthdate", "PostalCode",
-                "AddressLineOne", "AddressLineTwo", "KycStatus", "CardType", "UnderUse"};
+                "AddressLineOne", "AddressLineTwo", "KycStatus", "CardType", "UnderUse", "Market", "IsExplorerModeOn"};
         try {
             for(int i =0; i < keyArray.length;i++){
                 if(!jObj.has(keyArray[i])){
@@ -200,6 +233,9 @@ public class TestAccountData {
             data.KycStatus = KYCStatus.valueOf(jObj.getString(keyArray[12]));
             data.TestAccountCardType = CardType.valueOf(jObj.getString(keyArray[13]));
             data.UnderUse = jObj.getBoolean(keyArray[14]);
+            data.TestAccountMarket = Market.valueOf(jObj.getString(keyArray[15]));
+            data.IsExplorerModeOn = jObj.getBoolean(keyArray[16]);
+
             data.printTestAccountData("IMPORT");
 
             if(jObj.optJSONObject("card") != null){

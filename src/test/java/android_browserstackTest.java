@@ -1,4 +1,5 @@
 import TestBased.*;
+import TestBased.TestAccountData.Market;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -88,14 +89,15 @@ public class android_browserstackTest {
         }else{
             driver = new AndroidDriver<>(new URL("http://" + username + ":" + accessKey + "@" + config.get("server") + "/wd/hub"), capabilities);
         }
+
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         testAccountData = null;
-        subProc = new YouTripAndroidSubRoutine(UIElementKeyDict, driver);
-        if(environment != null){
-            subProc.api.setYPEndPoint(environment.get("sg_youportalEndPoint").toString());
-            subProc.api.setDataBackDoorEndPoint(environment.get("sg_databackdoorEndPoint").toString());
-            subProc.api.setBackDoorEndPoint(environment.get("sg_backdoorEndPoint").toString(), true, null, null);
-        }
+        assert environment != null;
+        subProc = new YouTripAndroidSubRoutine(Market.valueOf(environment.get("market").toString()), UIElementKeyDict, driver);
+        subProc.api.setYPEndPoint(environment.get("sg_youportalEndPoint").toString());
+        subProc.api.setDataBackDoorEndPoint(environment.get("sg_databackdoorEndPoint").toString());
+        subProc.api.setBackDoorEndPoint(environment.get("sg_backdoorEndPoint").toString(), true, null, null);
+
         wait = subProc.getDriverWait();
         System.out.println("SETUP: Android device setup finished");
     }

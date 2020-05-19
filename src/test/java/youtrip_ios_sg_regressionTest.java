@@ -2,8 +2,8 @@ import TestBased.TestAccountData;
 import TestBased.TestAccountData.CardStatus;
 import TestBased.TestAccountData.CardType;
 import TestBased.TestAccountData.KYCStatus;
+import TestBased.TestAccountData.Market;
 import TestBased.TestCardData;
-import TestBased.YouTripIosUIElementKey.Market;
 import TestBased.YouTripIosUIElementKey.PageKey;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.JavascriptExecutor;
@@ -1247,6 +1247,40 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             System.out.println("Test STEP: Finish \"regTC43_checkOrderReplacementCardPage\"");
         }catch(Exception e){
             System.out.println("Test STEP: Fail \"regTC43_checkOrderReplacementCardPage\"");
+            subProc.unlockTestAccountData(testAccountData);
+            testAccountData = null;
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void test_card_activation(){
+        //1001006
+        System.out.println("Test STEP: Start \"test_card_activation\"");
+        isRequriedReset = false;
+        IOSElement el;
+        try {
+            testAccountData = subProc.api.data_getTestUserByUserID("1001006");
+
+            //if(isAppReset) {
+            subProc.procSelectCountry(Market.Singapore);
+            subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
+
+            // Transition wait after OTP-login to Limited Home page
+            Thread.sleep(2000);
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+            if (el != null) {
+                el.click();
+                Thread.sleep(2000);
+            }
+
+            //}
+
+            System.out.println("debug here");
+
+        }catch(Exception e){
+            System.out.println("Test STEP: Fail \"test_card_activation\"");
             subProc.unlockTestAccountData(testAccountData);
             testAccountData = null;
             e.printStackTrace();

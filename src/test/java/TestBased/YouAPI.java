@@ -23,6 +23,7 @@ public class YouAPI {
     private boolean isBackDoorRequireAuthen;
     private String backDoorAuthUserName;
     private String backDoorAuthPwd;
+    private Market currentValue;
 
     public Utils util = new Utils();
 
@@ -46,6 +47,7 @@ public class YouAPI {
     }
     public void setYPEndPoint(String value){ this.ypEndPoint = value; }
     public void setDataBackDoorEndPoint(String value){ this.dataBackDoorEndPoint = value; }
+    public void setMarket(Market value){ this.currentValue = value; }
 
     public YouAPI(){
         //TODO need to refactor end points
@@ -466,7 +468,7 @@ public class YouAPI {
     }
 
     public TestAccountData data_getTestUserByCardTypeAndKycStatus(String cardType, String kycStatus) throws NoSuchFieldException {
-        String url_getTestUser = (this.dataBackDoorEndPoint + "/testUser/searchNoCardTestUser/" + cardType + "/" + kycStatus);
+        String url_getTestUser = (this.dataBackDoorEndPoint + "/testUser/searchNoCardTestUser/" + this.currentValue.toString() +  "/" + cardType + "/" + kycStatus);
 
         System.out.println("API CALL: " + url_getTestUser);
 
@@ -480,7 +482,7 @@ public class YouAPI {
     }
 
     public TestAccountData data_getTestUserByCardTypeAndKycStatusAndCardStatus(String cardType, String kycStatus, String cardStatus) throws NoSuchFieldException{
-        String url_getTestUser = (this.dataBackDoorEndPoint + "/testUser/searchTestUser/" + cardType + "/" + kycStatus + "/" + cardStatus);
+        String url_getTestUser = (this.dataBackDoorEndPoint + "/testUser/searchTestUser/" + this.currentValue.toString() +  "/" + cardType + "/" + kycStatus + "/" + cardStatus);
 
         System.out.println("API CALL: " + url_getTestUser);
 
@@ -509,7 +511,7 @@ public class YouAPI {
     }
 
     public TestCardData data_getTestCardByCardTypeAndStatus(String cardType, String cardStatus) throws NoSuchFieldException{
-        String url_getTestCaed = (this.dataBackDoorEndPoint + "/testCard/searchTestCard/" + cardType + "/" + cardStatus);
+        String url_getTestCaed = (this.dataBackDoorEndPoint + "/testCard/searchTestCard/" + this.currentValue.toString() +  "/" + cardType + "/" + cardStatus);
 
         System.out.println("API CALL: " + url_getTestCaed);
 
@@ -523,7 +525,7 @@ public class YouAPI {
     }
 
     public void data_bindTestCardToTestUser(String userId, String cardId) {
-        String url_updateTestUserCard = (this.dataBackDoorEndPoint + "/testUser/bindTestCardToTestUser");
+        String url_updateTestUserCard = (this.dataBackDoorEndPoint + "/" + this.currentValue + "/testUser/bindTestCardToTestUser");
 
         System.out.println("API CALL: " + url_updateTestUserCard);
 

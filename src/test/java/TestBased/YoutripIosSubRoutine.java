@@ -5,7 +5,7 @@ import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import TestBased.YouTripIosUIElementKey.Market;
+import TestBased.TestAccountData.Market;
 import org.testng.Assert;
 
 import static org.testng.Assert.assertEquals;
@@ -15,13 +15,16 @@ public class YoutripIosSubRoutine {
     private YouTripIosUIElementKey UIElementKeyDict;
     private AppiumDriver driver;
     private WebDriverWait wait;
+    private Market currentMarket;
     public YouAPI api;
 
-    public YoutripIosSubRoutine(YouTripIosUIElementKey UIElementKeyDict, AppiumDriver driver){
+    public YoutripIosSubRoutine(Market market, YouTripIosUIElementKey UIElementKeyDict, AppiumDriver driver){
         this.UIElementKeyDict = UIElementKeyDict;
         this.driver = driver;
         wait = new WebDriverWait(driver, 30);
         api = new YouAPI();
+        currentMarket = market;
+        api.setMarket(this.currentMarket);
     }
 
     public WebDriverWait getDriverWait() { return this.wait; }
@@ -507,7 +510,7 @@ public class YoutripIosSubRoutine {
             el.click();
     }
 
-    public void procLoginToHomePage(YouTripIosUIElementKey.Market market, String mprefix, String phoneNumber, String appPinCode) throws Exception {
+    public void procLoginToHomePage(Market market, String mprefix, String phoneNumber, String appPinCode) throws Exception {
         IOSElement el;
         this.procSelectCountry(market);
         this.procOTPLogin(mprefix, phoneNumber, "", false);
@@ -537,7 +540,7 @@ public class YoutripIosSubRoutine {
         }
     }
 
-    public void procVerifyInHomePage(YouTripIosUIElementKey.Market market) throws Exception {
+    public void procVerifyInHomePage(Market market) throws Exception {
         System.out.println("TEST STEP: Home Page - Verify Home Page is Entered");
         wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnMenu", driver)));
         Assert.assertTrue(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnTopUp", driver).isDisplayed());

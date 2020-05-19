@@ -8,14 +8,12 @@ import org.openqa.selenium.WebElement;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import TestBased.UIElementData.*;
+import TestBased.TestAccountData.Market;
 
 public class YouTripIosUIElementKey {
-    public enum Market{
-        Singapore,
-        Thailand
-    }
 
     public enum PageKey{
         DevAlertElementDict,

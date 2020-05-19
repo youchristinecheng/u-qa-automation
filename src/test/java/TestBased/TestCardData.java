@@ -13,6 +13,7 @@ public class TestCardData {
     public TestAccountData.CardStatus Status;
     public int NumOfReplace;
     public boolean UnderUse;
+    public TestAccountData.Market TestCardMarket;
 
     public TestCardData() {
         Id = null;
@@ -22,6 +23,7 @@ public class TestCardData {
         Status = null;
         NumOfReplace = 0;
         UnderUse = false;
+        TestCardMarket = null;
     }
 
     public TestCardData(TestAccountData accountData) {
@@ -42,6 +44,7 @@ public class TestCardData {
                 .append("\t\t\"CardType\": "+this.TestCardCardType.getCodeCardType()+",\n")
                 .append("\t\t\"CardIDToken\": \""+this.CardIDToken+"\",\n")
                 .append("\t\t\"UnderUse\": "+this.UnderUse+"\n")
+                .append("\t\t\"Market\": "+this.TestCardMarket.getCodeMarket()+"\n")
                 .append("\t}\n");
 
         return builder.toString();
@@ -60,7 +63,7 @@ public class TestCardData {
     public static TestCardData toTestCardData(JSONObject jObj) throws NoSuchFieldException {
         TestCardData data = new TestCardData();
         String[] keyArray= new String[] {"Id", "Status", "YouId", "NumOfReplace", "CardType",
-                "CardIDToken", "UnderUse"};
+                "CardIDToken", "UnderUse", "Market"};
         try {
             for(int i =0; i < keyArray.length;i++){
                 if(!jObj.has(keyArray[i])){
@@ -74,6 +77,7 @@ public class TestCardData {
             data.TestCardCardType = TestAccountData.CardType.valueOf(jObj.getString(keyArray[4]));
             data.CardIDToken = jObj.getString(keyArray[5]);
             data.UnderUse = jObj.getBoolean(keyArray[6]);
+            data.TestCardMarket = TestAccountData.Market.valueOf(jObj.getString(keyArray[7]));
 
             data.printTestCardData("IMPORT");
             return data;
