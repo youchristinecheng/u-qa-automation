@@ -1,5 +1,6 @@
 package TestBased;
 import TestBased.UIElementData.*;
+import TestBased.TestAccountData.Market;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebDriver;
@@ -8,11 +9,6 @@ import org.openqa.selenium.WebElement;
 import java.util.HashMap;
 
 public class YouTripAndroidUIElementKey {
-
-    public enum Market{
-        Singapore,
-        Thailand
-    }
 
     public enum PageKey{
         CountryPageElementDict,

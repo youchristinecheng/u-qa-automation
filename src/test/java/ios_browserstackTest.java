@@ -1,4 +1,5 @@
 import TestBased.*;
+import TestBased.TestAccountData.Market;
 import io.appium.java_client.ios.IOSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -77,26 +78,25 @@ public class ios_browserstackTest {
             accessKey = (String) config.get("key");
         }
 
-        capabilities.setCapability("app", appUrl);
-        capabilities.setCapability("build", buildName);
-
         if(username.equals("") && accessKey.equals("")){
+            capabilities.setCapability("app", commonCapabilities.get("app"));
             driver = new IOSDriver<>(new URL("http://"+ config.get("server") + "/wd/hub"), capabilities);
         }else{
+            capabilities.setCapability("app", appUrl);
+            capabilities.setCapability("build", buildName);
             driver = new IOSDriver<>(new URL("http://" + username + ":" + accessKey + "@" + config.get("server") + "/wd/hub"), capabilities);
         }
-
 
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         testAccountData = null;
         UIElementKeyDict = new YouTripIosUIElementKey();
         defaultAPPPinCode = "1111";
-        subProc =  new YoutripIosSubRoutine(UIElementKeyDict, driver);
-        if(environment != null){
-            subProc.api.setYPEndPoint(environment.get("sg_youportalEndPoint").toString());
-            subProc.api.setDataBackDoorEndPoint(environment.get("sg_databackdoorEndPoint").toString());
-            subProc.api.setBackDoorEndPoint(environment.get("sg_backdoorEndPoint").toString(), true, null, null);
-        }
+        assert environment != null;
+        subProc =  new YoutripIosSubRoutine(Market.valueOf(environment.get("market").toString()), UIElementKeyDict, driver);
+        subProc.api.setYPEndPoint(environment.get("sg_youportalEndPoint").toString());
+        subProc.api.setDataBackDoorEndPoint(environment.get("sg_databackdoorEndPoint").toString());
+        subProc.api.setBackDoorEndPoint(environment.get("sg_backdoorEndPoint").toString(), true, null, null);
+
         if(env.equals("dev")) {
             fisapi = null;
         }else{

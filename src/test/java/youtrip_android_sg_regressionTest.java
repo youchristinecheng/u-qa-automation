@@ -1,5 +1,5 @@
 import TestBased.*;
-import TestBased.YouTripAndroidUIElementKey.Market;
+import TestBased.TestAccountData.Market;
 import TestBased.YouTripAndroidUIElementKey.PageKey;
 import io.appium.java_client.android.AndroidElement;
 import org.testng.ITestContext;
@@ -88,6 +88,8 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             testAccountData.PostalCode = "123456";
             testAccountData.Card = null;
             testAccountData.UnderUse = true;
+            testAccountData.TestAccountMarket = subProc.getCurrentMarket();
+            testAccountData.IsExplorerModeOn = false;
             String nationality = "Singaporean";
 
             //select PC card
