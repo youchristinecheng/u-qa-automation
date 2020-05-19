@@ -267,9 +267,10 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             // Limited Home Page
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
             Assert.assertEquals(el.getText(), "Thank You for Your Application");
+            Thread.sleep(2000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             kycRefNo = el.getText();
-
+            System.out.println("TEST DATA: KYC Reference from Limited Home Page" +kycRefNo);
             System.out.println("TEST STEP: KYC Partial rejection Send");
             isForebackEnable = false;
             subProc.api.yp_partialReject(kycRefNo);
