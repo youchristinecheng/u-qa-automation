@@ -88,6 +88,8 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             testAccountData.PostalCode = "123456";
             testAccountData.Card = null;
             testAccountData.UnderUse = true;
+            testAccountData.TestAccountMarket = subProc.getCurrentMarket();
+            testAccountData.IsExplorerModeOn = false;
             String nationality = "Singaporean";
 
             //select PC card

@@ -5,6 +5,7 @@ import TestBased.TestAccountData.KYCStatus;
 import TestBased.TestAccountData.Market;
 import TestBased.TestCardData;
 import TestBased.YouTripIosUIElementKey.PageKey;
+import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Rectangle;
@@ -117,6 +118,8 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         testAccountData.PostalCode = "000000";
         testAccountData.Card = null;
         testAccountData.UnderUse = true;
+        testAccountData.TestAccountMarket = subProc.getCurrentMarket();
+        testAccountData.IsExplorerModeOn = false;
         testAccountData.printTestAccountData("NEW GEN");
 
         try {
@@ -1254,37 +1257,56 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         }
     }
 
-    @Test
-    public void test_card_activation(){
-        //1001006
-        System.out.println("Test STEP: Start \"test_card_activation\"");
-        isRequriedReset = false;
-        IOSElement el;
-        try {
-            testAccountData = subProc.api.data_getTestUserByUserID("1001006");
-
-            //if(isAppReset) {
-            subProc.procSelectCountry(Market.Singapore);
-            subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
-
-            // Transition wait after OTP-login to Limited Home page
-            Thread.sleep(2000);
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
-            if (el != null) {
-                el.click();
-                Thread.sleep(2000);
-            }
-
-            //}
-
-            System.out.println("debug here");
-
-        }catch(Exception e){
-            System.out.println("Test STEP: Fail \"test_card_activation\"");
-            subProc.unlockTestAccountData(testAccountData);
-            testAccountData = null;
-            e.printStackTrace();
-            fail();
-        }
-    }
+//    @Test
+//    public void test_card_activation(){
+//        //1001006
+//        System.out.println("Test STEP: Start \"test_card_activation\"");
+//
+//        driver.executeScript("mobile: terminateApp", ImmutableMap.of("bundleId", "com.apple.mobilesafari"));
+//
+//        List args = new ArrayList();
+////        args.add("-u");
+////        args.add(deepLinkURL);
+//
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("bundleId", "com.apple.mobilesafari");
+//        params.put("arguments", args);
+//        driver.executeScript("mobile: launchApp", params);
+//
+//        args.clear();
+//        params.clear();
+//        params.put("bundleId", "co.you.youapp");
+//        driver.executeScript("mobile: launchApp", params);
+//
+//        //driver.findElementByAccessibilityId("Open").click();
+//
+//        isRequriedReset = false;
+//        IOSElement el;
+//        try {
+//            testAccountData = subProc.api.data_getTestUserByUserID("1001006");
+//
+//            //if(isAppReset) {
+//            subProc.procSelectCountry(Market.Singapore);
+//            subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
+//
+//            // Transition wait after OTP-login to Limited Home page
+//            Thread.sleep(2000);
+//            el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+//            if (el != null) {
+//                el.click();
+//                Thread.sleep(2000);
+//            }
+//
+//            //}
+//
+//            System.out.println("debug here");
+//
+//        }catch(Exception e){
+//            System.out.println("Test STEP: Fail \"test_card_activation\"");
+//            subProc.unlockTestAccountData(testAccountData);
+//            testAccountData = null;
+//            e.printStackTrace();
+//            fail();
+//        }
+//    }
 }

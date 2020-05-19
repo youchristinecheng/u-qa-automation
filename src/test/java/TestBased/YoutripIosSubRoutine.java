@@ -18,6 +18,11 @@ public class YoutripIosSubRoutine {
     private Market currentMarket;
     public YouAPI api;
 
+
+    public TestAccountData.Market getCurrentMarket() {
+        return currentMarket;
+    }
+
     public YoutripIosSubRoutine(Market market, YouTripIosUIElementKey UIElementKeyDict, AppiumDriver driver){
         this.UIElementKeyDict = UIElementKeyDict;
         this.driver = driver;

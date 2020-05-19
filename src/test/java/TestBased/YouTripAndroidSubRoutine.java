@@ -24,6 +24,10 @@ public class YouTripAndroidSubRoutine {
     private Market currentMarket;
     public YouAPI api;
 
+    public TestAccountData.Market getCurrentMarket() {
+        return currentMarket;
+    }
+
     public YouTripAndroidSubRoutine(Market market, YouTripAndroidUIElementKey UIElementKeyDict, AppiumDriver driver){
         this.UIElementKeyDict = UIElementKeyDict;
         this.driver = driver;

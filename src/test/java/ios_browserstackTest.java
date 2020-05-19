@@ -78,12 +78,12 @@ public class ios_browserstackTest {
             accessKey = (String) config.get("key");
         }
 
-        capabilities.setCapability("app", appUrl);
-        capabilities.setCapability("build", buildName);
-
         if(username.equals("") && accessKey.equals("")){
+            capabilities.setCapability("app", commonCapabilities.get("app"));
             driver = new IOSDriver<>(new URL("http://"+ config.get("server") + "/wd/hub"), capabilities);
         }else{
+            capabilities.setCapability("app", appUrl);
+            capabilities.setCapability("build", buildName);
             driver = new IOSDriver<>(new URL("http://" + username + ":" + accessKey + "@" + config.get("server") + "/wd/hub"), capabilities);
         }
 
