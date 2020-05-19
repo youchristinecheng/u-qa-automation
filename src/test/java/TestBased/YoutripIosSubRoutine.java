@@ -538,6 +538,7 @@ public class YoutripIosSubRoutine {
     }
 
     public void procVerifyInHomePage(YouTripIosUIElementKey.Market market) throws Exception {
+        Thread.sleep(5000);
         System.out.println("TEST STEP: Home Page - Verify Home Page is Entered");
         wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnMenu", driver)));
         Assert.assertTrue(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnTopUp", driver).isDisplayed());
