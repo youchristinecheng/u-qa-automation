@@ -186,8 +186,10 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             // Limited Home Page
             el= (IOSElement)UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
             Assert.assertEquals(el.getText(), "Thank You for Your Application");
+            Thread.sleep(2000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             kycRefNo = el.getText();
+            System.out.println("TEST DATA: KYC Reference from Limited Home Page " +kycRefNo);
 
             System.out.println("TEST STEP: KYC rejection Send");
             isForebackEnable = false;
@@ -224,6 +226,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             String newKycRefNo = el.getText();
             Assert.assertNotEquals(newKycRefNo, kycRefNo);
+
 
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("Test STEP: Finish \"regTC09_fullreject_and_resubmit_PC_KYC_NRIC\"");
@@ -270,8 +273,10 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             // Limited Home Page
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
             Assert.assertEquals(el.getText(), "Thank You for Your Application");
+            Thread.sleep(2000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             kycRefNo = el.getText();
+            System.out.println("TEST DATA: KYC Reference from Limited Home Page " +kycRefNo);
 
             System.out.println("TEST STEP: KYC Partial rejection Send");
             isForebackEnable = false;
@@ -343,7 +348,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
                     Thread.sleep(2000);
                 }
             }
-
+            Thread.sleep(2000);
             //get and store the KYC reference number
             String kycRefNo = (UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
             System.out.println("TEST DATA: KYC submission reference number is " + kycRefNo);
@@ -437,8 +442,10 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             System.out.println("TEST STEP: Verify Back to Limited Home Page");
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
             Assert.assertEquals(el.getText(), "Thank You for Your Application");
+            Thread.sleep(2000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             String kycRefNo = el.getText();
+            System.out.println("TEST DATA: KYC Reference from Limited Home Page " +kycRefNo);
             testAccountData.Id = subProc.api.yp_getKYCdetails(kycRefNo).get("userId");
 
             subProc.api.data_updateTestCard(testAccountData.Card);
@@ -487,7 +494,9 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             // Limited Home Page
             el = (IOSElement)UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
             Assert.assertEquals(el.getText(), "Thank You for Your Application");
+            Thread.sleep(2000);
             kycRefNo = ((IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
+            System.out.println("TEST DATA: KYC Reference from Limited Home Page " +kycRefNo);
 
             System.out.println("TEST STEP: KYC rejection Send");
             isForebackEnable = false;
@@ -573,8 +582,10 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             // Limited Home Page
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
             Assert.assertEquals(el.getText(), "Thank You for Your Application");
+            Thread.sleep(2000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             kycRefNo = el.getText();
+            System.out.println("TEST DATA: KYC Reference from Limited Home Page " +kycRefNo);
 
             System.out.println("TEST STEP: KYC Partial rejection Send");
             isForebackEnable = false;
@@ -651,6 +662,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             //get and store the KYC reference number
+            Thread.sleep(2000);
             String kycRefNo = (UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
             System.out.println("TEST DATA: KYC submission reference number is " + kycRefNo);
 
