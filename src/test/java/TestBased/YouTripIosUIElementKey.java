@@ -43,6 +43,7 @@ public class YouTripIosUIElementKey {
         NotificationAlertElementDict,
         LimitedHomePageElementDict,
         EnterYNumberPageElementDict,
+        ActivateCardConfirmEmailPageElementDict,
         APPPinCodePageElementDict,
         HomePageElementDict,
         SettingPageElementDict,
@@ -81,6 +82,7 @@ public class YouTripIosUIElementKey {
     private HashMap<String, UIElementData> NotificationAlertElementDict;
     private HashMap<String, UIElementData> LimitedHomePageElementDict;
     private HashMap<String, UIElementData> EnterYNumberPageElementDict;
+    private HashMap<String, UIElementData> ActivateCardConfirmEmailPageElementDict;
     private HashMap<String, UIElementData> APPPinCodePageElementDict;
     private HashMap<String, UIElementData> HomePageElementDict;
     private HashMap<String, UIElementData> SettingPageElementDict;
@@ -121,6 +123,7 @@ public class YouTripIosUIElementKey {
         this.NotificationAlertElementDict =  new HashMap<>();
         this.LimitedHomePageElementDict = new HashMap<>();
         this.EnterYNumberPageElementDict = new HashMap<>();
+        this.ActivateCardConfirmEmailPageElementDict =  new HashMap<>();
         this.APPPinCodePageElementDict = new HashMap<>();
         this.HomePageElementDict = new HashMap<>();
         this.TopUpPageElementDict = new HashMap<>();
@@ -226,9 +229,6 @@ public class YouTripIosUIElementKey {
         this.Container.put(PageKey.TurnBackPopUpPageElementDict.ordinal(), this.TurnBackPopUpPageElementDict);
 
         this.ProofOfAddressPopUpPageElementDict.put("lblTitle", new UIElementData("lblProofofAddressTitle", FindMethod.ACCESSIBILITYID));
-        //TODO: Here is the switch between old version and new version. Once new version is launch, old version of code would be able to remove
-//        this.ProofOfAddressPopUpPageElementDict.put("lblDescPt2", new UIElementData("lblProofofAddressDesc", FindMethod.ACCESSIBILITYID));
-        //TODO: New version code below
         this.ProofOfAddressPopUpPageElementDict.put("lblDesc", new UIElementData("lblProofofAddressDesc", FindMethod.ACCESSIBILITYID));
         this.ProofOfAddressPopUpPageElementDict.put("lblDescPt1", new UIElementData("lblProofofAddressDescPt1", FindMethod.ACCESSIBILITYID));
         this.ProofOfAddressPopUpPageElementDict.put("lblDescPt2", new UIElementData("lblProofofAddressDescPt2", FindMethod.ACCESSIBILITYID));
@@ -310,9 +310,17 @@ public class YouTripIosUIElementKey {
         this.EnterYNumberPageElementDict.put("txtYouIdDigit10", new UIElementData("txtYouIdDigit10", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.EnterYNumberPageElementDict.ordinal(), this.EnterYNumberPageElementDict);
 
+        this.ActivateCardConfirmEmailPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.ActivateCardConfirmEmailPageElementDict.put("txtEmail", new UIElementData("txtEmail", FindMethod.ACCESSIBILITYID));
+        this.ActivateCardConfirmEmailPageElementDict.put("btnNext", new UIElementData("btnNext", FindMethod.ACCESSIBILITYID));
+        this.ActivateCardConfirmEmailPageElementDict.put("btnConfirm", new UIElementData("btnConfirm", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.ActivateCardConfirmEmailPageElementDict.ordinal(), this.ActivateCardConfirmEmailPageElementDict);
+
         this.APPPinCodePageElementDict.put("lblChangePinTitle", new UIElementData("Enter Current PIN", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("lblChangePinNewPinTitle", new UIElementData("Create New PIN", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("lblChangePinConfirmPinTitle", new UIElementData("Confirm New PIN", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("lblActiveCardCreatePinTitle", new UIElementData("Create a PIN", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("lblActiveCardConfirmPinTitle", new UIElementData("Confirm Your PIN", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("1", new UIElementData("1", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("2", new UIElementData("2", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("3", new UIElementData("3", FindMethod.ACCESSIBILITYID));
