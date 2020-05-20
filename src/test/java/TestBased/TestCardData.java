@@ -43,7 +43,7 @@ public class TestCardData {
                 .append("\t\t\"NumOfReplace\": "+this.NumOfReplace+",\n")
                 .append("\t\t\"CardType\": "+this.TestCardCardType.getCodeCardType()+",\n")
                 .append("\t\t\"CardIDToken\": \""+this.CardIDToken+"\",\n")
-                .append("\t\t\"UnderUse\": "+this.UnderUse+"\n")
+                .append("\t\t\"UnderUse\": "+this.UnderUse+",\n")
                 .append("\t\t\"Market\": "+this.TestCardMarket.getCodeMarket()+"\n")
                 .append("\t}\n");
 
@@ -92,6 +92,8 @@ public class TestCardData {
         System.out.println("CARD DATA " + direction.toUpperCase() + ": CardIDToken - " + this.CardIDToken);
         System.out.println("CARD DATA " + direction.toUpperCase() + ": Status - " + this.Status);
         System.out.println("CARD DATA " + direction.toUpperCase() + ": NumOfReplace - " + this.NumOfReplace);
+        System.out.println("CARD DATA " + direction.toUpperCase() + ": TestCardCardType - " + this.TestCardCardType.toString());
         System.out.println("CARD DATA " + direction.toUpperCase() + ": UnderUse - " + this.UnderUse);
+        System.out.println("CARD DATA " + direction.toUpperCase() + ": Market - " + this.TestCardMarket.toString());
     }
 }

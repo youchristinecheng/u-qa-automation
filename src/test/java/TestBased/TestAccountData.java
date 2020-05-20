@@ -266,5 +266,7 @@ public class TestAccountData {
         System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": AddressLineTwo - " + this.AddressLineTwo);
         System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": PostalCode - " + this.PostalCode);
         System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": UnderUse - " + this.UnderUse);
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": Market - " + this.TestAccountMarket.toString());
+        System.out.println("ACCOUNT DATA " + direction.toUpperCase() + ": IsExplorerModeOn - " + this.IsExplorerModeOn);
     }
 }
