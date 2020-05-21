@@ -1,22 +1,24 @@
 #!/bin/bash
 
-#formatted the argument into {<platform>_<market>_<env>_<scope>}
+function join { local IFS="$1"; shift; echo "$*"; }
+
+#formatted the argument into {<platform>_<market>_<scope>}
 PLATFORM=$( echo "$1" | tr A-Z a-z)
 BUILDVER=$2
+EXECENV=$(echo "$3" | tr A-Z a-z)
 
 IFS='_' read -r -a array <<< "$PLATFORM"
+
 TESTPROFILE=${PLATFORM}
 PLATFORM="${array[0]}"
-EXECENV="${array[1]}${array[2]}"
-TESTENV="${array[2]}"
+TESTENV=${EXECENV:2}
 
 APPNAME=""
 
-echo "TestProfile=${TESTPROFILE}"
+echo "Test Profile=${TESTPROFILE}"
 echo "Platform=${PLATFORM}"
-echo "TestEnvironment=${EXECENV}"
-echo 
-
+echo "Test Environmentin Profile=${EXECENV}"
+echo "Declared Test Environment for AppCenter=${TESTENV}"
 
 if [ ! "$PLATFORM" = "ios" ] && [ ! "$PLATFORM" = "android" ]
 then
