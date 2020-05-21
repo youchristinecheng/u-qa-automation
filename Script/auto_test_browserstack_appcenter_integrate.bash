@@ -1,11 +1,24 @@
 #!/bin/bash
 
-PLATFORM=$( echo "$1" | tr a-z A-Z)
+#formatted the argument into {<platform>_<market>_<env>_<scope>}
+PLATFORM=$( echo "$1" | tr A-Z a-z)
 BUILDVER=$2
+
+IFS='_' read -r -a array <<< "$PLATFORM"
+TESTPROFILE=${PLATFORM}
+PLATFORM="${array[0]}"
+EXECENV="${array[1]}${array[2]}"
+TESTENV="${array[2]}"
+
 APPNAME=""
 
+echo "TestProfile=${TESTPROFILE}"
+echo "Platform=${PLATFORM}"
+echo "TestEnvironment=${EXECENV}"
+echo 
 
-if [ ! "$PLATFORM" = "IOS" ] && [ ! "$PLATFORM" = "ANDROID" ]
+
+if [ ! "$PLATFORM" = "ios" ] && [ ! "$PLATFORM" = "android" ]
 then
 	echo "Given platform from argument is not match. Only allow for 'IOS' or 'ANDROID'. Now exit..."
 	exit 1
@@ -17,11 +30,22 @@ if [ -z "$BUILDVER" ];then
 fi
 
 
-if [ "$PLATFORM" = "IOS" ]
+if [ "$PLATFORM" = "ios" ]
 then
-	APPNAME="YOUTrip-iOS"
+	if [ "$TESTENV" = "sit" ]
+	then
+		APPNAME="YOUTrip-iOS"
+	else
+		APPNAME="YOUTrip-iOS-DEV-1"
+	fi
+
 else
-	APPNAME="YOUTrip-Android-Sit"
+	if [ "$TESTENV" = "sit" ]
+	then
+		APPNAME="YOUTrip-Android-Sit"
+	else
+		APPNAME="YOUTrip-Android-DEV-1"
+	fi
 fi
 
 echo "get ${APPNAME} build ${BUILDVER}"
@@ -44,8 +68,9 @@ APPHASH=$(echo $(curl -u "${BROWSERSTACK_USER}:${BROWSERSTACK_PWD}" -X POST "htt
 
 echo "BrowserStack returned AppHash: ${APPHASH}"
 
-if [ ${PLATFORM} = "ANDROID" ];then
-	mvn clean test -Pandroid_regression_single -Dapp=${APPHASH} -Dbuild=${APPVER} -Denv=sgsit
-else
-	mvn clean test -Pios_regression_single -Dapp=${APPHASH} -Dbuild=${APPVER} -Denv=sgsit
-fi
+#if [ ${PLATFORM} = "ANDROID" ];then
+#	mvn clean test -Pandroid_regression_single -Dapp=${APPHASH} -Dbuild=${APPVER} -Denv=sgsit
+#else
+#	mvn clean test -Pios_regression_single -Dapp=${APPHASH} -Dbuild=${APPVER} -Denv=sgsit
+#fi
+mvn clean test -P${TESTPROFILE} -Dapp=${APPHASH} -Dbuild=${APPVER} -Denv=${EXECENV}
