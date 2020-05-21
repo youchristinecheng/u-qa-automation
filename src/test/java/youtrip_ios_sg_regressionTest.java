@@ -12,6 +12,7 @@ import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import javax.smartcardio.Card;
@@ -368,11 +369,127 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
 
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("Test STEP: Finish \"regTC11_approved_PC_KYC_NRIC\"");
-            testAccountData = null;
+            if(!subProc.api.getIsDevEnv()) {
+                testAccountData = null;
+            }else{
+                isRequriedReset = false;
+            }
         }catch(Exception e){
             System.out.println("Test STEP: Fail \"regTC11_approved_PC_KYC_NRIC\"");
             testAccountData.UnderUse = false;
             testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
+            subProc.api.data_updateTestUser(testAccountData);
+            testAccountData = null;
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void regTC23_PC_Activate_Card() throws InterruptedException{
+        //NPC card activation test
+        if(!subProc.api.getIsDevEnv()){
+            throw new SkipException("This test is only available in Dev Environnment");
+        }
+
+        System.out.println("Test STEP: Start \"regTC23_PC_Activate_Card\"");
+        isForebackEnable = false;
+        isRequriedReset = true;
+        IOSElement el;
+        try {
+            if (testAccountData == null) {
+                //testAccountData = subProc.api.data_getTestUserByCardTypeAndKycStatus(CardType.NPC.toString(), KYCStatus.Submit.toString());
+                fail("fail to load test account from previous test case in succeed");
+            }
+
+            if(subProc.api.getIsDevEnv()) {
+                testAccountData.Card = subProc.api.devEnvGenerateCard(true, testAccountData.Id);
+                subProc.api.data_bindTestCardToTestUser(testAccountData.Id, testAccountData.Card.Id);
+            }
+
+            if(isAppReset) {
+                subProc.procSelectCountry(subProc.getCurrentMarket());
+                subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
+
+                // Transition wait after OTP-login to Limited Home page
+                Thread.sleep(2000);
+                el = (IOSElement) UIElementKeyDict.getElement(PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+                if (el != null) {
+                    el.click();
+                    Thread.sleep(2000);
+                }
+            }
+
+            System.out.println("TEST STEP: Limited Home Page - KYC already approved");
+            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Your Card is On Its Way");
+            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver).getText(), "My Card Arrived");
+
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver);
+            el.click();
+            Thread.sleep(2000);
+
+            System.out.println("TEST STEP: PC Registration - Enter Y-Number");
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.EnterYNumberPageElementDict, "lblTitle", driver), "Enter Y-Number"));
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.EnterYNumberPageElementDict, "txtYouIdDigit1", driver);
+            el.sendKeys(testAccountData.Card.YouId.substring(2));
+            Thread.sleep(3000);
+
+            System.out.println("TEST STEP: Confirm Email Address Page - On Page");
+            assertEquals(UIElementKeyDict.getElement(PageKey.ActivateCardConfirmEmailPageElementDict, "lblTitle", driver).getText(), "Confirm Email Address");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver);
+            el.click();
+            Thread.sleep(2000);
+
+            String deepLinkURL = subProc.api.getActivateCardEmailLink(testAccountData.Id);
+            System.out.println(deepLinkURL);
+
+            // Hacking code for switch to safari and opend deeplink
+            driver.executeScript("mobile: terminateApp", ImmutableMap.of("bundleId", "com.apple.mobilesafari"));
+            List args = new ArrayList();
+            args.add("-u");
+            args.add(deepLinkURL);
+
+            // Need to have wait time for app launch
+            System.out.println("TEST STEP: Launch Safari App for apply DeepLink");
+            Map<String, Object> params = new HashMap<>();
+            params.put("bundleId", "com.apple.mobilesafari");
+            params.put("arguments", args);
+            driver.executeScript("mobile: launchApp", params);
+            Thread.sleep(7000);
+
+            driver.findElementByAccessibilityId("Open").click();
+            Thread.sleep(2000);
+
+            System.out.println("TEST STEP: Switch back to YouTrip App from DeepLink");
+            args.clear();
+            params.clear();
+            params.put("bundleId", "co.you.youapp");
+            driver.executeScript("mobile: launchApp", params);
+            Thread.sleep(5000);
+            // Create a Pin
+
+            assertEquals(UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "lblActiveCardCreatePinTitle", driver).getText(), "Create a PIN");
+            subProc.procEnterAPPPinCode(this.defaultAPPPinCode);
+            Thread.sleep(2000);
+
+            // Confirm Your Pin
+            assertEquals(UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "lblActiveCardConfirmPinTitle", driver).getText(), "Confirm Your PIN");
+            subProc.procEnterAPPPinCode(this.defaultAPPPinCode);
+            Thread.sleep(5000);
+
+            //TODO: Verification of Home Page redirection is skipped due to homepage replacement
+            //subProc.procVerifyInHomePage(Market.Singapore);
+
+            testAccountData.Card.Status = CardStatus.NewActive;
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("Test STEP: Finish \"regTC23_NPC_Activate_Card\"");
+        }catch(Exception e){
+            System.out.println("Test STEP: Fail \"regTC23_NPC_Activate_Card\"");
+            testAccountData.UnderUse = false;
+            testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
+            testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
             testAccountData = null;
             e.printStackTrace();
@@ -390,7 +507,12 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         testAccountData = new TestAccountData();
         TestCardData testCardData = null;
         try {
-            testCardData = subProc.api.data_getTestCardByCardTypeAndStatus(CardType.NPC.toString(), CardStatus.NPCPending.toString());
+            if(subProc.api.getIsDevEnv()) {
+                System.out.println("TEST STEP: Generate new NPC card in Dev environment");
+                testCardData = subProc.api.devEnvGenerateCard(false, "");
+            }else{
+                testCardData = subProc.api.data_getTestCardByCardTypeAndStatus(CardType.NPC.toString(), CardStatus.NPCPending.toString());
+            }
             testAccountData.Card = testCardData;
             testAccountData.Card.Status = CardStatus.Inactive;
 
