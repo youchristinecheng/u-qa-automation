@@ -92,18 +92,14 @@ public class ios_browserstackTest {
         UIElementKeyDict = new YouTripIosUIElementKey();
         defaultAPPPinCode = "1111";
         assert environment != null;
+        String environemntType = environment.get("env").toString();
+
         subProc =  new YoutripIosSubRoutine(Market.valueOf(environment.get("market").toString()), UIElementKeyDict, driver);
-        subProc.api.setYPEndPoint(environment.get("sg_youportalEndPoint").toString());
-        subProc.api.setDataBackDoorEndPoint(environment.get("sg_databackdoorEndPoint").toString());
-        subProc.api.setBackDoorEndPoint(environment.get("sg_backdoorEndPoint").toString(), true, null, null);
-
-        if(env.equals("dev")) {
-            fisapi = null;
-        }else{
-            fisapi = new YouFISAPI();
-        }
-
-
+        subProc.api.setYPEndPoint(environment.get("youportalEndPoint").toString());
+        subProc.api.setDataBackDoorEndPoint(environment.get("databackdoorEndPoint").toString());
+        subProc.api.setBackDoorEndPoint(environment.get("backdoorEndPoint").toString(), environment.get("productId").toString(), null, null);
+        subProc.api.setIsDevEnv(environemntType.equals("dev"));
+        fisapi = environemntType.equals("dev") ? null : new YouFISAPI();
 
         wait = subProc.getDriverWait();
         try {

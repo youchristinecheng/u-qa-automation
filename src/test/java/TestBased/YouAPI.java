@@ -1,5 +1,6 @@
 package TestBased;
 
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
@@ -10,8 +11,7 @@ import static org.testng.Assert.assertEquals;
 import java.util.HashMap;
 import java.util.Map;
 import TestBased.TestAccountData.*;
-
-import javax.swing.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
 public class YouAPI {
@@ -20,34 +20,33 @@ public class YouAPI {
     private String backDoorEndPoint;
     private String dataBackDoorEndPoint;
     private String ypEndPoint;
-    private boolean isBackDoorRequireAuthen;
     private String backDoorAuthUserName;
     private String backDoorAuthPwd;
-    private Market currentValue;
+    private Market currenMarkettValue;
+    private String productId;
+    private boolean isDevEnv;
 
     public Utils util = new Utils();
 
     public String getKycRejectReason(){return this.kycRejectReason;}
+    public Boolean getIsDevEnv(){ return this.isDevEnv; }
     public void setKycRejectReason(String value){this.kycRejectReason = value;}
-    public void setBackDoorEndPoint(String endPoint, boolean isAuthenticated, String UserName, String Password){
-        if(endPoint.endsWith("/"))
+    public void setBackDoorEndPoint(String endPoint, String productId, String UserName, String Password) {
+        if (endPoint.endsWith("/"))
             endPoint = endPoint.replaceAll("/$", "");
         this.backDoorEndPoint = endPoint;
-        this.isBackDoorRequireAuthen = isAuthenticated;
-        if(!isAuthenticated){
-            this.backDoorAuthUserName = "";
-            this.backDoorAuthPwd = "";
-        } else {
-            // Remain to its default value as if not given
-            if (UserName != null && Password != null) {
-                this.backDoorAuthUserName = UserName;
-                this.backDoorAuthPwd = Password;
-            }
+        this.productId = productId;
+        // Remain to its default value as if not given
+        if (UserName != null && Password != null) {
+            this.backDoorAuthUserName = UserName;
+            this.backDoorAuthPwd = Password;
         }
     }
+
     public void setYPEndPoint(String value){ this.ypEndPoint = value; }
     public void setDataBackDoorEndPoint(String value){ this.dataBackDoorEndPoint = value; }
-    public void setMarket(Market value){ this.currentValue = value; }
+    public void setMarket(Market value){ this.currenMarkettValue = value; }
+    public void setIsDevEnv(boolean value) {this.isDevEnv = value; }
 
     public YouAPI(){
         //TODO need to refactor end points
@@ -55,10 +54,10 @@ public class YouAPI {
         this.backDoorEndPoint = "https://uoy.backdoor.sg.sit.you.co";
         this.ypEndPoint = "http://yp.external.sg.sit.you.co";
         this.dataBackDoorEndPoint = "http://qa-auto-support.backdoor.sg.sit.you.co";
-        this.isBackDoorRequireAuthen = true;
         backDoorAuthUserName = "qa";
         backDoorAuthPwd = "youtrip1@3";
         Unirest.config().verifySsl(false);
+        isDevEnv = false;
     }
 
     /*
@@ -66,85 +65,18 @@ public class YouAPI {
      */
     public String getOTP(String mprefix, String mnumber) {
 
-        String url_backdoorOTP = (backDoorEndPoint + "/onboarding/otp/"+mprefix+"/"+mnumber);
+        String url_backdoorOTP = (backDoorEndPoint + "/onboarding/otp/" + mprefix + "/" + mnumber);
         String otpCode = null;
 
-        if (!isBackDoorRequireAuthen) {
-            otpCode = Unirest.get(url_backdoorOTP)
-                    .asJson()
-                    .getBody()
-                    .getObject()
-                    .getString("password");
-        }else{
-            otpCode = Unirest.get(url_backdoorOTP)
-                    .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
-                    .asJson()
-                    .getBody()
-                    .getObject()
-                    .getString("password");
-        }
+        otpCode = Unirest.get(url_backdoorOTP)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .asJson()
+                .getBody()
+                .getObject()
+                .getString("password");
 
-        System.out.println("API CALL: " +url_backdoorOTP);
+        System.out.println("API CALL: " + url_backdoorOTP);
         return otpCode;
-    }
-
-    public Map<String, String> getUserId(String mprefix, String phoneNumber) {
-        HashMap<String, String> result = new HashMap<>();
-        String baseUri = "http://api.sg.sit.you.co/v2";
-        String req_uri = (baseUri + "/public/device");
-        HttpResponse<JsonNode> response = Unirest.post(req_uri)
-                .header("Content-Type", "application/json")
-                .header("x-request-id", "register-device-" + util.getTimestamp())
-                .body("{\"device_id\": \"44vic4-20022716280914\"," +
-                        "\"device_name\": \"Samsung Note 9\"," +
-                        "\"platform\": \"Android\"," +
-                        "\"os_ver\": \"7.1.1\"," +
-                        "\"app_id\": \"YouTrip\"," +
-                        "\"app_ver\": \"1.2.7\"," +
-                        "\"language\": \"en-TH\"," +
-                        "\"timezone\": \"Asia/Hong_Kong\"}").asJson();
-
-        JSONObject responseJson = response.getBody().getObject();
-        String oauth_key = responseJson.getString("oauth_client_key");
-        String oauth_passpwd = responseJson.getString("oauth_client_secret");
-
-        req_uri = (baseUri + "/device/otp");
-        response = Unirest.post(req_uri)
-                .header("Content-Type", "application/json")
-                .header("x-request-id", "request-otp-" + util.getTimestamp())
-                .basicAuth(oauth_key, oauth_passpwd)
-                .body("{\"mcc\": \"" + mprefix + "\"," +
-                        "\"phone_number\": \"" + phoneNumber + "\"," +
-                        "\"language\": \"en-US\"}").asJson();
-
-        responseJson = response.getBody().getObject();
-        String otp_key = responseJson.getString("id");
-
-        String otpCode = getOTP(mprefix, phoneNumber);
-        req_uri = (baseUri + "/device/otp/" + otp_key);
-        response = Unirest.post(req_uri)
-                .header("Content-Type", "application/json")
-                .header("x-request-id", "verify-otp-" + util.getTimestamp())
-                .basicAuth(oauth_key, oauth_passpwd)
-                .body("{\"password\": \"" + otpCode + "\"," +
-                        "\"mcc\": \"" + mprefix + "\"," +
-                        "\"phone_number\": \"" + phoneNumber + "\"}").asJson();
-        responseJson = response.getBody().getObject();
-        String access_token = responseJson.getString("access_token");
-        String refresh_token = responseJson.getString("refresh_token");
-        result.put("access_token", access_token);
-        result.put("refresh_token", refresh_token);
-
-        req_uri = (baseUri + "/me");
-        response = Unirest.get(req_uri)
-                .header("Content-Type", "application/json")
-                .header("x-request-id", "get-user-" + util.getTimestamp())
-                .header("Authorization", "Bearer " + access_token).asJson();
-        responseJson = response.getBody().getObject();
-        String user_id = responseJson.getString("id");
-        result.put("user_id", user_id);
-        
-        return result;
     }
 
     public String getActivateCardEmailLink (String userID) throws InterruptedException {
@@ -169,34 +101,59 @@ public class YouAPI {
         return activateCardEmailURL;
     }
 
+    public TestCardData devEnvGenerateCard(boolean isPCCard, String userId) throws ValueException, NotImplementedException{
+        if(!isDevEnv){
+            throw new ValueException("This function is only support from Dev Environemnt");
+        }
+
+        String url_generateCardRequest = "";
+        if(!isPCCard) {
+            url_generateCardRequest = (backDoorEndPoint + "/onboarding/cards/npc/" + this.productId);
+        }else{
+            url_generateCardRequest = (backDoorEndPoint + "/onboarding/cards/pc/" + this.productId + "/" + userId);
+        }
+
+        HttpResponse<JsonNode> res = Unirest.post(url_generateCardRequest)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .header("x-request-id", "generateCard"+util.getTimestamp())
+                .asJson();
+        JSONObject responseJson = res.getBody().getObject();
+        TestCardData card_data = new TestCardData();
+
+        card_data.Id = (isPCCard) ? userId :  responseJson.getString("card_id_token");
+        card_data.CardIDToken = responseJson.getString("card_id_token");
+        card_data.YouId = responseJson.getString("you_id");
+        card_data.TestCardMarket = this.currenMarkettValue;
+        card_data.Status = (isPCCard) ? CardStatus.Inactive : CardStatus.NPCPending;
+        card_data.UnderUse = false;
+        card_data.NumOfReplace = 0;
+        card_data.TestCardCardType = (isPCCard) ? CardType.PC : CardType.NPC;
+        card_data.printTestCardData("NEW GEN ON DEV");
+
+        this.data_createTestCard(card_data);
+
+        return card_data;
+    }
+
     /*
      * ###### YouPortal API calls ######
      */
 
     public String yp_getToken() {
         String url_backdoorYP = (backDoorEndPoint + "/youportal/token?scopes=https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile,openid");
-        System.out.println("API CALL: " +url_backdoorYP);
+        System.out.println("API CALL: " + url_backdoorYP);
 
         String ypToken = null;
-        if (!isBackDoorRequireAuthen) {
-            Unirest.config().verifySsl(false);
-            ypToken = Unirest.get(url_backdoorYP)
-                    .header("x-request-id", "token"+util.getTimestamp())
-                    .asJson()
-                    .getBody()
-                    .getObject()
-                    .getString("token");
-        }else{
-            Unirest.config().verifySsl(false);
-            ypToken = Unirest.get(url_backdoorYP)
-                    .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
-                    .header("x-request-id", "token"+util.getTimestamp())
-                    .asJson()
-                    .getBody()
-                    .getObject()
-                    .getString("token");
+        Unirest.config().verifySsl(false);
+        ypToken = Unirest.get(url_backdoorYP)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .header("x-request-id", "token" + util.getTimestamp())
+                .asJson()
+                .getBody()
+                .getObject()
+                .getString("token");
 
-        }
+
         return ypToken;
     }
 
@@ -468,7 +425,7 @@ public class YouAPI {
     }
 
     public TestAccountData data_getTestUserByCardTypeAndKycStatus(String cardType, String kycStatus) throws NoSuchFieldException {
-        String url_getTestUser = (this.dataBackDoorEndPoint + "/testUser/searchNoCardTestUser/" + this.currentValue.toString() +  "/" + cardType + "/" + kycStatus);
+        String url_getTestUser = (this.dataBackDoorEndPoint + "/testUser/searchNoCardTestUser/" + this.currenMarkettValue.toString() +  "/" + cardType + "/" + kycStatus);
 
         System.out.println("API CALL: " + url_getTestUser);
 
@@ -482,7 +439,7 @@ public class YouAPI {
     }
 
     public TestAccountData data_getTestUserByCardTypeAndKycStatusAndCardStatus(String cardType, String kycStatus, String cardStatus) throws NoSuchFieldException{
-        String url_getTestUser = (this.dataBackDoorEndPoint + "/testUser/searchTestUser/" + this.currentValue.toString() +  "/" + cardType + "/" + kycStatus + "/" + cardStatus);
+        String url_getTestUser = (this.dataBackDoorEndPoint + "/testUser/searchTestUser/" + this.currenMarkettValue.toString() +  "/" + cardType + "/" + kycStatus + "/" + cardStatus);
 
         System.out.println("API CALL: " + url_getTestUser);
 
@@ -493,6 +450,21 @@ public class YouAPI {
                 .getObject();
 
         return TestAccountData.toTestAccountData(Rspbody);
+    }
+
+    public void data_createTestCard(TestCardData data){
+        String url_createCard = (this.dataBackDoorEndPoint + "/testCard/create");
+
+        System.out.println("API CALL: " + url_createCard);
+
+        HttpResponse<JsonNode> updateTestCardjsonResponse = Unirest.post(url_createCard)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .header("x-request-id", "createTestCard"+util.getTimestamp())
+                .header("Content-Type", "application/json")
+                .body(data.toRequestBodyString())
+                .asJson();
+
+        assertEquals(200, updateTestCardjsonResponse.getStatus());
     }
 
     public void data_updateTestCard(TestCardData data){
@@ -511,7 +483,7 @@ public class YouAPI {
     }
 
     public TestCardData data_getTestCardByCardTypeAndStatus(String cardType, String cardStatus) throws NoSuchFieldException{
-        String url_getTestCaed = (this.dataBackDoorEndPoint + "/testCard/searchTestCard/" + this.currentValue.toString() +  "/" + cardType + "/" + cardStatus);
+        String url_getTestCaed = (this.dataBackDoorEndPoint + "/testCard/searchTestCard/" + this.currenMarkettValue.toString() +  "/" + cardType + "/" + cardStatus);
 
         System.out.println("API CALL: " + url_getTestCaed);
 

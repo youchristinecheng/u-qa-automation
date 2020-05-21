@@ -21,6 +21,7 @@ public class android_browserstackTest {
     YouTripAndroidSubRoutine subProc;
     WebDriverWait wait;
     TestAccountData testAccountData;
+    YouFISAPI fisapi;
 
     @BeforeTest(alwaysRun = true)
     @Parameters({"config", "device", "app", "build", "env"})
@@ -93,10 +94,13 @@ public class android_browserstackTest {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         testAccountData = null;
         assert environment != null;
+        String environemntType = environment.get("env").toString();
         subProc = new YouTripAndroidSubRoutine(Market.valueOf(environment.get("market").toString()), UIElementKeyDict, driver);
-        subProc.api.setYPEndPoint(environment.get("sg_youportalEndPoint").toString());
-        subProc.api.setDataBackDoorEndPoint(environment.get("sg_databackdoorEndPoint").toString());
-        subProc.api.setBackDoorEndPoint(environment.get("sg_backdoorEndPoint").toString(), true, null, null);
+        subProc.api.setYPEndPoint(environment.get("youportalEndPoint").toString());
+        subProc.api.setDataBackDoorEndPoint(environment.get("databackdoorEndPoint").toString());
+        subProc.api.setBackDoorEndPoint(environment.get("backdoorEndPoint").toString(), environment.get("productId").toString(), null, null);
+        subProc.api.setIsDevEnv(environemntType.equals("dev"));
+        fisapi = environemntType.equals("dev") ? null : new YouFISAPI();
 
         wait = subProc.getDriverWait();
         System.out.println("SETUP: Android device setup finished");
