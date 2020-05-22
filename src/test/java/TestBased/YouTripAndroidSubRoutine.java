@@ -699,7 +699,11 @@ public class YouTripAndroidSubRoutine {
             jsExec.executeScript("mobile:deepLink", params);
             Thread.sleep(3000);
 
-            driver.findElement(By.id("android:id/button_once")).click();
+            el = (AndroidElement) driver.findElement(By.id("android:id/button_once"));
+            if (el != null) {
+                el.click();
+                System.out.println("TEST STEP: Android Browser - confirm");
+            }
             Thread.sleep(3000);
 
             //set PIN
