@@ -1,15 +1,15 @@
 package TestBased;
 
 import TestBased.TestAccountData.Market;
-import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.android.Activity;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertEquals;
@@ -19,7 +19,6 @@ public class YouTripAndroidSubRoutine {
 
     private YouTripAndroidUIElementKey UIElementKeyDict;
     private AppiumDriver driver;
-    private AndroidDriver androidDriver;
     private WebDriverWait wait;
     private Market currentMarket;
     public YouAPI api;
@@ -692,25 +691,16 @@ public class YouTripAndroidSubRoutine {
             //call API to get device ID
             String activateCardEmailURL = api.getActivateCardEmailLink(userID);
 
-            //open webpage and go to email link
-            //String webBrowserAppPackage = "com.android.chrome";
-            //String webBrowserAppActivity = "com.google.android.apps.chrome.Main";
-            String webBrowserAppPackage = "com.sec.android.app.sbrowser";
-            String webBrowserAppActivity = "com.sec.android.app.sbrowser.SBrowserMainActivity";
+            //run deep link command to open activation link
+            JavascriptExecutor jsExec = (JavascriptExecutor) driver;
+            Map<String, Object> params = new HashMap<>();
+            params.put("url", activateCardEmailURL );
+            params.put("package", "com.sec.android.app.sbrowser");
+            jsExec.executeScript("mobile:deepLink", params);
+            Thread.sleep(3000);
 
-            //utilise android driver
-            AndroidDriver androidDriver = (AndroidDriver) driver;
-            Activity activity = new Activity(webBrowserAppPackage, webBrowserAppActivity);
-            activity.setStopApp(false);
-            androidDriver.startActivity(activity);
-            Thread.sleep(2000);
-            //androidDriver.get(activateCardEmailURL);
-
-            WebElement url = androidDriver.findElement(By.id("com.sec.android.app.sbrowser:id/location_bar_edit_text"));
-            url.click();
-            url.clear();
-            url.sendKeys(activateCardEmailURL);
-            Thread.sleep(2000);
+            driver.findElement(By.id("android:id/button_once")).click();
+            Thread.sleep(3000);
 
             //set PIN
             wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblTitle", driver)), "Create a PIN"));
@@ -722,7 +712,7 @@ public class YouTripAndroidSubRoutine {
                 System.out.println("TEST STEP: Create App PIN Page - click digit " +Character.toString(i));
             }
             System.out.println("TEST STEP: Create App PIN Page - PIN entered");
-            Thread.sleep(5000);
+            Thread.sleep(3000);
 
             //Confirm PIN
             wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblTitle", driver)), "Confirm Your PIN"));
@@ -733,9 +723,16 @@ public class YouTripAndroidSubRoutine {
             }
 
             System.out.println("TEST STEP: Confirm App PIN Page - PIN entered");
-            Thread.sleep(5000);
+            Thread.sleep(3000);
 
-
+            //need to handle finger print module
+            el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.FingerPrintPageElementDict, "skipLink", driver, true);
+            if (el != null) {
+                System.out.println("TEST STEP: Fingerprint Authentication Page - Dialog Displayed");
+                el.click();
+                System.out.println("TEST STEP: Fingerprint Authentication Page - Skip Now clicked");
+                Thread.sleep(3000);
+            }
 
         }catch(Exception e) {
             throw e;
@@ -750,10 +747,12 @@ public class YouTripAndroidSubRoutine {
             el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.LimitedHomePageElementDict, "btnMenu", driver);
             el.click();
             System.out.println("TEST STEP: Limited Home page - click hamburger menu");
+            Thread.sleep(3000);
             //click settings and logout
             el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.LeftSideMenuElementDict, "optSettings", driver);
             el.click();
             System.out.println("TEST STEP: Hambuger menu - click setting option");
+            Thread.sleep(3000);
             el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.SettingPageElementDict, "optLogOut", driver);
             el.click();
             System.out.println("TEST STEP: Setting menu - click logout option");

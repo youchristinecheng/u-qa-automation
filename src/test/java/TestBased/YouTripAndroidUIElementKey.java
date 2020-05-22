@@ -1,6 +1,5 @@
 package TestBased;
 import TestBased.UIElementData.*;
-import TestBased.TestAccountData.Market;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebDriver;
@@ -41,6 +40,7 @@ public class YouTripAndroidUIElementKey {
         ConfirmEmailPageElementDict,
         CheckSentEmailPageElementDict,
         CreateConfirmPinPageElementDict,
+        FingerPrintPageElementDict,
         UnlockAppPageElementDict,
         HomePageElementDict
     }
@@ -75,6 +75,7 @@ public class YouTripAndroidUIElementKey {
     private HashMap<String, UIElementData> ConfirmEmailPageElementDict;
     private HashMap<String, UIElementData> CheckSentEmailPageElementDict;
     private HashMap<String, UIElementData> CreateConfirmPinPageElementDict;
+    private HashMap<String, UIElementData> FingerPrintPageElementDict;
     private HashMap<String, UIElementData> UnlockAppPageElementDict;
     private HashMap<String, UIElementData> HomePageElementDict;
 
@@ -112,6 +113,7 @@ public class YouTripAndroidUIElementKey {
         this.ConfirmEmailPageElementDict = new HashMap<>();
         this.CheckSentEmailPageElementDict = new HashMap<>();
         this.CreateConfirmPinPageElementDict = new HashMap<>();
+        this.FingerPrintPageElementDict = new HashMap<>();
         this.UnlockAppPageElementDict = new HashMap<>();
         this.HomePageElementDict = new HashMap<>();
 
@@ -321,6 +323,11 @@ public class YouTripAndroidUIElementKey {
         this.CreateConfirmPinPageElementDict.put("btn0", new UIElementData("co.you.youapp.dev:id/input0", FindMethod.ID));
         this.CreateConfirmPinPageElementDict.put("btnDelete", new UIElementData("co.you.youapp.dev:id/clickDelete", FindMethod.ID));
         this.Container.put(PageKey.CreateConfirmPinPageElementDict.ordinal(), this.CreateConfirmPinPageElementDict);
+
+        //FingerPrint Setting Page
+        this.FingerPrintPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
+        this.FingerPrintPageElementDict.put("skipLink", new UIElementData("co.you.youapp.dev:id/textNegative", FindMethod.ID));
+        this.Container.put(PageKey.FingerPrintPageElementDict.ordinal(), this.FingerPrintPageElementDict);
 
         //Unlock App Page
         this.UnlockAppPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
