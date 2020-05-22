@@ -98,6 +98,7 @@ public class YouAPI {
 
         //setup email url for activate card and return it
         String activateCardEmailURL = ("https://api.sit.you.co/v2/link/token-activate-card/"+token);
+        System.out.println("TEST DATA: Activation Email Link is " +activateCardEmailURL);
         return activateCardEmailURL;
     }
 

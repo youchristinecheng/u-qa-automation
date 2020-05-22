@@ -21,7 +21,7 @@ public class YouTripAndroidUIElementKey {
         IdentityVerificationElementDict,
         PRRegistrationElementDict,
         ForeignerRegistrationElementDict,
-        CameraAccessAlertElementDict,
+        AndroidSystemAlertElementDict,
         StepsPageElementDict,
         CameraPageElementDict,
         PhotoConfirmPageElementDict,
@@ -57,7 +57,7 @@ public class YouTripAndroidUIElementKey {
     private HashMap<String, UIElementData> PRRegistrationElementDict;
     private HashMap<String, UIElementData> ForeignerRegistrationElementDict;
     private HashMap<String, UIElementData> StepsPageElementDict;
-    private HashMap<String, UIElementData> CameraAccessAlertElementDict;
+    private HashMap<String, UIElementData> AndroidSystemAlertElementDict;
     private HashMap<String, UIElementData> CameraPageElementDict;
     private HashMap<String, UIElementData> PhotoConfirmPageElementDict;
     private HashMap<String, UIElementData> TurnBackPopUpPageElementDict;
@@ -95,7 +95,7 @@ public class YouTripAndroidUIElementKey {
         this.PRRegistrationElementDict = new HashMap<>();
         this.ForeignerRegistrationElementDict = new HashMap<>();
         this.StepsPageElementDict = new HashMap<>();
-        this.CameraAccessAlertElementDict = new HashMap<>();
+        this.AndroidSystemAlertElementDict = new HashMap<>();
         this.CameraPageElementDict = new HashMap<>();
         this.PhotoConfirmPageElementDict = new HashMap<>();
         this.TurnBackPopUpPageElementDict = new HashMap<>();
@@ -206,10 +206,6 @@ public class YouTripAndroidUIElementKey {
         this.StepsPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
         this.StepsPageElementDict.put("btnStart", new UIElementData("co.you.youapp.dev:id/buttonStart", FindMethod.ID));
         this.Container.put(PageKey.StepsPageElementDict.ordinal(), this.StepsPageElementDict);
-
-        //Camera Alert Access
-        this.CameraAccessAlertElementDict.put("btnAccept", new UIElementData("com.android.packageinstaller:id/permission_allow_button", FindMethod.ID));
-        this.Container.put(PageKey.CameraAccessAlertElementDict.ordinal(), this.CameraAccessAlertElementDict);
 
         //Camera Page
         this.CameraPageElementDict.put("btnShutter", new UIElementData("co.you.youapp.dev:id/buttonShutter", FindMethod.ID));
@@ -358,6 +354,16 @@ public class YouTripAndroidUIElementKey {
         this.HomePageElementDict.put("menuHelp", new UIElementData("Help", FindMethod.ACCESSIBILITYID));
         this.HomePageElementDict.put("menuSettings", new UIElementData("Settings", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.HomePageElementDict.ordinal(), this.HomePageElementDict);
+
+
+
+        //Android Alert -
+        //Camera Alert Access
+        this.AndroidSystemAlertElementDict.put("cameraAccept", new UIElementData("com.android.packageinstaller:id/permission_allow_button", FindMethod.ID));
+        //Deep link to Browser alert
+        this.AndroidSystemAlertElementDict.put("browserAccept", new UIElementData("android:id/button_once", FindMethod.ID));
+        this.Container.put(PageKey.AndroidSystemAlertElementDict.ordinal(), this.AndroidSystemAlertElementDict);
+
 
 
     }

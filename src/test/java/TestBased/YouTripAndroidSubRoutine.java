@@ -377,7 +377,7 @@ public class YouTripAndroidSubRoutine {
                 System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click start now button");
                 Thread.sleep(3000);
                 //accept the Android camera permission if it appears (not needed permission allowed)
-                //el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CameraAccessAlertElementDict, "btnAccept", driver, true);
+                //el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.AndroidSystemAlertElementDict, "cameraAccept", driver, true);
                 //if (el != null) {
                 //    el.click();
                 //    System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - click allow YouTrip access to camera button");
@@ -697,12 +697,14 @@ public class YouTripAndroidSubRoutine {
             params.put("url", activateCardEmailURL );
             params.put("package", "com.sec.android.app.sbrowser");
             jsExec.executeScript("mobile:deepLink", params);
+            System.out.println("TEST STEP: Android Browser - opened and deeplink applied");
             Thread.sleep(3000);
 
-            el = (AndroidElement) driver.findElement(By.id("android:id/button_once"));
+            //handle Android system dialog on browser entry
+            el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.AndroidSystemAlertElementDict, "browserAccept", driver, true);
             if (el != null) {
                 el.click();
-                System.out.println("TEST STEP: Android Browser - confirm");
+                System.out.println("TEST STEP: Android Browser - confirm Android dialog");
             }
             Thread.sleep(3000);
 
