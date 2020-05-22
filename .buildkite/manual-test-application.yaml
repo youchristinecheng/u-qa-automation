@@ -1,18 +1,24 @@
 steps:
   - block: "Testing Parameters"
     fields:
-      - select: "platform"
+      - select: "test profile"
         key: "PLATFORM"
         options:
-          - label: "ios"
-            value: "IOS"
-          - label: "android"
-            value: "ANDROID"
+          - label: "iOS - SG - Regression"
+            value: "ios_sg_regression_single"
+          - label: "iOS - SG - Regression(Multi-Devices)"
+            value: "ios_sg_regression_parallel"
+          - label: "ANDROID - SG Regression"
+            value: "android_sg_regression_single"
+          - label: "ANDROID - SG Regression(Multi-Devices)"
+            value: "android_sg_regression_parallel"
       - select: "env"
         key: "ENV"
         options:
           - label: "SG - SIT"
             value: "sgsit"
+          - label: "SG - DEV"
+            value: "sgdev"
       - text: "build version"
         key: "BUILDVER"
         default: "latest"
@@ -35,4 +41,4 @@ steps:
             - APPCENTER_TOKEN
             - BUILDKITE_SLACK_TOKEN
     artifact_paths: "./target/surefire-reports/emailable-report.html"
-
+    
