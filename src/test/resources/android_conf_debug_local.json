@@ -6,7 +6,7 @@
   "capabilities": {
     "automationName": "UiAutomator2",
     "platformName": "Android",
-    "app": "/Users/danielchan/IdeaProjects/appautomatedtests/apps/app-sit-release-HEAD-3.5.0.1238-dirty.apk"
+    "app": "/Users/danielchan/IdeaProjects/u-qa-automation/apps/app-stub-release-HEAD-3.6.1.1198.apk"
   },
 
   "device": {
