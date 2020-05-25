@@ -22,6 +22,8 @@ public class YouAPI {
     private String ypEndPoint;
     private String backDoorAuthUserName;
     private String backDoorAuthPwd;
+    private String apiEndPoint;
+    private String kbankMockPoint;
     private Market currenMarkettValue;
     private String productId;
     private boolean isDevEnv;
@@ -45,6 +47,7 @@ public class YouAPI {
 
     public void setYPEndPoint(String value){ this.ypEndPoint = value; }
     public void setDataBackDoorEndPoint(String value){ this.dataBackDoorEndPoint = value; }
+    public void setApiEndPoint(String value) {this.apiEndPoint = value;}
     public void setMarket(Market value){ this.currenMarkettValue = value; }
     public void setIsDevEnv(boolean value) {this.isDevEnv = value; }
 
@@ -54,6 +57,9 @@ public class YouAPI {
         this.backDoorEndPoint = "https://uoy.backdoor.sg.sit.you.co";
         this.ypEndPoint = "http://yp.external.sg.sit.you.co";
         this.dataBackDoorEndPoint = "http://qa-auto-support.backdoor.sg.sit.you.co";
+        this.apiEndPoint = "http://api.dev.you.co/v2";
+        this.kbankMockPoint = "https://u-kbank-mock-server.internal.dev.you.co";
+
         backDoorAuthUserName = "qa";
         backDoorAuthPwd = "youtrip1@3";
         Unirest.config().verifySsl(false);
@@ -134,6 +140,114 @@ public class YouAPI {
         this.data_createTestCard(card_data);
 
         return card_data;
+    }
+
+    /*
+     * ###### Frontend API call Hacks######
+     */
+    public HashMap<String, String> hack_genUserMetaData(String mprefix, String phoneNumber){
+        HashMap<String, String> result = new HashMap<>();
+
+
+        String req_uri = (this.apiEndPoint + "/public/device");
+        HttpResponse<JsonNode> response = Unirest.post(req_uri)
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "register-device-" + util.getTimestamp())
+                .body("{\"device_id\": \"44vic4-20022716280914\"," +
+                        "\"device_name\": \"Samsung Note 9\"," +
+                        "\"platform\": \"Android\"," +
+                        "\"os_ver\": \"7.1.1\"," +
+                        "\"app_id\": \"YouTrip\"," +
+                        "\"app_ver\": \"1.2.7\"," +
+                        "\"language\": \"en-TH\"," +
+                        "\"timezone\": \"Asia/Hong_Kong\"}").asJson();
+
+        JSONObject responseJson = response.getBody().getObject();
+        String oauth_key = responseJson.getString("oauth_client_key");
+        String oauth_passpwd = responseJson.getString("oauth_client_secret");
+
+        req_uri = (this.apiEndPoint + "/device/otp");
+        response = Unirest.post(req_uri)
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "request-otp-" + util.getTimestamp())
+                .basicAuth(oauth_key, oauth_passpwd)
+                .body("{\"mcc\": \"" + mprefix + "\"," +
+                        "\"phone_number\": \"" + phoneNumber + "\"," +
+                        "\"language\": \"en-US\"}").asJson();
+
+        responseJson = response.getBody().getObject();
+        String otp_key = responseJson.getString("id");
+
+        String otpCode = this.getOTP(mprefix, phoneNumber);
+        req_uri = (this.apiEndPoint + "/device/otp/" + otp_key);
+        response = Unirest.post(req_uri)
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "verify-otp-" + util.getTimestamp())
+                .basicAuth(oauth_key, oauth_passpwd)
+                .body("{\"password\": \"" + otpCode + "\"," +
+                        "\"mcc\": \"" + mprefix + "\"," +
+                        "\"phone_number\": \"" + phoneNumber + "\"}").asJson();
+        responseJson = response.getBody().getObject();
+        String access_token = responseJson.getString("access_token");
+        String refresh_token = responseJson.getString("refresh_token");
+        result.put("access_token", access_token);
+        result.put("refresh_token", refresh_token);
+
+        req_uri = (this.apiEndPoint + "/me");
+        response = Unirest.get(req_uri)
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "get-user-" + util.getTimestamp())
+                .header("Authorization", "Bearer " + access_token).asJson();
+        responseJson = response.getBody().getObject();
+        String user_id = responseJson.getString("id");
+        result.put("user_id", user_id);
+
+        return result;
+    }
+
+    public void hack_thSubmitAndPassKYC(boolean isPCCard, String thaiIdNumber, String youId, String mprefix, String phoneNumber, String email){
+        HashMap<String, String> userMetaMap = this.hack_genUserMetaData(mprefix, phoneNumber);
+        String accessToken = userMetaMap.get("access_token");
+
+        String bodyStr = "";
+        if(isPCCard){
+            bodyStr = "{\n" +
+                    "  \"id_num\": \"" + thaiIdNumber + "\"\n" +
+                    "}";
+        }else{
+            bodyStr = "{\n" +
+                    "\t\"you_id\": \"" + youId + "\",\n" +
+                    "\t\"id_num\": \"" + thaiIdNumber + "\"\n" +
+                    "}";
+        }
+
+        System.out.println("TEST STEP: Mocking creating KYC");
+        HttpResponse<JsonNode>  response = Unirest.post(this.apiEndPoint + "/me/kyc/" + this.productId)
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "th-kyc-" + util.getTimestamp())
+                .header("Authorization", "Bearer " + accessToken)
+                .body(bodyStr).asJson();
+
+        assertEquals(200, response.getStatus());
+        JSONObject responseJson = response.getBody().getObject();
+
+        String tokenUri = responseJson.getJSONObject("deeplink").getString("uri");
+        int idx = tokenUri.indexOf("=");
+        String tokenId = tokenUri.substring(idx + 1);
+
+        System.out.println("TEST STEP: Mocking approving KYC");
+        response = Unirest.post(kbankMockPoint + "/authentication")
+                .header("Content-Type", "application/json")
+                .header("x-you-request-id", "th-kyc-" + util.getTimestamp())
+                .body("{\n" +
+                        "\t\"email\": " + email + ",\n" +
+                        "\t\"token_id\": " + tokenId + ",\n" +
+                        "\t\"status\": \"10\"\n" +
+                        "}").asJson();
+
+        assertEquals(200, response.getStatus());
+
+        System.out.println("debug");
     }
 
     /*

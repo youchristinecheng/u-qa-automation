@@ -95,7 +95,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         Date dateOfBirth = c.getTime();
         SimpleDateFormat dateOfBirthFormatter = new SimpleDateFormat("ddMMYYYY");
 
-        if (!isAppReset) {
+        if (isAppReset) {
             testAccountData = new TestAccountData();
             SimpleDateFormat formatter = new SimpleDateFormat("YYMMDDHHmmssSS");
             System.out.println(formatter.format(date));

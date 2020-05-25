@@ -17,6 +17,7 @@ public class YouTripIosUIElementKey {
 
     public enum PageKey{
         DevAlertElementDict,
+        AppStoreLocationAccessAlertPopUpElementDict,
         CountryPageElementDict,
         CountrySelectionElementDict,
         GetStartedPageElementDict,
@@ -43,6 +44,7 @@ public class YouTripIosUIElementKey {
         NotificationAlertElementDict,
         LimitedHomePageElementDict,
         EnterYNumberPageElementDict,
+        KYCKPLUSAuthenticationPageElementDict,
         ActivateCardConfirmEmailPageElementDict,
         APPPinCodePageElementDict,
         HomePageElementDict,
@@ -56,6 +58,7 @@ public class YouTripIosUIElementKey {
     }
 
     private HashMap<String, UIElementData> DevAlertElementDict;
+    private HashMap<String, UIElementData> AppStoreLocationAccessAlertPopUpElementDict;
     private HashMap<String, UIElementData> CountryPageElementDict;
     private HashMap<String, UIElementData> CountrySelectionElementDict;
     private HashMap<String, UIElementData> GetStartedPageElementDict;
@@ -82,6 +85,7 @@ public class YouTripIosUIElementKey {
     private HashMap<String, UIElementData> NotificationAlertElementDict;
     private HashMap<String, UIElementData> LimitedHomePageElementDict;
     private HashMap<String, UIElementData> EnterYNumberPageElementDict;
+    private HashMap<String, UIElementData> KYCKPLUSAuthenticationPageElementDict;
     private HashMap<String, UIElementData> ActivateCardConfirmEmailPageElementDict;
     private HashMap<String, UIElementData> APPPinCodePageElementDict;
     private HashMap<String, UIElementData> HomePageElementDict;
@@ -97,6 +101,7 @@ public class YouTripIosUIElementKey {
     public YouTripIosUIElementKey(){
 
         this.DevAlertElementDict = new HashMap<>();
+        this.AppStoreLocationAccessAlertPopUpElementDict = new HashMap<>();
         this.CameraAccessAlertElementDict = new HashMap<>();
         this.CountryPageElementDict = new HashMap<>();
         this.CountrySelectionElementDict = new HashMap<>();
@@ -123,6 +128,7 @@ public class YouTripIosUIElementKey {
         this.NotificationAlertElementDict =  new HashMap<>();
         this.LimitedHomePageElementDict = new HashMap<>();
         this.EnterYNumberPageElementDict = new HashMap<>();
+        this.KYCKPLUSAuthenticationPageElementDict = new HashMap<>();
         this.ActivateCardConfirmEmailPageElementDict =  new HashMap<>();
         this.APPPinCodePageElementDict = new HashMap<>();
         this.HomePageElementDict = new HashMap<>();
@@ -145,6 +151,10 @@ public class YouTripIosUIElementKey {
         this.DevAlertElementDict.put("Download logs", new UIElementData("//XCUIElementTypeButton[@name=\"Download logs\"]", FindMethod.XPATH));
         this.DevAlertElementDict.put("Continue", new UIElementData("//XCUIElementTypeButton[@name=\"Continue\"]", FindMethod.XPATH));
         this.Container.put(PageKey.DevAlertElementDict.ordinal(), this.DevAlertElementDict);
+
+        this.AppStoreLocationAccessAlertPopUpElementDict.put("Allow", new UIElementData("//XCUIElementTypeButton[@name=\"Allow\"", FindMethod.XPATH));
+        this.AppStoreLocationAccessAlertPopUpElementDict.put("Don't Allow", new UIElementData("//XCUIElementTypeButton[@name=\"Don't Allow\"", FindMethod.XPATH));
+        this.Container.put(PageKey.AppStoreLocationAccessAlertPopUpElementDict.ordinal(), this.AppStoreLocationAccessAlertPopUpElementDict);
 
         this.CountryPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
         this.CountryPageElementDict.put("optionCountry", new UIElementData("optionCountry", FindMethod.ACCESSIBILITYID));
@@ -187,6 +197,9 @@ public class YouTripIosUIElementKey {
         this.WelcomePageElementDict.put("lblWelcome", new UIElementData("lblWelcome", FindMethod.ACCESSIBILITYID));
         this.WelcomePageElementDict.put("btnPCRegister", new UIElementData("btnOrderPC", FindMethod.ACCESSIBILITYID));
         this.WelcomePageElementDict.put("btnNPCRegister", new UIElementData("btnActiveNow", FindMethod.ACCESSIBILITYID));
+        // Thailand Page elements
+        this.WelcomePageElementDict.put("btnOrderPC", new UIElementData("btnOrderPC", FindMethod.ACCESSIBILITYID));
+        this.WelcomePageElementDict.put("btnActiveNow", new UIElementData("btnActiveNow", FindMethod.ACCESSIBILITYID));
         // Menu Button and its sub-menu item ONLY retrieve by ID ["icMenu"] and corresponding sub-menu ID due to dynamic rendering
         this.Container.put(PageKey.WelcomePageElementDict.ordinal(), this.WelcomePageElementDict);
 
@@ -262,6 +275,8 @@ public class YouTripIosUIElementKey {
         this.PersonalInformationElementDict.put("btnMale", new UIElementData("btnMale" , FindMethod.ACCESSIBILITYID));
         this.PersonalInformationElementDict.put("btnFemale", new UIElementData("btnFemale" , FindMethod.ACCESSIBILITYID));
         this.PersonalInformationElementDict.put("btnNext", new UIElementData("btnNext", FindMethod.ACCESSIBILITYID));
+        // TH Page Elements
+        this.PersonalInformationElementDict.put("txtIdNumber", new UIElementData("txtIdNumber" , FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.PersonalInformationElementDict.ordinal(), this.PersonalInformationElementDict);
 
         this.KYCNationalityElementDict.put("btnClose", new UIElementData("btnClose", FindMethod.ACCESSIBILITYID));
@@ -309,6 +324,11 @@ public class YouTripIosUIElementKey {
         this.EnterYNumberPageElementDict.put("txtYouIdDigit9", new UIElementData("txtYouIdDigit9", FindMethod.ACCESSIBILITYID));
         this.EnterYNumberPageElementDict.put("txtYouIdDigit10", new UIElementData("txtYouIdDigit10", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.EnterYNumberPageElementDict.ordinal(), this.EnterYNumberPageElementDict);
+
+        this.KYCKPLUSAuthenticationPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
+        this.KYCKPLUSAuthenticationPageElementDict.put("btnOpenKPlus", new UIElementData("btnOpenKPlus", FindMethod.ACCESSIBILITYID));
+        this.KYCKPLUSAuthenticationPageElementDict.put("btnNoKPlus", new UIElementData("btnNoKPlus", FindMethod.ACCESSIBILITYID));
+        this.Container.put(PageKey.KYCKPLUSAuthenticationPageElementDict.ordinal(), this.KYCKPLUSAuthenticationPageElementDict);
 
         this.ActivateCardConfirmEmailPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
         this.ActivateCardConfirmEmailPageElementDict.put("txtEmail", new UIElementData("txtEmail", FindMethod.ACCESSIBILITYID));

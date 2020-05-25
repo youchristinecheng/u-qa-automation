@@ -35,6 +35,45 @@ public class Utils {
     return formatter.format(date);
     }
 
+    public String getThaiID(){
+        try {
+            Pattern r = Pattern.compile("[A-Za-z]");
+
+            int randomNum = 1000000 + rand.nextInt(9999999);
+            String password = randomNum + getTimestamp();
+
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(password.getBytes());
+            byte[] digest = md.digest();
+            String myHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
+            System.out.println("myHash: " + myHash);
+
+            String thaiIdNum = myHash.substring(0, 12).toUpperCase();
+            System.out.println("Candidate: " + thaiIdNum);
+            Matcher m = r.matcher(thaiIdNum);
+            while (m.find()) {
+                String found = m.group();
+                int modDigit = ((int) ((char) found.charAt(0))) % 65;
+                if (m.start() == 0) {
+                    thaiIdNum = Integer.toString(modDigit) + thaiIdNum.substring(1);
+                } else {
+                    thaiIdNum = thaiIdNum.substring(0, m.start()) + Integer.toString(modDigit) + thaiIdNum.substring(m.end());
+                }
+            }
+
+            int checksum = 0;
+            for (int i =0; i < thaiIdNum.length();i++){
+                int d = Character.getNumericValue(thaiIdNum.charAt(i));
+                checksum += (d * (13 - i));
+            }
+            thaiIdNum += (11 - checksum % 11) % 10;
+
+            return thaiIdNum;
+        }catch(NoSuchAlgorithmException nsae){
+            return null;
+        }
+    }
+
     public String getNRIC() {
         try {
             Pattern r = Pattern.compile("[A-Za-z]");

@@ -616,4 +616,74 @@ public class YoutripIosSubRoutine {
         testAccountData.Card.UnderUse = false;
         this.api.data_updateTestUser(testAccountData);
     }
+
+    public void proc_TH_OTPLogin(String mprefix, String mnumber) throws Exception{
+        IOSElement el;
+
+        System.out.println("TEST STEP: Get Started Page - on page");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.GetStartedPageElementDict, "btnGetStarted", driver);
+        el.click();
+
+        System.out.println("TEST STEP: Mobile Number Page - on page");
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.MobileNumberPageElementDict, "lblTitle", driver), "Enter Mobile Number"));
+
+        System.out.println("TEST DATA: Mobile Number is " + mprefix + " " + mnumber);
+        System.out.println("TEST STEP: Mobile Number Page - inputted mobile number prefix");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.MobileNumberPageElementDict, "txtPrefix", driver);
+        el.click();
+        this.clearTextFieldValueForiOS12(el, 2);
+        // Enter the test data value
+        el.sendKeys(mprefix);
+
+        System.out.println("TEST STEP: Mobile Number Page - inputted mobile number");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.MobileNumberPageElementDict, "txtPhoneNumber", driver);
+        el.click();
+        el.sendKeys(mnumber);
+        System.out.println("TEST STEP: Mobile Number Page - clicked Next button");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.MobileNumberPageElementDict, "btnNext", driver);
+        el.click();
+        Thread.sleep(2000);
+
+        System.out.println("TEST STEP: OTP Page - on page");
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.OTPPageElementDict, "lblTitle", driver), "Enter Code from SMS"));
+        // Get OTP from backdoor and input otp
+        String otpCode = api.getOTP(mprefix, mnumber);
+        Thread.sleep(10000);
+
+        // Make use of app text field focus shifting functionality
+        System.out.println("TEST STEP: OTP Page - entered OTP");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.OTPPageElementDict, "OTPDigit1", driver);
+        el.sendKeys(otpCode);
+        System.out.println("TEST STEP: OTP Page - Send OTP");
+
+        Thread.sleep(2000);
+    }
+
+    public void procTH_SubmitKYC(int deviceOSVersion, boolean isPCCardFlow, String thaiIdNumber, String youId) throws Exception {
+        IOSElement el;
+        if(!isPCCardFlow) {
+            System.out.println("TEST STEP: NPC Registration - Enter Y-Number");
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EnterYNumberPageElementDict, "lblTitle", driver), "Enter Y-Number"));
+            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EnterYNumberPageElementDict, "txtYouIdDigit1", driver);
+            el.sendKeys(youId.substring(2));
+            Thread.sleep(2000);
+        }
+
+        System.out.println("TEST STEP: KYC Process - Enter Thai ID");
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "lblTitle", driver), "Enter ID Number"));
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "txtIdNumber", driver);
+        el.sendKeys(thaiIdNumber);
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "btnNext", driver);
+        el.click();
+        Thread.sleep(3000);
+
+        System.out.println("TEST STEP: KYC Process - Authentication From KPlus");
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCKPLUSAuthenticationPageElementDict, "lblTitle", driver), "Register with K PLUS"));
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCKPLUSAuthenticationPageElementDict, "btnNoKPlus", driver);
+        assertEquals(el.getText(), "Do not have K PLUS?");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCKPLUSAuthenticationPageElementDict, "btnOpenKPlus", driver);
+        assertEquals(el.getText(), "Register with K PLUS");
+        el.click();
+        Thread.sleep(2000);
+    }
 }
