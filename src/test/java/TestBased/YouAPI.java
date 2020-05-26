@@ -190,6 +190,8 @@ public class YouAPI {
         responseJson = response.getBody().getObject();
         String access_token = responseJson.getString("access_token");
         String refresh_token = responseJson.getString("refresh_token");
+        System.out.println("access_token:" + access_token);
+        System.out.println("refresh_token:" + refresh_token);
         result.put("access_token", access_token);
         result.put("refresh_token", refresh_token);
 
@@ -206,48 +208,50 @@ public class YouAPI {
     }
 
     public void hack_thSubmitAndPassKYC(boolean isPCCard, String thaiIdNumber, String youId, String mprefix, String phoneNumber, String email){
-        HashMap<String, String> userMetaMap = this.hack_genUserMetaData(mprefix, phoneNumber);
-        String accessToken = userMetaMap.get("access_token");
+        try {
+            HashMap<String, String> userMetaMap = this.hack_genUserMetaData(mprefix, phoneNumber);
+            String accessToken = userMetaMap.get("access_token");
 
-        String bodyStr = "";
-        if(isPCCard){
-            bodyStr = "{\n" +
-                    "  \"id_num\": \"" + thaiIdNumber + "\"\n" +
-                    "}";
-        }else{
-            bodyStr = "{\n" +
-                    "\t\"you_id\": \"" + youId + "\",\n" +
-                    "\t\"id_num\": \"" + thaiIdNumber + "\"\n" +
-                    "}";
+            String bodyStr = "";
+            if (isPCCard) {
+                bodyStr = "{\n" +
+                        "  \"id_num\": \"" + thaiIdNumber + "\"\n" +
+                        "}";
+            } else {
+                bodyStr = "{\n" +
+                        "\t\"you_id\": \"" + youId + "\",\n" +
+                        "\t\"id_num\": \"" + thaiIdNumber + "\"\n" +
+                        "}";
+            }
+
+            System.out.println("TEST STEP: Mocking creating KYC");
+            HttpResponse<JsonNode> response = Unirest.post(this.apiEndPoint + "/me/kyc/" + this.productId)
+                    .header("Content-Type", "application/json")
+                    .header("x-request-id", "th-kyc-" + util.getTimestamp())
+                    .header("Authorization", "Bearer " + accessToken)
+                    .body(bodyStr).asJson();
+
+            assertEquals(200, response.getStatus());
+            JSONObject responseJson = response.getBody().getObject();
+
+            String tokenUri = responseJson.getJSONObject("deeplink").getString("uri");
+            int idx = tokenUri.indexOf("=");
+            String tokenId = tokenUri.substring(idx + 1);
+            System.out.println(tokenId);
+            Thread.sleep(1000);
+
+            System.out.println("TEST STEP: Mocking approving KYC");
+            response = Unirest.post(this.kbankMockPoint + "/authentication")
+                    .header("Content-Type", "application/json")
+                    .body("{\n" +
+                            "\t\"token_id\": \"" + tokenId + "\",\n" +
+                            "\t\"status\": \"10\"\n" +
+                            "}").asJson();
+
+            assertEquals(200, response.getStatus());
+        }catch(Exception e){
+            return;
         }
-
-        System.out.println("TEST STEP: Mocking creating KYC");
-        HttpResponse<JsonNode>  response = Unirest.post(this.apiEndPoint + "/me/kyc/" + this.productId)
-                .header("Content-Type", "application/json")
-                .header("x-request-id", "th-kyc-" + util.getTimestamp())
-                .header("Authorization", "Bearer " + accessToken)
-                .body(bodyStr).asJson();
-
-        assertEquals(200, response.getStatus());
-        JSONObject responseJson = response.getBody().getObject();
-
-        String tokenUri = responseJson.getJSONObject("deeplink").getString("uri");
-        int idx = tokenUri.indexOf("=");
-        String tokenId = tokenUri.substring(idx + 1);
-
-        System.out.println("TEST STEP: Mocking approving KYC");
-        response = Unirest.post(kbankMockPoint + "/authentication")
-                .header("Content-Type", "application/json")
-                .header("x-you-request-id", "th-kyc-" + util.getTimestamp())
-                .body("{\n" +
-                        "\t\"email\": " + email + ",\n" +
-                        "\t\"token_id\": " + tokenId + ",\n" +
-                        "\t\"status\": \"10\"\n" +
-                        "}").asJson();
-
-        assertEquals(200, response.getStatus());
-
-        System.out.println("debug");
     }
 
     /*

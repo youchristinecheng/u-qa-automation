@@ -4,6 +4,7 @@ import TestBased.TestAccountData.CardType;
 import TestBased.TestAccountData.KYCStatus;
 import TestBased.TestAccountData.Market;
 import TestBased.TestCardData;
+import TestBased.UIElementData;
 import TestBased.YouTripIosUIElementKey.PageKey;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.JavascriptExecutor;
@@ -125,6 +126,39 @@ public class youtrip_ios_th_regressionTest extends ios_browserstackTest {
             }
 
             subProc.api.hack_thSubmitAndPassKYC(true, testAccountData.NricNumber, "", testAccountData.MCC, testAccountData.PhoneNumber,  testAccountData.Email);
+
+            // Switch back to YouTrip App
+            System.out.println("TEST STEP: Switch back to YouTrip App from DeepLink");
+            Map<String, Object> params = new HashMap<>();
+            params.put("bundleId", "co.you.youapp");
+            driver.executeScript("mobile: launchApp", params);
+            Thread.sleep(5000);
+
+            System.out.println("TEST STEP: Close Page to lookup cache clearing");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.KYCKPLUSAuthenticationPageElementDict, "icClose", driver);
+            el.click();
+            Thread.sleep(2000);
+            System.out.println("TEST STEP: Close Page to cached limited home page");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.KYCKPLUSAuthenticationPageElementDict, "icClose", driver);
+            el.click();
+            Thread.sleep(2000);
+            System.out.println("TEST STEP: Try on Logout and re-login");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "btnMenu", driver);
+            el.click();
+            Thread.sleep(2000);
+
+            //driver.findElementByAccessibilityId("menuBtnSetting").click();
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "menuBtnSetting", driver);
+            el.click();
+            Thread.sleep(2000);
+            //driver.findElementByAccessibilityId("Log Out");
+            el = (IOSElement) UIElementKeyDict.getElement(PageKey.SettingPageElementDict, "limitedHomeBtnLogout", driver);
+            el.click();
+            Thread.sleep(2000);
+
+            subProc.procSelectCountry(Market.Thailand);
+            subProc.proc_TH_OTPLogin(testAccountData.MCC, testAccountData.PhoneNumber);
+            Thread.sleep(2000);
 
             System.out.println("TEST STEP: Verify Back to Limited Home Page");
             el = (IOSElement)UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);

@@ -201,6 +201,8 @@ public class YouTripIosUIElementKey {
         this.WelcomePageElementDict.put("btnOrderPC", new UIElementData("btnOrderPC", FindMethod.ACCESSIBILITYID));
         this.WelcomePageElementDict.put("btnActiveNow", new UIElementData("btnActiveNow", FindMethod.ACCESSIBILITYID));
         // Menu Button and its sub-menu item ONLY retrieve by ID ["icMenu"] and corresponding sub-menu ID due to dynamic rendering
+        this.WelcomePageElementDict.put("btnMenu", new UIElementData("icMenu", FindMethod.ACCESSIBILITYID));
+        this.WelcomePageElementDict.put("menuBtnSetting", new UIElementData("btnSetting", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.WelcomePageElementDict.ordinal(), this.WelcomePageElementDict);
 
         this.IdentityVerificationElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
@@ -325,6 +327,7 @@ public class YouTripIosUIElementKey {
         this.EnterYNumberPageElementDict.put("txtYouIdDigit10", new UIElementData("txtYouIdDigit10", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.EnterYNumberPageElementDict.ordinal(), this.EnterYNumberPageElementDict);
 
+        this.KYCKPLUSAuthenticationPageElementDict.put("icClose", new UIElementData("icClose", FindMethod.ACCESSIBILITYID));
         this.KYCKPLUSAuthenticationPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
         this.KYCKPLUSAuthenticationPageElementDict.put("btnOpenKPlus", new UIElementData("btnOpenKPlus", FindMethod.ACCESSIBILITYID));
         this.KYCKPLUSAuthenticationPageElementDict.put("btnNoKPlus", new UIElementData("btnNoKPlus", FindMethod.ACCESSIBILITYID));
@@ -374,6 +377,7 @@ public class YouTripIosUIElementKey {
         this.SettingPageElementDict.put("btnExplorerMode", new UIElementData("Explorer Mode", FindMethod.ACCESSIBILITYID));
         this.SettingPageElementDict.put("btnChangePIN", new UIElementData("Change PIN", FindMethod.ACCESSIBILITYID));
         this.SettingPageElementDict.put("btnLogout", new UIElementData("btnLogout", FindMethod.ACCESSIBILITYID));
+        this.SettingPageElementDict.put("limitedHomeBtnLogout", new UIElementData("Log Out", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.SettingPageElementDict.ordinal(), this.SettingPageElementDict);
 
         this.TopUpPageElementDict.put("btnClose", new UIElementData("icClose", FindMethod.ACCESSIBILITYID));
