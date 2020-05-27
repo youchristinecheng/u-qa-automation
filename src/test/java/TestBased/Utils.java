@@ -34,7 +34,18 @@ public class Utils {
     Date date = new Date(System.currentTimeMillis());
     return formatter.format(date);
     }
-
+    //provide timestamp for unique Tlogid
+    public String getTimestampTillss() {
+        SimpleDateFormat formatter = new SimpleDateFormat("YYMMDDHHmmss");
+        Date date = new Date(System.currentTimeMillis());
+        return formatter.format(date);
+    }
+    //provide timestamp in format for local transaction time in TE file
+    public String getTimestampWithoutDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("HHmmss");
+        Date date = new Date(System.currentTimeMillis());
+        return formatter.format(date);
+    }
     public String getNRIC() {
         try {
             Pattern r = Pattern.compile("[A-Za-z]");
