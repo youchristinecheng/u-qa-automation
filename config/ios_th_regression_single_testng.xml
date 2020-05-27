@@ -13,10 +13,10 @@
     <test name="iOS Regression">
         <parameter name="config" value="ios_conf.json"/>
         <parameter name="device" value="iphone_xs"/>
-        <parameter name="env" value="thdev"/>
+       <!-- <parameter name="env" value="thdev"/>
         <parameter name="build" value="dev_env_test_build"></parameter>
-<!--        <parameter name="app" value="bs://7b0ddc7c170dce91e0e0cb28bfce65f9d53ca3ff"></parameter>-->
-        <parameter name="app" value="bs://501877a8e0fbb594c7f80c7fe59976c60b7ca967"></parameter>
+&lt;!&ndash;        <parameter name="app" value="bs://7b0ddc7c170dce91e0e0cb28bfce65f9d53ca3ff"></parameter>&ndash;&gt;
+        <parameter name="app" value="bs://501877a8e0fbb594c7f80c7fe59976c60b7ca967"></parameter>-->
         <classes>
             <class name="youtrip_ios_th_regressionTest">
                 <methods>
