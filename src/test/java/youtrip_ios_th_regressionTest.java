@@ -229,28 +229,7 @@ public class youtrip_ios_th_regressionTest extends ios_browserstackTest {
             System.out.println(deepLinkURL);
 
             // Hacking code for switch to safari and opend deeplink
-            driver.executeScript("mobile: terminateApp", ImmutableMap.of("bundleId", "com.apple.mobilesafari"));
-            List args = new ArrayList();
-            args.add("-u");
-            args.add(deepLinkURL);
-
-            // Need to have wait time for app launch
-            System.out.println("TEST STEP: Launch Safari App for apply DeepLink");
-            Map<String, Object> params = new HashMap<>();
-            params.put("bundleId", "com.apple.mobilesafari");
-            params.put("arguments", args);
-            driver.executeScript("mobile: launchApp", params);
-            Thread.sleep(7000);
-
-            driver.findElementByAccessibilityId("Open").click();
-            Thread.sleep(2000);
-
-            System.out.println("TEST STEP: Switch back to YouTrip App from DeepLink");
-            args.clear();
-            params.clear();
-            params.put("bundleId", "co.you.youapp");
-            driver.executeScript("mobile: launchApp", params);
-            Thread.sleep(5000);
+            subProc.procActivateDeepLinkFromSafari(deepLinkURL);
 
             assertEquals(UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "lblTHStepsTitle", driver).getText(), "Set App PIN and Card PIN");
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "btnTHSteps1", driver);
@@ -273,7 +252,7 @@ public class youtrip_ios_th_regressionTest extends ios_browserstackTest {
             Thread.sleep(5000);
 
             //TODO: Verification of Home Page redirection is skipped due to homepage replacement
-            //subProc.procVerifyInHomePage();
+            subProc.procVerifyInHomePage();
 
             testAccountData.Card.Status = TestAccountData.CardStatus.NewActive;
             testAccountData.UnderUse = false;

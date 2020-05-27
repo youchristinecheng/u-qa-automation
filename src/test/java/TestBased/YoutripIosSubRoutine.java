@@ -1,5 +1,6 @@
 package TestBased;
 
+import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.WebElement;
@@ -7,6 +8,11 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import TestBased.TestAccountData.Market;
 import org.testng.Assert;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 
@@ -44,6 +50,34 @@ public class YoutripIosSubRoutine {
         }catch(Exception e){
             throw e;
         }
+    }
+
+    public void procActivateDeepLinkFromSafari(String deepLinkURL) throws InterruptedException {
+        // Hacking code for switch to safari and opend deeplink
+        driver.executeScript("mobile: terminateApp", ImmutableMap.of("bundleId", "com.apple.mobilesafari"));
+        List args = new ArrayList();
+        args.add("-u");
+        args.add(deepLinkURL);
+
+        System.out.println("TEST STEP: Launch Safari App for apply DeepLink");
+        Map<String, Object> params = new HashMap<>();
+        params.put("bundleId", "com.apple.mobilesafari");
+        params.put("arguments", args);
+        driver.executeScript("mobile: launchApp", params);
+        Thread.sleep(7000);
+
+        driver.findElementByAccessibilityId("Open").click();
+        Thread.sleep(2000);
+
+        System.out.println("TEST STEP: Switch back to YouTrip App from DeepLink");
+        args.clear();
+        params.clear();
+        params.put("bundleId", "co.you.youapp");
+        driver.executeScript("mobile: launchApp", params);
+        Thread.sleep(5000);
+
+        driver.executeScript("mobile: terminateApp", ImmutableMap.of("bundleId", "com.apple.mobilesafari"));
+        Thread.sleep(1000);
     }
 
     public void procSelectCountry() throws Exception{

@@ -444,30 +444,9 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             System.out.println(deepLinkURL);
 
             // Hacking code for switch to safari and opend deeplink
-            driver.executeScript("mobile: terminateApp", ImmutableMap.of("bundleId", "com.apple.mobilesafari"));
-            List args = new ArrayList();
-            args.add("-u");
-            args.add(deepLinkURL);
+            subProc.procActivateDeepLinkFromSafari(deepLinkURL);
 
-            // Need to have wait time for app launch
-            System.out.println("TEST STEP: Launch Safari App for apply DeepLink");
-            Map<String, Object> params = new HashMap<>();
-            params.put("bundleId", "com.apple.mobilesafari");
-            params.put("arguments", args);
-            driver.executeScript("mobile: launchApp", params);
-            Thread.sleep(7000);
-
-            driver.findElementByAccessibilityId("Open").click();
-            Thread.sleep(2000);
-
-            System.out.println("TEST STEP: Switch back to YouTrip App from DeepLink");
-            args.clear();
-            params.clear();
-            params.put("bundleId", "co.you.youapp");
-            driver.executeScript("mobile: launchApp", params);
-            Thread.sleep(5000);
             // Create a Pin
-
             assertEquals(UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "lblActiveCardCreatePinTitle", driver).getText(), "Create a PIN");
             subProc.procEnterAPPPinCode(this.defaultAPPPinCode);
             Thread.sleep(2000);
@@ -860,30 +839,9 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             System.out.println(deepLinkURL);
 
             // Hacking code for switch to safari and opend deeplink
-            driver.executeScript("mobile: terminateApp", ImmutableMap.of("bundleId", "com.apple.mobilesafari"));
-            List args = new ArrayList();
-            args.add("-u");
-            args.add(deepLinkURL);
+            subProc.procActivateDeepLinkFromSafari(deepLinkURL);
 
-            // Need to have wait time for app launch
-            System.out.println("TEST STEP: Launch Safari App for apply DeepLink");
-            Map<String, Object> params = new HashMap<>();
-            params.put("bundleId", "com.apple.mobilesafari");
-            params.put("arguments", args);
-            driver.executeScript("mobile: launchApp", params);
-            Thread.sleep(7000);
-
-            driver.findElementByAccessibilityId("Open").click();
-            Thread.sleep(2000);
-
-            System.out.println("TEST STEP: Switch back to YouTrip App from DeepLink");
-            args.clear();
-            params.clear();
-            params.put("bundleId", "co.you.youapp");
-            driver.executeScript("mobile: launchApp", params);
-            Thread.sleep(5000);
             // Create a Pin
-
             assertEquals(UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "lblActiveCardCreatePinTitle", driver).getText(), "Create a PIN");
             subProc.procEnterAPPPinCode(this.defaultAPPPinCode);
             Thread.sleep(2000);
