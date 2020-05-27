@@ -98,6 +98,7 @@ public class ios_browserstackTest {
         subProc.api.setYPEndPoint(environment.get("youportalEndPoint").toString());
         subProc.api.setDataBackDoorEndPoint(environment.get("databackdoorEndPoint").toString());
         subProc.api.setBackDoorEndPoint(environment.get("backdoorEndPoint").toString(), environment.get("productId").toString(), null, null);
+        subProc.api.setMockUpEndPoint(environment.get("api_endpoint").toString(), environment.get("kbankMockPoint").toString());
         subProc.api.setIsDevEnv(environemntType.equals("dev"));
         fisapi = environemntType.equals("dev") ? null : new YouFISAPI();
 

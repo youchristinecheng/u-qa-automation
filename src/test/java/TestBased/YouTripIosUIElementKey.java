@@ -17,7 +17,6 @@ public class YouTripIosUIElementKey {
 
     public enum PageKey{
         DevAlertElementDict,
-        AppStoreLocationAccessAlertPopUpElementDict,
         CountryPageElementDict,
         CountrySelectionElementDict,
         GetStartedPageElementDict,
@@ -58,7 +57,6 @@ public class YouTripIosUIElementKey {
     }
 
     private HashMap<String, UIElementData> DevAlertElementDict;
-    private HashMap<String, UIElementData> AppStoreLocationAccessAlertPopUpElementDict;
     private HashMap<String, UIElementData> CountryPageElementDict;
     private HashMap<String, UIElementData> CountrySelectionElementDict;
     private HashMap<String, UIElementData> GetStartedPageElementDict;
@@ -101,7 +99,6 @@ public class YouTripIosUIElementKey {
     public YouTripIosUIElementKey(){
 
         this.DevAlertElementDict = new HashMap<>();
-        this.AppStoreLocationAccessAlertPopUpElementDict = new HashMap<>();
         this.CameraAccessAlertElementDict = new HashMap<>();
         this.CountryPageElementDict = new HashMap<>();
         this.CountrySelectionElementDict = new HashMap<>();
@@ -151,10 +148,6 @@ public class YouTripIosUIElementKey {
         this.DevAlertElementDict.put("Download logs", new UIElementData("//XCUIElementTypeButton[@name=\"Download logs\"]", FindMethod.XPATH));
         this.DevAlertElementDict.put("Continue", new UIElementData("//XCUIElementTypeButton[@name=\"Continue\"]", FindMethod.XPATH));
         this.Container.put(PageKey.DevAlertElementDict.ordinal(), this.DevAlertElementDict);
-
-        this.AppStoreLocationAccessAlertPopUpElementDict.put("Allow", new UIElementData("//XCUIElementTypeButton[@name=\"Allow\"", FindMethod.XPATH));
-        this.AppStoreLocationAccessAlertPopUpElementDict.put("Don't Allow", new UIElementData("//XCUIElementTypeButton[@name=\"Don't Allow\"", FindMethod.XPATH));
-        this.Container.put(PageKey.AppStoreLocationAccessAlertPopUpElementDict.ordinal(), this.AppStoreLocationAccessAlertPopUpElementDict);
 
         this.CountryPageElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
         this.CountryPageElementDict.put("optionCountry", new UIElementData("optionCountry", FindMethod.ACCESSIBILITYID));
@@ -356,6 +349,17 @@ public class YouTripIosUIElementKey {
         this.APPPinCodePageElementDict.put("0", new UIElementData("0", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("btnBackSpace", new UIElementData("icDelete", FindMethod.ACCESSIBILITYID));
         this.APPPinCodePageElementDict.put("btnForgot", new UIElementData("Forgot?", FindMethod.ACCESSIBILITYID));
+
+        // TH Page Elements
+        this.APPPinCodePageElementDict.put("lblTHStepsTitle", new UIElementData("Set App PIN and Card PIN", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("btnTHSteps1", new UIElementData("Step 1: Set an App PIN", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("lblTHCreateAppPIN", new UIElementData("Create an App PIN", FindMethod.ACCESSIBILITYID));
+        //Type Again to Confirm
+        this.APPPinCodePageElementDict.put("lblTHConfirmAppPIN", new UIElementData("Type Again to Confirm", FindMethod.ACCESSIBILITYID));
+        //Step 2: Set a Card PIN
+        this.APPPinCodePageElementDict.put("lblTHSteps2", new UIElementData("Step 2: Set a Card PIN", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("btnTHSameCardPin", new UIElementData("Yes, Use the Same Code", FindMethod.ACCESSIBILITYID));
+        this.APPPinCodePageElementDict.put("btnTHDiffCardPin", new UIElementData("No, use another code", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.APPPinCodePageElementDict.ordinal(), this.APPPinCodePageElementDict);
 
         this.HomePageElementDict.put("btnMenu", new UIElementData("btnMenu", FindMethod.ACCESSIBILITYID));

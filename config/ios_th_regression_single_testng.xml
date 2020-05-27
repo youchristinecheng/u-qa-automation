@@ -20,14 +20,14 @@
         <classes>
             <class name="youtrip_ios_th_regressionTest">
                 <methods>
-<!--                    <include name="regTC03_selectTH"/>-->
-<!--                    <include name="regTC05_login_new_user_OTP"/>-->
+                    <include name="regTC03_selectTH"/>
+                    <include name="regTC05_login_new_user_OTP"/>
                     <include name="regTC08_submit_PC_TH"/>
+                    <include name="regTC23_PC_Activate_Card_TH"/>
                     <!--<include name="regTC19_submit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>
-                    <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>
-                    <include name="regTC23_NPC_Activate_Card"/>-->
+                    <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>-->
                 </methods>
             </class>
         </classes>

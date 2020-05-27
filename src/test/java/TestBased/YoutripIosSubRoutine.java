@@ -46,6 +46,10 @@ public class YoutripIosSubRoutine {
         }
     }
 
+    public void procSelectCountry() throws Exception{
+        this.procSelectCountry(this.getCurrentMarket());
+    }
+
     public void procSelectCountry(Market country) throws Exception{
         String expectedResult;
         IOSElement el;
@@ -543,6 +547,10 @@ public class YoutripIosSubRoutine {
         for (char c : appPinCode.toCharArray()) {
             (UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, Character.toString(c), driver)).click();
         }
+    }
+
+    public void procVerifyInHomePage() throws Exception{
+        this.procVerifyInHomePage(this.currentMarket);
     }
 
     public void procVerifyInHomePage(Market market) throws Exception {

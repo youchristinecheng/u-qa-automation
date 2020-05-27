@@ -42,7 +42,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         isRequriedReset = true;
         System.out.println("Test STEP: Start \"regTC04_selectSG\"");
         try {
-            subProc.procSelectCountry(Market.Singapore);
+            subProc.procSelectCountry();
             System.out.println("Test STEP: Finish \"regTC04_selectSG\"");
         } catch (Exception e) {
             System.out.println("Test STEP: Fail \"regTC04_selectSG\"");
@@ -69,7 +69,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         isRequriedReset = false;
 
         try {
-            subProc.procSelectCountry(Market.Singapore);
+            subProc.procSelectCountry();
             subProc.procOTPLogin(mprefix, mnumber, email, true);
 
             System.out.println("TEST STEP: Welcome Page - on page");
@@ -125,7 +125,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
 
         try {
             if(isAppReset) {
-                subProc.procSelectCountry(Market.Singapore);
+                subProc.procSelectCountry();
                 subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, true);
                 Thread.sleep(2000);
             }
@@ -259,7 +259,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             if(isAppReset) {
-                subProc.procSelectCountry(Market.Singapore);
+                subProc.procSelectCountry();
                 subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
                 // Transition wait after OTP-login to Limited Home page
@@ -338,7 +338,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             if(isAppReset) {
-                subProc.procSelectCountry(Market.Singapore);
+                subProc.procSelectCountry();
                 subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
                 // Transition wait after OTP-login to Limited Home page
@@ -408,7 +408,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             if(isAppReset) {
-                subProc.procSelectCountry(subProc.getCurrentMarket());
+                subProc.procSelectCountry();
                 subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
                 // Transition wait after OTP-login to Limited Home page
@@ -484,9 +484,9 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             testAccountData.UnderUse = false;
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
-            System.out.println("Test STEP: Finish \"regTC23_NPC_Activate_Card\"");
+            System.out.println("Test STEP: Finish \"regTC23_PC_Activate_Card\"");
         }catch(Exception e){
-            System.out.println("Test STEP: Fail \"regTC23_NPC_Activate_Card\"");
+            System.out.println("Test STEP: Fail \"regTC23_PC_Activate_Card\"");
             testAccountData.UnderUse = false;
             testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
             testAccountData.Card.UnderUse = false;
@@ -547,7 +547,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             testAccountData.IsExplorerModeOn = false;
             testAccountData.printTestAccountData("NEW GEN");
 
-            subProc.procSelectCountry(Market.Singapore);
+            subProc.procSelectCountry();
             subProc.procOTPLogin(mprefix, mnumber, email,true);
             Thread.sleep(2000);
 
@@ -691,7 +691,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             if(isAppReset) {
-                subProc.procSelectCountry(Market.Singapore);
+                subProc.procSelectCountry();
                 subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
                 // Transition wait after OTP-login to Limited Home page
@@ -773,7 +773,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             if(isAppReset) {
-                subProc.procSelectCountry(Market.Singapore);
+                subProc.procSelectCountry();
                 subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
                 // Transition wait after OTP-login to Limited Home page
@@ -830,7 +830,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             if(isAppReset) {
-                subProc.procSelectCountry(subProc.getCurrentMarket());
+                subProc.procSelectCountry();
                 subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
                 // Transition wait after OTP-login to Limited Home page
