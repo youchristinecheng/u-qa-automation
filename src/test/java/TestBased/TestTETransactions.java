@@ -7,12 +7,12 @@ import java.time.LocalDate;
 import java.util.Properties;
 
 public class TestTETransactions {
-    String timestamp;
+    String timeStamp;
     String timeWithoutDate;
     String date;
     int trxnCount=0;
+    Utils utils = new Utils();
     public void createTETransactionFile(String BU, String TrxnType, String TrxnStatus, String Card, String TrxnAmount, String TrxnCurr, String BillAmount, String BillCurr, String trxnDesc) {
-        Utils utils = new Utils();
         try {
             Properties properties;
             String propertyFilePath = "src/test/resources/Transaction.properties";
@@ -33,7 +33,7 @@ public class TestTETransactions {
             TrxnCurr= String.valueOf(getCurrencyCode(TrxnCurr));
             BillCurr= String.valueOf(getCurrencyCode(BillCurr));
 
-            timestamp = utils.getTimestampTillss();
+            timeStamp = utils.getTimestampTillss();
             timeWithoutDate = utils.getTimestampWithoutDate();
             date = LocalDate.now().toString();
 
@@ -54,11 +54,11 @@ public class TestTETransactions {
             String content = properties.getProperty("Header") + "\n" + contentBody + "\n" + properties.getProperty("Footer");
             content = content.replaceAll("YTG", BU);
             content = content.replaceAll("(FileDate=\")[^&]*(\")", "$1" + date + "$2" +" TotNumTxns=\""+trxnCount+"\"");
-            content = content.replaceAll("(YTGtxnexp)[^&]*(.xml)", "$1" + timestamp + "$2");
+            content = content.replaceAll("(YTGtxnexp)[^&]*(.xml)", "$1" + timeStamp + "$2");
 
-            File destFile = new File("src/test/resources/" + BU + "txnexp" + timestamp + ".xml");
+            File destFile = new File("src/test/resources/" + BU + "txnexp" + timeStamp + ".xml");
             FileUtils.writeStringToFile(destFile, content, "UTF-8");
-            System.out.println("date" + LocalDate.now() + " timestamp=" + timestamp + " timeWithoutDate=" + timeWithoutDate);
+            System.out.println("date" + LocalDate.now() + " timestamp=" + timeStamp + " timeWithoutDate=" + timeWithoutDate);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,8 +72,8 @@ public class TestTETransactions {
         content = content.replaceAll("(<TXNDATE>)[^&]*(</TXNDATE>)", "$1" + date + "$2");
         content = content.replaceAll("(<CTXDATELOCAL>)[^&]*(</CTXDATELOCAL>)", "$1" + date + "$2");
         content = content.replaceAll("(<CARDID>)[^&]*(</CARDID>)", "$1" + Card + "$2");
-        content = content.replaceAll("(<TLOGID>)[^&]*(</TLOGID>)", "$1" + timestamp + "$2");
-        content = content.replaceAll("(<ORGTLOGID>)[^&]*(</ORGTLOGID>)", "$1" + timestamp + "$2");
+        content = content.replaceAll("(<TLOGID>)[^&]*(</TLOGID>)", "$1" + timeStamp + "$2");
+        content = content.replaceAll("(<ORGTLOGID>)[^&]*(</ORGTLOGID>)", "$1" + timeStamp + "$2");
         content = content.replaceAll("(<LOCALTIME>)[^&]*(</LOCALTIME>)", "$1" + timeWithoutDate + "$2");
         content = content.replaceAll("(<TXNTIME>)[^&]*(</TXNTIME>)", "$1" + timeWithoutDate + "$2");
         content = content.replaceAll("(<CTXTIMELOCAL>)[^&]*(</CTXTIMELOCAL>)", "$1" + timeWithoutDate + "$2");
@@ -86,7 +86,7 @@ public class TestTETransactions {
         if(TrxnStatus.equalsIgnoreCase("Reverse"))
             content = content.replaceAll("(<AMTBLK>)[^&]*(</AMTBLK>)", "$1" + "-"+BillAmount + "$2");
         if(TrxnStatus.equalsIgnoreCase("Complete"))
-            content = content.replaceAll("(<TLOGID>)[^&]*(</TLOGID>)", "$1" + timestamp+1 + "$2");
+            content = content.replaceAll("(<TLOGID>)[^&]*(</TLOGID>)", "$1" + timeStamp+1 + "$2");
         if(TrxnType.equalsIgnoreCase("Sales"))
             content = content.replaceAll("(<TXNCODE>)[^&]*(</TXNCODE>)", "$1" + "0" + "$2");
         else if(TrxnType.equalsIgnoreCase("ATM")) {

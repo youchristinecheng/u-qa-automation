@@ -672,6 +672,11 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             fail();
         }
     }
-
+    @Test
+    public void regTC27_TE_Transaction_File(){
+        System.out.println("TEST CASE: Start \"makeTETransactionFile\"");
+        TestTETransactions testTETransaction=new TestTETransactions();
+        testTETransaction.createTETransactionFile("YTG","ATM","Pending","1863782777202414","60.00","SGD","60.00","SGD","SGD Transaction");
+    }
 
 }
