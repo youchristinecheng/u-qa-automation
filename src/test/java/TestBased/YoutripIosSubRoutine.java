@@ -56,14 +56,10 @@ public class YoutripIosSubRoutine {
         // Hacking code for switch to safari and opend deeplink
         driver.executeScript("mobile: terminateApp", ImmutableMap.of("bundleId", "com.apple.mobilesafari"));
         WebElement webEl;
-//        List args = new ArrayList();
-//        args.add("-u");
-//        args.add(deepLinkURL);
 
         System.out.println("TEST STEP: Launch Safari App for apply DeepLink");
         Map<String, Object> params = new HashMap<>();
         params.put("bundleId", "com.apple.mobilesafari");
-//        params.put("arguments", args);
         driver.executeScript("mobile: launchApp", params);
         Thread.sleep(3000);
         // Click on url field
@@ -77,15 +73,11 @@ public class YoutripIosSubRoutine {
         // Go to this url
         driver.findElementByAccessibilityId("Go").click();
         Thread.sleep(2000);
-        // Wait for page to finish loading
-//        waitForDismiss("StopButton");
-
 
         driver.findElementByAccessibilityId("Open").click();
         Thread.sleep(2000);
 
         System.out.println("TEST STEP: Switch back to YouTrip App from DeepLink");
-//        args.clear();
         params.clear();
         params.put("bundleId", "co.you.youapp");
         driver.executeScript("mobile: launchApp", params);
@@ -254,12 +246,10 @@ public class YoutripIosSubRoutine {
             if(isFullRejectFlow) {
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtSurname", driver);
                 el.click();
-                //el.clear();
                 this.clearTextFieldValueForiOS12(el, surname.length());
                 el.sendKeys(newSurname);
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtGivenName", driver);
                 el.click();
-                //el.clear();
                 this.clearTextFieldValueForiOS12(el, givenName.length());
                 el.sendKeys(newGivenName);
                 // by default app will update the NameOnCard as it has been updated
@@ -288,7 +278,6 @@ public class YoutripIosSubRoutine {
         }
         if(isFullRejectFlow) {
             el.click();
-            //el.clear();
             this.clearTextFieldValueForiOS12(el, newSurname.length() + newGivenName.length() + 1);
             el.sendKeys(newNameOnCard);
             //Dismiss keyboard from UI
@@ -309,7 +298,6 @@ public class YoutripIosSubRoutine {
             if(isFullRejectFlow) {
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "txtDateOfBirth", driver);
                 el.click();
-                //el.clear();
                 this.clearTextFieldValueForiOS12(el, dateOfBirth.length());
                 el.sendKeys(newDateOfBirth);
             }
@@ -465,12 +453,10 @@ public class YoutripIosSubRoutine {
             if(isFullRejectFlow) {
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtSurname", driver);
                 el.click();
-                //el.clear();
                 this.clearTextFieldValueForiOS12(el, surname.length());
                 el.sendKeys(newSurname);
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtGivenName", driver);
                 el.click();
-                //el.clear();
                 this.clearTextFieldValueForiOS12(el, givenName.length());
                 el.sendKeys(newGivenName);
             }
