@@ -21,6 +21,8 @@ public class YouAPI {
     private String ypEndPoint;
     private String backDoorAuthUserName;
     private String backDoorAuthPwd;
+    private String apiEndPoint;
+    private String kbankMockPoint;
     private Market currenMarkettValue;
     private String productId;
     private boolean isDevEnv;
@@ -43,10 +45,16 @@ public class YouAPI {
     }
     public void setYPEndPoint(String value){ this.ypEndPoint = value; }
     public void setDataBackDoorEndPoint(String value){ this.dataBackDoorEndPoint = value; }
+    public void setMockUpEndPoint(String apiEndPOint, String kbankMockPoint) {
+        this.apiEndPoint = apiEndPOint;
+        this.kbankMockPoint = kbankMockPoint;
+    }
     public void setMarket(Market value){ this.currenMarkettValue = value; }
     public void setIsDevEnv(boolean value) {this.isDevEnv = value; }
 
     public YouAPI(){
+        this.apiEndPoint = "";
+        this.kbankMockPoint = "";
         backDoorAuthUserName = "qa";
         backDoorAuthPwd = "youtrip1@3";
         Unirest.config().verifySsl(false);
@@ -90,8 +98,9 @@ public class YouAPI {
         System.out.println("API CALL: " +url_activateCardMagicLink);
 
         //setup email url for activate card and return it
-        String activateCardEmailURL = ("https://api.sit.you.co/v2/link/token-activate-card/"+token);
-        System.out.println("TEST DATA: Activation Email Link is " +activateCardEmailURL);
+        String domainEndPoint = this.apiEndPoint.substring(7);
+        String activateCardEmailURL = ("https://" + domainEndPoint + "/link/token-activate-card/"+token);
+        System.out.println("TEST DATA: Activation Email Link is " + activateCardEmailURL);
         return activateCardEmailURL;
     }
 
@@ -127,6 +136,126 @@ public class YouAPI {
         this.data_createTestCard(card_data);
 
         return card_data;
+    }
+
+    /*
+     * ###### Frontend API call Hacks######
+     */
+    public HashMap<String, String> hack_genUserMetaData(String mprefix, String phoneNumber) throws NoSuchFieldException{
+        HashMap<String, String> result = new HashMap<>();
+        String usrId = this.data_getTestUserIdByPhoneNumber(mprefix, phoneNumber);
+        result.put("user_id", usrId);
+
+        HashMap<String, String> currentDeviceMeta = this.data_getTestUserRegisteredDevice(usrId);
+        /*"deviceId",
+        "deviceName"
+        "platform",
+        "osVersion",
+        "appID"
+        "appVersion"
+        "lang"*/
+
+        String req_uri = (this.apiEndPoint + "/public/device");
+        HttpResponse<JsonNode> response = Unirest.post(req_uri)
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "register-device-" + util.getTimestamp())
+                .body("{\"device_id\": \"" + currentDeviceMeta.get("deviceId") + "\"," +
+                        "\"device_name\": \"" + currentDeviceMeta.get("deviceName") + "\"," +
+                        "\"platform\": \""+ currentDeviceMeta.get("platform") + "\"," +
+                        "\"os_ver\": \"" + currentDeviceMeta.get("osVersion") + "\"," +
+                        "\"app_id\": \""  + currentDeviceMeta.get("appID") + "\"," +
+                        "\"app_ver\": \"" + currentDeviceMeta.get("appVersion") + "\"," +
+                        "\"language\": \"" + currentDeviceMeta.get("lang") + "\"," +
+                        "\"timezone\": \"Asia/Hong_Kong\"}").asJson();
+
+        JSONObject responseJson = response.getBody().getObject();
+        String oauth_key = responseJson.getString("oauth_client_key");
+        String oauth_passpwd = responseJson.getString("oauth_client_secret");
+
+        req_uri = (this.apiEndPoint + "/device/otp");
+        response = Unirest.post(req_uri)
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "request-otp-" + util.getTimestamp())
+                .basicAuth(oauth_key, oauth_passpwd)
+                .body("{\"mcc\": \"" + mprefix + "\"," +
+                        "\"phone_number\": \"" + phoneNumber + "\"," +
+                        "\"language\": \"en-US\"}").asJson();
+
+        responseJson = response.getBody().getObject();
+        String otp_key = responseJson.getString("id");
+
+        String otpCode = this.getOTP(mprefix, phoneNumber);
+        req_uri = (this.apiEndPoint + "/device/otp/" + otp_key);
+        response = Unirest.post(req_uri)
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "verify-otp-" + util.getTimestamp())
+                .basicAuth(oauth_key, oauth_passpwd)
+                .body("{\"password\": \"" + otpCode + "\"," +
+                        "\"mcc\": \"" + mprefix + "\"," +
+                        "\"phone_number\": \"" + phoneNumber + "\"}").asJson();
+        responseJson = response.getBody().getObject();
+        String access_token = responseJson.getString("access_token");
+        String refresh_token = responseJson.getString("refresh_token");
+        System.out.println("access_token:" + access_token);
+        System.out.println("refresh_token:" + refresh_token);
+        result.put("access_token", access_token);
+        result.put("refresh_token", refresh_token);
+
+        req_uri = (this.apiEndPoint + "/me");
+        response = Unirest.get(req_uri)
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "get-user-" + util.getTimestamp())
+                .header("Authorization", "Bearer " + access_token).asJson();
+        assertEquals(200, response.getStatus());
+
+        return result;
+    }
+
+    public void hack_thRequestAndPassKYC(boolean isPCCard, String thaiIdNumber, String youId, String mprefix, String phoneNumber, String email) throws NoSuchFieldException, InterruptedException {
+        if (!isDevEnv || this.kbankMockPoint.equals("")){
+            throw  new ValueException("Provided Environment is not TH Dev environment to execute mocking process");
+        }
+
+        System.out.println("TEST STEP: work around log-in generate User meta data");
+        HashMap<String, String> userMetaMap = this.hack_genUserMetaData(mprefix, phoneNumber);
+        String accessToken = userMetaMap.get("access_token");
+
+        HttpResponse<JsonNode> response;
+
+        response = Unirest.post(this.apiEndPoint + "/me/kyc/" + this.productId + "/request")
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "th-kyc-" + util.getTimestamp())
+                .header("Authorization", "Bearer " + accessToken)
+                .asJson();
+
+        assertEquals(200, response.getStatus());
+
+        JSONObject responseJson = response.getBody().getObject();
+        String tokenUri = responseJson.getJSONObject("deeplink").getString("uri");
+        int idx = tokenUri.indexOf("=");
+        String tokenId = tokenUri.substring(idx + 1);
+        System.out.println(tokenId);
+        Thread.sleep(1000);
+
+        System.out.println("TEST STEP: Mocking approving KYC");
+        response = Unirest.post(this.kbankMockPoint + "/authentication")
+                .header("Content-Type", "application/json")
+                .body("{\n" +
+                        "\t\"token_id\": \"" + tokenId + "\",\n" +
+                        "\t\"status\": \"10\",\n" +
+                        "\t\"email\": \"" + email + "\"\n" +
+                        "}").asJson();
+
+        assertEquals(200, response.getStatus());
+
+        System.out.println("TEST STEP: Checking KYC");
+        response = Unirest.get(this.apiEndPoint + "/me/kyc/" + this.productId)
+                .header("Content-Type", "application/json")
+                .header("x-request-id", "th-kyc-" + util.getTimestamp())
+                .header("Authorization", "Bearer " + accessToken)
+                .asJson();
+
+        assertEquals(200, response.getStatus());
     }
 
     /*
@@ -534,5 +663,64 @@ public class YouAPI {
 
         String _deviceId = Rspbody.getString("DeviceID");
         return _deviceId;
+    }
+
+    public String data_getTestUserIdByPhoneNumber(String mprefix, String phoneNumber) throws NoSuchFieldException {
+        String url_getTestUserId = (this.dataBackDoorEndPoint + "/testUserData/getUserByPhoneNumber/" + mprefix + "/" + phoneNumber);
+
+        System.out.println("API CALL: " + url_getTestUserId);
+
+        JSONObject rspbody = Unirest.get(url_getTestUserId)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .asJson()
+                .getBody()
+                .getObject();
+
+        Boolean _isFound = rspbody.getBoolean("IsFound");
+        if(!_isFound)
+            throw new NoSuchFieldException("User Id with given PhoneNumber: \"" + mprefix + "\" \"" + phoneNumber + "\" is not found.");
+
+        JSONObject usrObj = rspbody.getJSONObject("User");
+        String userId = usrObj.getString("ID");
+        return userId;
+    }
+
+    public HashMap<String, String> data_getTestUserRegisteredDevice(String userID) throws NoSuchFieldException {
+        HashMap<String, String> result = new HashMap<>();
+        String url_getTestUserRegisteredDeviceId = (this.dataBackDoorEndPoint + "/testUserData/getDeviceID/" +  userID);
+
+        System.out.println("API CALL: " + url_getTestUserRegisteredDeviceId);
+
+        JSONObject Rspbody = Unirest.get(url_getTestUserRegisteredDeviceId)
+                .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
+                .asJson()
+                .getBody()
+                .getObject();
+
+        /*
+         * "ID": "",
+         * "DeviceID": "45BDCD5B-098E-4A00-85FA-737292992CF4",
+         * "DeviceName": "iPhone 8 Plus",
+         * "Platform": "iOS",
+         * "OSVersion": "13.1.2",
+         * "AppID": "YouTrip",
+         * "AppVersion": "3.6.0-sit",
+         * "Language": "en-SG",
+         * "Timezone": "GMT+8",
+         * "IsFound": true
+         * */
+
+        result.put("deviceId", Rspbody.getString("DeviceID"));
+        result.put("deviceName", Rspbody.getString("DeviceName"));
+        result.put("platform", Rspbody.getString("Platform"));
+        result.put("osVersion", Rspbody.getString("OSVersion"));
+        result.put("appID", Rspbody.getString("AppID"));
+        result.put("appVersion", Rspbody.getString("AppVersion"));
+        result.put("lang", Rspbody.getString("Language"));
+        Boolean _isFound = Rspbody.getBoolean("IsFound");
+
+        if(!_isFound)
+            throw new NoSuchFieldException("Device Id with given UserID: \"" + userID + "\" is not found.");
+        return result;
     }
 }

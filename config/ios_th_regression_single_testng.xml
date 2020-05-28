@@ -13,25 +13,17 @@
     <test name="iOS Regression">
         <parameter name="config" value="ios_conf.json"/>
         <parameter name="device" value="iphone_xs"/>
-        <parameter name="env" value="sgdev"/>
-        <parameter name="build" value="dev_env_test_build"></parameter>
-<!--        <parameter name="app" value="bs://7b0ddc7c170dce91e0e0cb28bfce65f9d53ca3ff"></parameter>-->
-        <parameter name="app" value="bs://501877a8e0fbb594c7f80c7fe59976c60b7ca967"></parameter>
         <classes>
-            <class name="youtrip_ios_sg_regressionTest">
+            <class name="youtrip_ios_th_regressionTest">
                 <methods>
-                    <include name="regTC04_selectSG"/>
+                    <include name="regTC03_selectTH"/>
                     <include name="regTC05_login_new_user_OTP"/>
-                    <include name="regTC08_submit_PC_KYC_NRIC"/>
-                    <include name="regTC09_fullreject_and_resubmit_PC_KYC_NRIC"/>
-                    <include name="regTC10_partialreject_and_resubmit_PC_KYC_NRIC"/>
-                    <include name="regTC11_approved_PC_KYC_NRIC"/>
-                    <include name="regTC23_PC_Activate_Card"/>
+                    <include name="regTC08_submit_PC_TH"/>
+                    <include name="regTC23_PC_Activate_Card_TH"/>
                     <!--<include name="regTC19_submit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>
-                    <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>
-                    <include name="regTC23_NPC_Activate_Card"/>-->
+                    <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>-->
                 </methods>
             </class>
         </classes>

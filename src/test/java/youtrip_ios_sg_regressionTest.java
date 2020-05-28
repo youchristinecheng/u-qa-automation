@@ -42,7 +42,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         isRequriedReset = true;
         System.out.println("Test STEP: Start \"regTC04_selectSG\"");
         try {
-            subProc.procSelectCountry(Market.Singapore);
+            subProc.procSelectCountry();
             System.out.println("Test STEP: Finish \"regTC04_selectSG\"");
         } catch (Exception e) {
             System.out.println("Test STEP: Fail \"regTC04_selectSG\"");
@@ -69,7 +69,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         isRequriedReset = false;
 
         try {
-            subProc.procSelectCountry(Market.Singapore);
+            subProc.procSelectCountry();
             subProc.procOTPLogin(mprefix, mnumber, email, true);
 
             System.out.println("TEST STEP: Welcome Page - on page");
@@ -95,7 +95,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
         Date dateOfBirth = c.getTime();
         SimpleDateFormat dateOfBirthFormatter = new SimpleDateFormat("ddMMYYYY");
 
-        if (!isAppReset) {
+        if (isAppReset) {
             testAccountData = new TestAccountData();
             SimpleDateFormat formatter = new SimpleDateFormat("YYMMDDHHmmssSS");
             System.out.println(formatter.format(date));
@@ -125,7 +125,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
 
         try {
             if(isAppReset) {
-                subProc.procSelectCountry(Market.Singapore);
+                subProc.procSelectCountry();
                 subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, true);
                 Thread.sleep(2000);
             }
@@ -259,7 +259,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             if(isAppReset) {
-                subProc.procSelectCountry(Market.Singapore);
+                subProc.procSelectCountry();
                 subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
                 // Transition wait after OTP-login to Limited Home page
@@ -338,7 +338,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             if(isAppReset) {
-                subProc.procSelectCountry(Market.Singapore);
+                subProc.procSelectCountry();
                 subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
                 // Transition wait after OTP-login to Limited Home page
@@ -408,7 +408,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             if(isAppReset) {
-                subProc.procSelectCountry(subProc.getCurrentMarket());
+                subProc.procSelectCountry();
                 subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
                 // Transition wait after OTP-login to Limited Home page
@@ -441,33 +441,11 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             Thread.sleep(2000);
 
             String deepLinkURL = subProc.api.getActivateCardEmailLink(testAccountData.Id);
-            System.out.println(deepLinkURL);
 
             // Hacking code for switch to safari and opend deeplink
-            driver.executeScript("mobile: terminateApp", ImmutableMap.of("bundleId", "com.apple.mobilesafari"));
-            List args = new ArrayList();
-            args.add("-u");
-            args.add(deepLinkURL);
+            subProc.procActivateDeepLinkFromSafari(deepLinkURL);
 
-            // Need to have wait time for app launch
-            System.out.println("TEST STEP: Launch Safari App for apply DeepLink");
-            Map<String, Object> params = new HashMap<>();
-            params.put("bundleId", "com.apple.mobilesafari");
-            params.put("arguments", args);
-            driver.executeScript("mobile: launchApp", params);
-            Thread.sleep(7000);
-
-            driver.findElementByAccessibilityId("Open").click();
-            Thread.sleep(2000);
-
-            System.out.println("TEST STEP: Switch back to YouTrip App from DeepLink");
-            args.clear();
-            params.clear();
-            params.put("bundleId", "co.you.youapp");
-            driver.executeScript("mobile: launchApp", params);
-            Thread.sleep(5000);
             // Create a Pin
-
             assertEquals(UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "lblActiveCardCreatePinTitle", driver).getText(), "Create a PIN");
             subProc.procEnterAPPPinCode(this.defaultAPPPinCode);
             Thread.sleep(2000);
@@ -484,9 +462,9 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             testAccountData.UnderUse = false;
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
-            System.out.println("Test STEP: Finish \"regTC23_NPC_Activate_Card\"");
+            System.out.println("Test STEP: Finish \"regTC23_PC_Activate_Card\"");
         }catch(Exception e){
-            System.out.println("Test STEP: Fail \"regTC23_NPC_Activate_Card\"");
+            System.out.println("Test STEP: Fail \"regTC23_PC_Activate_Card\"");
             testAccountData.UnderUse = false;
             testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
             testAccountData.Card.UnderUse = false;
@@ -547,7 +525,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             testAccountData.IsExplorerModeOn = false;
             testAccountData.printTestAccountData("NEW GEN");
 
-            subProc.procSelectCountry(Market.Singapore);
+            subProc.procSelectCountry();
             subProc.procOTPLogin(mprefix, mnumber, email,true);
             Thread.sleep(2000);
 
@@ -691,7 +669,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             if(isAppReset) {
-                subProc.procSelectCountry(Market.Singapore);
+                subProc.procSelectCountry();
                 subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
                 // Transition wait after OTP-login to Limited Home page
@@ -773,7 +751,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             if(isAppReset) {
-                subProc.procSelectCountry(Market.Singapore);
+                subProc.procSelectCountry();
                 subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
                 // Transition wait after OTP-login to Limited Home page
@@ -830,7 +808,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             if(isAppReset) {
-                subProc.procSelectCountry(subProc.getCurrentMarket());
+                subProc.procSelectCountry();
                 subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, testAccountData.Email, false);
 
                 // Transition wait after OTP-login to Limited Home page
@@ -860,30 +838,9 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             System.out.println(deepLinkURL);
 
             // Hacking code for switch to safari and opend deeplink
-            driver.executeScript("mobile: terminateApp", ImmutableMap.of("bundleId", "com.apple.mobilesafari"));
-            List args = new ArrayList();
-            args.add("-u");
-            args.add(deepLinkURL);
+            subProc.procActivateDeepLinkFromSafari(deepLinkURL);
 
-            // Need to have wait time for app launch
-            System.out.println("TEST STEP: Launch Safari App for apply DeepLink");
-            Map<String, Object> params = new HashMap<>();
-            params.put("bundleId", "com.apple.mobilesafari");
-            params.put("arguments", args);
-            driver.executeScript("mobile: launchApp", params);
-            Thread.sleep(7000);
-
-            driver.findElementByAccessibilityId("Open").click();
-            Thread.sleep(2000);
-
-            System.out.println("TEST STEP: Switch back to YouTrip App from DeepLink");
-            args.clear();
-            params.clear();
-            params.put("bundleId", "co.you.youapp");
-            driver.executeScript("mobile: launchApp", params);
-            Thread.sleep(5000);
             // Create a Pin
-
             assertEquals(UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "lblActiveCardCreatePinTitle", driver).getText(), "Create a PIN");
             subProc.procEnterAPPPinCode(this.defaultAPPPinCode);
             Thread.sleep(2000);

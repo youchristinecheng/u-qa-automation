@@ -1,5 +1,6 @@
 package TestBased;
 
+import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.WebElement;
@@ -7,6 +8,11 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import TestBased.TestAccountData.Market;
 import org.testng.Assert;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 
@@ -44,6 +50,53 @@ public class YoutripIosSubRoutine {
         }catch(Exception e){
             throw e;
         }
+    }
+
+    public void procActivateDeepLinkFromSafari(String deepLinkURL) throws InterruptedException {
+        // Hacking code for switch to safari and opend deeplink
+        driver.executeScript("mobile: terminateApp", ImmutableMap.of("bundleId", "com.apple.mobilesafari"));
+        WebElement webEl;
+//        List args = new ArrayList();
+//        args.add("-u");
+//        args.add(deepLinkURL);
+
+        System.out.println("TEST STEP: Launch Safari App for apply DeepLink");
+        Map<String, Object> params = new HashMap<>();
+        params.put("bundleId", "com.apple.mobilesafari");
+//        params.put("arguments", args);
+        driver.executeScript("mobile: launchApp", params);
+        Thread.sleep(3000);
+        // Click on url field
+        webEl = driver.findElementByAccessibilityId("URL");
+        webEl.click();
+        Thread.sleep(1000);
+        // Set value in url field to desired url
+        webEl = driver.findElementByAccessibilityId("URL");
+        webEl.sendKeys(deepLinkURL);
+        Thread.sleep(1000);
+        // Go to this url
+        driver.findElementByAccessibilityId("Go").click();
+        Thread.sleep(2000);
+        // Wait for page to finish loading
+//        waitForDismiss("StopButton");
+
+
+        driver.findElementByAccessibilityId("Open").click();
+        Thread.sleep(2000);
+
+        System.out.println("TEST STEP: Switch back to YouTrip App from DeepLink");
+//        args.clear();
+        params.clear();
+        params.put("bundleId", "co.you.youapp");
+        driver.executeScript("mobile: launchApp", params);
+        Thread.sleep(5000);
+
+        driver.executeScript("mobile: terminateApp", ImmutableMap.of("bundleId", "com.apple.mobilesafari"));
+        Thread.sleep(1000);
+    }
+
+    public void procSelectCountry() throws Exception{
+        this.procSelectCountry(this.getCurrentMarket());
     }
 
     public void procSelectCountry(Market country) throws Exception{
@@ -545,6 +598,10 @@ public class YoutripIosSubRoutine {
         }
     }
 
+    public void procVerifyInHomePage() throws Exception{
+        this.procVerifyInHomePage(this.currentMarket);
+    }
+
     public void procVerifyInHomePage(Market market) throws Exception {
         System.out.println("TEST STEP: Home Page - Verify Home Page is Entered");
         wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.HomePageElementDict, "btnMenu", driver)));
@@ -615,5 +672,75 @@ public class YoutripIosSubRoutine {
         testAccountData.UnderUse = false;
         testAccountData.Card.UnderUse = false;
         this.api.data_updateTestUser(testAccountData);
+    }
+
+    public void proc_TH_OTPLogin(String mprefix, String mnumber) throws Exception{
+        IOSElement el;
+
+        System.out.println("TEST STEP: Get Started Page - on page");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.GetStartedPageElementDict, "btnGetStarted", driver);
+        el.click();
+
+        System.out.println("TEST STEP: Mobile Number Page - on page");
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.MobileNumberPageElementDict, "lblTitle", driver), "Enter Mobile Number"));
+
+        System.out.println("TEST DATA: Mobile Number is " + mprefix + " " + mnumber);
+        System.out.println("TEST STEP: Mobile Number Page - inputted mobile number prefix");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.MobileNumberPageElementDict, "txtPrefix", driver);
+        el.click();
+        this.clearTextFieldValueForiOS12(el, 2);
+        // Enter the test data value
+        el.sendKeys(mprefix);
+
+        System.out.println("TEST STEP: Mobile Number Page - inputted mobile number");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.MobileNumberPageElementDict, "txtPhoneNumber", driver);
+        el.click();
+        el.sendKeys(mnumber);
+        System.out.println("TEST STEP: Mobile Number Page - clicked Next button");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.MobileNumberPageElementDict, "btnNext", driver);
+        el.click();
+        Thread.sleep(2000);
+
+        System.out.println("TEST STEP: OTP Page - on page");
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.OTPPageElementDict, "lblTitle", driver), "Enter Code from SMS"));
+        // Get OTP from backdoor and input otp
+        String otpCode = api.getOTP(mprefix, mnumber);
+        Thread.sleep(10000);
+
+        // Make use of app text field focus shifting functionality
+        System.out.println("TEST STEP: OTP Page - entered OTP");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.OTPPageElementDict, "OTPDigit1", driver);
+        el.sendKeys(otpCode);
+        System.out.println("TEST STEP: OTP Page - Send OTP");
+
+        Thread.sleep(2000);
+    }
+
+    public void procTH_SubmitKYC(int deviceOSVersion, boolean isPCCardFlow, String thaiIdNumber, String youId) throws Exception {
+        IOSElement el;
+        if(!isPCCardFlow) {
+            System.out.println("TEST STEP: NPC Registration - Enter Y-Number");
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EnterYNumberPageElementDict, "lblTitle", driver), "Enter Y-Number"));
+            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EnterYNumberPageElementDict, "txtYouIdDigit1", driver);
+            el.sendKeys(youId.substring(2));
+            Thread.sleep(2000);
+        }
+
+        System.out.println("TEST STEP: KYC Process - Enter Thai ID");
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "lblTitle", driver), "Enter ID Number"));
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "txtIdNumber", driver);
+        el.sendKeys(thaiIdNumber);
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "btnNext", driver);
+        el.click();
+        Thread.sleep(3000);
+
+        System.out.println("TEST STEP: KYC Process - Authentication From KPlus");
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCKPLUSAuthenticationPageElementDict, "lblTitle", driver), "Register with K PLUS"));
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCKPLUSAuthenticationPageElementDict, "btnNoKPlus", driver);
+        assertEquals(el.getText(), "Do not have K PLUS?");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCKPLUSAuthenticationPageElementDict, "btnOpenKPlus", driver);
+        assertEquals(el.getText(), "Register with K PLUS");
+        el.click();
+        Thread.sleep(2000);
     }
 }
