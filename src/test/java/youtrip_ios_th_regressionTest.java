@@ -261,10 +261,14 @@ public class youtrip_ios_th_regressionTest extends ios_browserstackTest {
             System.out.println("Test STEP: Finish \"regTC23_PC_Activate_Card_TH\"");
         }catch(Exception e){
             System.out.println("Test STEP: Fail \"regTC23_PC_Activate_Card_TH\"");
-            testAccountData.UnderUse = false;
-            testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
-            testAccountData.Card.UnderUse = false;
-            subProc.api.data_updateTestUser(testAccountData);
+            if(testAccountData != null) {
+                testAccountData.UnderUse = false;
+                testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
+                if(testAccountData.Card != null) {
+                    testAccountData.Card.UnderUse = false;
+                }
+                subProc.api.data_updateTestUser(testAccountData);
+            }
             testAccountData = null;
             e.printStackTrace();
             fail();
