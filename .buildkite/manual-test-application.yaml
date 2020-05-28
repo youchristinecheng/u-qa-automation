@@ -26,13 +26,14 @@ steps:
       - text: "build version"
         key: "BUILDVER"
         default: "latest"
-  - label: "Run Test and Send Test"
-    commands: 
+  - label: "Run Test"
+    key: "test"
+    commands:
+      - "buildkite-agent meta-data set TEST_RESULT true"
       - "./Script/auto_test_browserstack_appcenter_integrate.bash \
       $(buildkite-agent meta-data get PLATFORM) \
       $(buildkite-agent meta-data get BUILDVER) \
-      $(buildkite-agent meta-data get ENV)"
-      - "./.buildkite/scripts/send-slack-notification.sh"
+      $(buildkite-agent meta-data get ENV) || buildkite-agent meta-data set TEST_RESULT false"
     agents:
       queue: "${BUILDKITE_AGENT_META_DATA_QUEUE}"
     plugins:
@@ -43,6 +44,27 @@ steps:
             - BROWSERSTACK_USER
             - BROWSERSTACK_PWD
             - APPCENTER_TOKEN
-            - BUILDKITE_SLACK_TOKEN
     artifact_paths: "./target/surefire-reports/emailable-report.html"
+  - label:
+    agents:
+      queue: "${BUILDKITE_AGENT_META_DATA_QUEUE}"
+    commands:
+      - "cd .buildkite/scripts/"
+      - "buildkite-agent artifact download target/surefire-reports/emailable-report.html . --step 'Run Test'"
+      - "./send-slack-notification.sh target/surefire-reports/emailable-report.html \
+      $(buildkite-agent meta-data get ENV) \
+      $(buildkite-agent meta-data get PLATFORM) \
+      $(buildkite-agent meta-data get BUILDVER) \
+      $(buildkite-agent meta-data get TEST_RESULT)"
+    depends_on:
+      - step: "test"
+        allow_failure: true
+    plugins:
+      - docker#v3.5.0:
+          image: "curlimages/curl"
+          always-pull: true
+          environment:
+            - BUILDKITE_SLACK_TOKEN
+            - BUILDKITE_BUILD_NUMBER
+          user: root
     
