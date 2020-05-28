@@ -222,8 +222,6 @@ public class youtrip_ios_th_regressionTest extends ios_browserstackTest {
 
             System.out.println("TEST STEP: Confirm Email Address Page - On Page");
             assertEquals(UIElementKeyDict.getElement(PageKey.ActivateCardConfirmEmailPageElementDict, "lblTitle", driver).getText(), "Check Your Email");
-            System.out.println("debug");
-//            Thread.sleep(2000);
 
             String deepLinkURL = subProc.api.getActivateCardEmailLink(testAccountData.Id);
             System.out.println(deepLinkURL);
@@ -251,7 +249,6 @@ public class youtrip_ios_th_regressionTest extends ios_browserstackTest {
             el.click();
             Thread.sleep(5000);
 
-            //TODO: Verification of Home Page redirection is skipped due to homepage replacement
             subProc.procVerifyInHomePage();
 
             testAccountData.Card.Status = TestAccountData.CardStatus.NewActive;
