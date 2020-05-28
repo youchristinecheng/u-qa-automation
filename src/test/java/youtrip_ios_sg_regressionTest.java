@@ -441,7 +441,6 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             Thread.sleep(2000);
 
             String deepLinkURL = subProc.api.getActivateCardEmailLink(testAccountData.Id);
-            System.out.println(deepLinkURL);
 
             // Hacking code for switch to safari and opend deeplink
             subProc.procActivateDeepLinkFromSafari(deepLinkURL);

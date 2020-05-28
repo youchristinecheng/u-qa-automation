@@ -106,8 +106,9 @@ public class YouAPI {
         System.out.println("API CALL: " +url_activateCardMagicLink);
 
         //setup email url for activate card and return it
-        String activateCardEmailURL = ("https://api.sit.you.co/v2/link/token-activate-card/"+token);
-        System.out.println("TEST DATA: Activation Email Link is " +activateCardEmailURL);
+        String domainEndPoint = this.apiEndPoint.substring(7);
+        String activateCardEmailURL = ("https://" + domainEndPoint + "/link/token-activate-card/"+token);
+        System.out.println("TEST DATA: Activation Email Link is " + activateCardEmailURL);
         return activateCardEmailURL;
     }
 

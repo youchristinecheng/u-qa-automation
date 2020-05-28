@@ -55,22 +55,37 @@ public class YoutripIosSubRoutine {
     public void procActivateDeepLinkFromSafari(String deepLinkURL) throws InterruptedException {
         // Hacking code for switch to safari and opend deeplink
         driver.executeScript("mobile: terminateApp", ImmutableMap.of("bundleId", "com.apple.mobilesafari"));
-        List args = new ArrayList();
-        args.add("-u");
-        args.add(deepLinkURL);
+        WebElement webEl;
+//        List args = new ArrayList();
+//        args.add("-u");
+//        args.add(deepLinkURL);
 
         System.out.println("TEST STEP: Launch Safari App for apply DeepLink");
         Map<String, Object> params = new HashMap<>();
         params.put("bundleId", "com.apple.mobilesafari");
-        params.put("arguments", args);
+//        params.put("arguments", args);
         driver.executeScript("mobile: launchApp", params);
-        Thread.sleep(7000);
+        Thread.sleep(3000);
+        // Click on url field
+        webEl = driver.findElementByAccessibilityId("URL");
+        webEl.click();
+        Thread.sleep(1000);
+        // Set value in url field to desired url
+        webEl = driver.findElementByAccessibilityId("URL");
+        webEl.sendKeys(deepLinkURL);
+        Thread.sleep(1000);
+        // Go to this url
+        driver.findElementByAccessibilityId("Go").click();
+        Thread.sleep(2000);
+        // Wait for page to finish loading
+//        waitForDismiss("StopButton");
+
 
         driver.findElementByAccessibilityId("Open").click();
         Thread.sleep(2000);
 
         System.out.println("TEST STEP: Switch back to YouTrip App from DeepLink");
-        args.clear();
+//        args.clear();
         params.clear();
         params.put("bundleId", "co.you.youapp");
         driver.executeScript("mobile: launchApp", params);
