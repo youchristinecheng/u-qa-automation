@@ -13,7 +13,6 @@ import java.util.Map;
 import TestBased.TestAccountData.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-
 public class YouAPI {
 
     private String kycRejectReason;
@@ -44,7 +43,6 @@ public class YouAPI {
             this.backDoorAuthPwd = Password;
         }
     }
-
     public void setYPEndPoint(String value){ this.ypEndPoint = value; }
     public void setDataBackDoorEndPoint(String value){ this.dataBackDoorEndPoint = value; }
     public void setMockUpEndPoint(String apiEndPOint, String kbankMockPoint) {
@@ -55,14 +53,8 @@ public class YouAPI {
     public void setIsDevEnv(boolean value) {this.isDevEnv = value; }
 
     public YouAPI(){
-        //TODO need to refactor end points
-        //this.backDoorEndPoint = "http://backdoor.internal.sg.sit.you.co";
-        this.backDoorEndPoint = "https://uoy.backdoor.sg.sit.you.co";
-        this.ypEndPoint = "http://yp.external.sg.sit.you.co";
-        this.dataBackDoorEndPoint = "http://qa-auto-support.backdoor.sg.sit.you.co";
         this.apiEndPoint = "";
         this.kbankMockPoint = "";
-
         backDoorAuthUserName = "qa";
         backDoorAuthPwd = "youtrip1@3";
         Unirest.config().verifySsl(false);

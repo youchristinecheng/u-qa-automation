@@ -15,15 +15,17 @@
                     <include name="regTC07_partialreject_PC_KYC_NRIC"/>
                     <include name="regTC08_resubmit_partialreject_PC_KYC_NRIC"/>
                     <include name="regTC09_approved_PC_KYC_NRIC"/>
-                    <include name="regTC10_logout_PC_KYC_NRIC"/>
-                    <include name="regTC11_submit_NPC_KYC_forgeiner"/>
-                    <include name="regTC12_fullreject_NPC_KYC_forgeiner"/>
-                    <include name="regTC13_resubmit_fullreject_NPC_KYC_forgeiner"/>
-                    <include name="regTC14_partialreject_NPC_KYC_forgeiner"/>
-                    <include name="regTC15_resubmit_partialreject_NPC_KYC_forgeiner"/>
-                    <include name="regTC16_approved_NPC_KYC_forgeiner"/>
-                    <include name="regTC17_activatecard_NPC_KYC_forgeiner"/>
-                    <include name="regTC18_logout_NPC_KYC_forgeiner"/>
+                    <include name="regTC10_activatecard_PC_KYC_NRIC"/>
+                    <include name="regTC11_logout_PC_KYC_NRIC"/>
+                    <include name="regTC12_submit_NPC_KYC_forgeiner"/>
+                    <include name="regTC13_fullreject_NPC_KYC_forgeiner"/>
+                    <include name="regTC14_resubmit_fullreject_NPC_KYC_forgeiner"/>
+                    <include name="regTC15_partialreject_NPC_KYC_forgeiner"/>
+                    <include name="regTC16_resubmit_partialreject_NPC_KYC_forgeiner"/>
+                    <include name="regTC17_approved_NPC_KYC_forgeiner"/>
+                    <include name="regTC18_activatecard_NPC_KYC_forgeiner"/>
+                    <include name="regTC19_logout_NPC_KYC_forgeiner"/>
+                    <include name="regTC20_login_existing_user_OTP"/>
                 </methods>
             </class>
         </classes>

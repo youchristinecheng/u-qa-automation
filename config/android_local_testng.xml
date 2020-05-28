@@ -6,7 +6,26 @@
         <classes>
             <class name = "youtrip_android_sg_regressionTest">
                 <methods>
-                    <include name="regTC19_login_existing_user_OTP"/>
+                    <include name="regTC01_selectTH"/>
+                    <include name="regTC02_selectSG"/>
+                    <include name="regTC03_login_new_user_OTP"/>
+                    <include name="regTC04_submit_PC_KYC_NRIC"/>
+                    <include name="regTC05_fullreject_PC_KYC_NRIC"/>
+                    <include name="regTC06_resubmit_fullreject_PC_KYC_NRIC"/>
+                    <include name="regTC07_partialreject_PC_KYC_NRIC"/>
+                    <include name="regTC08_resubmit_partialreject_PC_KYC_NRIC"/>
+                    <include name="regTC09_approved_PC_KYC_NRIC"/>
+                    <include name="regTC10_activatecard_PC_KYC_NRIC"/>
+                    <include name="regTC11_logout_PC_KYC_NRIC"/>
+                    <include name="regTC12_submit_NPC_KYC_forgeiner"/>
+                    <include name="regTC13_fullreject_NPC_KYC_forgeiner"/>
+                    <include name="regTC14_resubmit_fullreject_NPC_KYC_forgeiner"/>
+                    <include name="regTC15_partialreject_NPC_KYC_forgeiner"/>
+                    <include name="regTC16_resubmit_partialreject_NPC_KYC_forgeiner"/>
+                    <include name="regTC17_approved_NPC_KYC_forgeiner"/>
+                    <include name="regTC18_activatecard_NPC_KYC_forgeiner"/>
+                    <include name="regTC19_logout_NPC_KYC_forgeiner"/>
+                    <include name="regTC20_login_existing_user_OTP"/>
                 </methods>
             </class>
         </classes>

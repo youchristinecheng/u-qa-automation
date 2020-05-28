@@ -2,6 +2,7 @@ import TestBased.*;
 import TestBased.TestAccountData.Market;
 import TestBased.YouTripAndroidUIElementKey.PageKey;
 import io.appium.java_client.android.AndroidElement;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
@@ -275,35 +276,82 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
     }
 
     @Test
-    public void regTC10_logout_PC_KYC_NRIC() {
-        System.out.println("TEST CASE: Start \"regTC10_logout_PC_KYC_NRIC\"");
+    public void regTC10_activatecard_PC_KYC_NRIC() {
+        if(!subProc.api.getIsDevEnv()){
+            throw new SkipException("This test is only available in Dev Environnment");
+        }
+        System.out.println("TEST CASE: Start \"regTC10_activatecard_PC_KYC_NRIC\"");
+        AndroidElement el;
         try {
             if (testAccountData == null) {
                 fail("fail to load test account from previous test case");
-                System.out.println("TEST CASE: Fail \"regTC10_logout_PC_KYC_NRIC\"");
+                System.out.println("TEST CASE: Fail \"regTC10_activatecard_PC_KYC_NRIC\"");
+            }
+
+            //create PC card for user
+            if(subProc.api.getIsDevEnv()) {
+                testAccountData.Card = subProc.api.devEnvGenerateCard(true, testAccountData.Id);
+                subProc.api.data_bindTestCardToTestUser(testAccountData.Id, testAccountData.Card.Id);
+            }
+
+            Thread.sleep(5000);
+            //activate card
+            subProc.procActivateCard(true, testAccountData.Id, testAccountData.Card.YouId, "1111");
+            Thread.sleep(10000);
+            subProc.procVerifyInHomePage();
+            //update test user
+            testAccountData.Card.Status = TestAccountData.CardStatus.NewActive;
+            testAccountData.UnderUse = false;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            System.out.println("TEST CASE: Finish \"regTC10_activatecard_PC_KYC_NRIC\"");
+
+        } catch (Exception e) {
+            System.out.println("TEST CASE: Fail \"regTC10_activatecard_PC_KYC_NRIC\"");
+            testAccountData.UnderUse = false;
+            testAccountData.KycStatus = TestAccountData.KYCStatus.UnknownKycStatus;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            testAccountData = null;
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void regTC11_logout_PC_KYC_NRIC() {
+        System.out.println("TEST CASE: Start \"regTC11_logout_PC_KYC_NRIC\"");
+        try {
+            if (testAccountData == null) {
+                fail("fail to load test account from previous test case");
+                System.out.println("TEST CASE: Fail \"regTC11_logout_PC_KYC_NRIC\"");
             }
             //logout of account
             subProc.procLogout();
             //reset active test account
             testAccountData = null;
-            System.out.println("TEST CASE: Finish \"regTC10_logout_PC_KYC_NRIC\"");
+            System.out.println("TEST CASE: Finish \"regTC11_logout_PC_KYC_NRIC\"");
         } catch (Exception e) {
-            System.out.println("TEST CASE: Fail \"regTC10_logout_PC_KYC_NRIC\"");
+            System.out.println("TEST CASE: Fail \"regTC11_logout_PC_KYC_NRIC\"");
             testAccountData = null;
             e.printStackTrace();
             fail();
-
         }
     }
 
     @Test
-    public void regTC11_submit_NPC_KYC_forgeiner() {
-        System.out.println("TEST CASE: Start \"regTC11_submit_NPC_KYC_forgeiner\"");
+    public void regTC12_submit_NPC_KYC_forgeiner() {
+        System.out.println("TEST CASE: Start \"regTC12_submit_NPC_KYC_forgeiner\"");
         testAccountData = new TestAccountData();
         TestCardData testCardData = null;
         try {
-            //get new NPC card
-            testCardData = subProc.api.data_getTestCardByCardTypeAndStatus(TestAccountData.CardType.NPC.toString(), TestAccountData.CardStatus.NPCPending.toString());
+            if(subProc.api.getIsDevEnv()) {
+                System.out.println("TEST STEP: Generate new NPC card in Dev environment");
+                testCardData = subProc.api.devEnvGenerateCard(false, "");
+            }else {
+                //for SIT get new NPC card
+                testCardData = subProc.api.data_getTestCardByCardTypeAndStatus(TestAccountData.CardType.NPC.toString(), TestAccountData.CardStatus.NPCPending.toString());
+            }
             testAccountData.Card = testCardData;
             testAccountData.Card.Status = TestAccountData.CardStatus.Inactive;
 
@@ -357,10 +405,10 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             //create test user and test card
             subProc.api.data_updateTestCard(testAccountData.Card);
             subProc.api.data_createTestUser(testAccountData);
-            System.out.println("TEST CASE: Finish \"regTC11_submit_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Finish \"regTC12_submit_NPC_KYC_forgeiner\"");
 
         } catch (Exception e) {
-            System.out.println("TEST CASE: Fail \"regTC11_submit_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Fail \"regTC12_submit_NPC_KYC_forgeiner\"");
             testAccountData = null;
             if (testCardData != null){
               testCardData.Status = TestAccountData.CardStatus.UnknownCardStatus;
@@ -373,12 +421,12 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
     }
 
     @Test
-    public void regTC12_fullreject_NPC_KYC_forgeiner() {
-        System.out.println("TEST CASE: Start \"regTC12_fullreject_NPC_KYC_forgeiner\"");
+    public void regTC13_fullreject_NPC_KYC_forgeiner() {
+        System.out.println("TEST CASE: Start \"regTC13_fullreject_NPC_KYC_forgeiner\"");
         try {
             if (testAccountData == null) {
                 fail("fail to load test account from previous test case");
-                System.out.println("TEST CASE: Fail \"regTC12_fullreject_NPC_KYC_forgeiner\"");
+                System.out.println("TEST CASE: Fail \"regTC13_fullreject_NPC_KYC_forgeiner\"");
             }
             //perform full rejection
             subProc.procRejectKYC(true);
@@ -386,10 +434,10 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             testAccountData.KycStatus = TestAccountData.KYCStatus.Reject;
             testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
-            System.out.println("TEST CASE: Finish \"regTC12_fullreject_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Finish \"regTC13_fullreject_NPC_KYC_forgeiner\"");
 
         } catch (Exception e) {
-            System.out.println("TEST CASE: Fail \"regTC12_fullreject_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Fail \"regTC13_fullreject_NPC_KYC_forgeiner\"");
             testAccountData.UnderUse = false;
             testAccountData.KycStatus = TestAccountData.KYCStatus.UnknownKycStatus;
             testAccountData.Card.UnderUse = false;
@@ -401,13 +449,13 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
     }
 
     @Test
-    public void regTC13_resubmit_fullreject_NPC_KYC_forgeiner() {
-        System.out.println("TEST CASE: Start \"regTC13_resubmit_fullreject_NPC_KYC_forgeiner\"");
+    public void regTC14_resubmit_fullreject_NPC_KYC_forgeiner() {
+        System.out.println("TEST CASE: Start \"regTC14_resubmit_fullreject_NPC_KYC_forgeiner\"");
         AndroidElement el;
         try {
             if (testAccountData == null) {
                 fail("fail to load test account from previous test case");
-                System.out.println("TEST CASE: Fail \"regTC13_resubmit_fullreject_NPC_KYC_forgeiner\"");
+                System.out.println("TEST CASE: Fail \"regTC14_resubmit_fullreject_NPC_KYC_forgeiner\"");
             }
             //click retry button
             el = (AndroidElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnRetry", driver);
@@ -428,10 +476,10 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             testAccountData.KycStatus = TestAccountData.KYCStatus.Submit;
             testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
-            System.out.println("TEST CASE: Finish \"regTC13_resubmit_fullreject_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Finish \"regTC14_resubmit_fullreject_NPC_KYC_forgeiner\"");
 
         } catch (Exception e) {
-            System.out.println("TEST CASE: Fail \"regTC13_resubmit_fullreject_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Fail \"regTC14_resubmit_fullreject_NPC_KYC_forgeiner\"");
             testAccountData.UnderUse = false;
             testAccountData.KycStatus = TestAccountData.KYCStatus.UnknownKycStatus;
             testAccountData.Card.UnderUse = false;
@@ -443,12 +491,12 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
     }
 
     @Test
-    public void regTC14_partialreject_NPC_KYC_forgeiner() {
-        System.out.println("TEST CASE: Start \"regTC14_partialreject_NPC_KYC_forgeiner\"");
+    public void regTC15_partialreject_NPC_KYC_forgeiner() {
+        System.out.println("TEST CASE: Start \"regTC15_partialreject_NPC_KYC_forgeiner\"");
         try {
             if (testAccountData == null) {
                 fail("fail to load test account from previous test case");
-                System.out.println("TEST CASE: Fail \"regTC14_partialreject_NPC_KYC_forgeiner\"");
+                System.out.println("TEST CASE: Fail \"regTC15_partialreject_NPC_KYC_forgeiner\"");
             }
             //perform partial rejection
             subProc.procRejectKYC(false);
@@ -456,10 +504,10 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             testAccountData.KycStatus = TestAccountData.KYCStatus.PartialReject;
             testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
-            System.out.println("TEST CASE: Finish \"regTC14_partialreject_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Finish \"regTC15_partialreject_NPC_KYC_forgeiner\"");
 
         } catch (Exception e) {
-            System.out.println("TEST CASE: Fail \"regTC14_partialreject_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Fail \"regTC15_partialreject_NPC_KYC_forgeiner\"");
             testAccountData.UnderUse = false;
             testAccountData.KycStatus = TestAccountData.KYCStatus.UnknownKycStatus;
             testAccountData.Card.UnderUse = false;
@@ -472,13 +520,13 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
     }
 
     @Test
-    public void regTC15_resubmit_partialreject_NPC_KYC_forgeiner() {
-        System.out.println("TEST CASE: Start \"regTC15_resubmit_partialreject_NPC_KYC_forgeiner\"");
+    public void regTC16_resubmit_partialreject_NPC_KYC_forgeiner() {
+        System.out.println("TEST CASE: Start \"regTC16_resubmit_partialreject_NPC_KYC_forgeiner\"");
         AndroidElement el;
         try {
             if (testAccountData == null) {
                 fail("fail to load test account from previous test case");
-                System.out.println("TEST CASE: Fail \"regTC15_resubmit_partialreject_NPC_KYC_forgeiner\"");
+                System.out.println("TEST CASE: Fail \"regTC16_resubmit_partialreject_NPC_KYC_forgeiner\"");
             }
             //click retry button
             el = (AndroidElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnRetry", driver);
@@ -496,10 +544,10 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             testAccountData.KycStatus = TestAccountData.KYCStatus.Submit;
             testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
-            System.out.println("TEST CASE: Finish \"regTC15_resubmit_partialreject_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Finish \"regTC16_resubmit_partialreject_NPC_KYC_forgeiner\"");
 
         } catch (Exception e) {
-            System.out.println("TEST CASE: Fail \"regTC15_resubmit_partialreject_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Fail \"regTC16_resubmit_partialreject_NPC_KYC_forgeiner\"");
             testAccountData.UnderUse = false;
             testAccountData.KycStatus = TestAccountData.KYCStatus.UnknownKycStatus;
             testAccountData.Card.UnderUse = false;
@@ -511,12 +559,12 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
     }
 
     @Test
-    public void regTC16_approved_NPC_KYC_forgeiner() {
-        System.out.println("TEST CASE: Start \"regTC16_approved_NPC_KYC_forgeiner\"");
+    public void regTC17_approved_NPC_KYC_forgeiner() {
+        System.out.println("TEST CASE: Start \"regTC17_approved_NPC_KYC_forgeiner\"");
         try {
             if (testAccountData == null) {
                 fail("fail to load test account from previous test case");
-                System.out.println("TEST CASE: Fail \"regTC16_approved_NPC_KYC_forgeiner\"");
+                System.out.println("TEST CASE: Fail \"regTC17_approved_NPC_KYC_forgeiner\"");
             }
             //perform approval
             subProc.procApproveKYC(false);
@@ -524,10 +572,10 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             testAccountData.KycStatus = TestAccountData.KYCStatus.Clear;
             testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
-            System.out.println("TEST CASE: Finish \"regTC16_approved_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Finish \"regTC17_approved_NPC_KYC_forgeiner\"");
 
         } catch (Exception e) {
-            System.out.println("TEST CASE: Fail \"regTC16_approved_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Fail \"regTC17_approved_NPC_KYC_forgeiner\"");
             testAccountData.UnderUse = false;
             testAccountData.KycStatus = TestAccountData.KYCStatus.UnknownKycStatus;
             testAccountData.Card.UnderUse = false;
@@ -540,13 +588,13 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
     }
 
     @Test
-    public void regTC17_activatecard_NPC_KYC_forgeiner() {
-        System.out.println("TEST CASE: Start \"regTC17_activatecard_NPC_KYC_forgeiner\"");
+    public void regTC18_activatecard_NPC_KYC_forgeiner() {
+        System.out.println("TEST CASE: Start \"regTC18_activatecard_NPC_KYC_forgeiner\"");
         AndroidElement el;
         try {
             if (testAccountData == null) {
                 fail("fail to load test account from previous test case");
-                System.out.println("TEST CASE: Fail \"regTC17_activatecard_NPC_KYC_forgeiner\"");
+                System.out.println("TEST CASE: Fail \"regTC18_activatecard_NPC_KYC_forgeiner\"");
             }
             //activate card
             subProc.procActivateCard(false, testAccountData.Id, null, "1111");
@@ -559,30 +607,35 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             testAccountData.UnderUse = false;
             testAccountData.Card.UnderUse = false;
             subProc.api.data_updateTestUser(testAccountData);
-            System.out.println("TEST CASE: Finish \"regTC17_activatecard_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Finish \"regTC18_activatecard_NPC_KYC_forgeiner\"");
 
         } catch (Exception e) {
-            System.out.println("TEST CASE: Fail \"regTC17_activatecard_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Fail \"regTC18_activatecard_NPC_KYC_forgeiner\"");
+            testAccountData.UnderUse = false;
+            testAccountData.KycStatus = TestAccountData.KYCStatus.UnknownKycStatus;
+            testAccountData.Card.UnderUse = false;
+            subProc.api.data_updateTestUser(testAccountData);
+            testAccountData = null;
             e.printStackTrace();
             fail();
         }
     }
 
     @Test
-    public void regTC18_logout_NPC_KYC_forgeiner() {
-        System.out.println("TEST CASE: Start \"regTC18_logout_NPC_KYC_forgeiner\"");
+    public void regTC19_logout_NPC_KYC_forgeiner() {
+        System.out.println("TEST CASE: Start \"regTC19_logout_NPC_KYC_forgeiner\"");
         try {
             if (testAccountData == null) {
                 fail("fail to load test account from previous test case");
-                System.out.println("TEST CASE: Fail \"regTC18_logout_NPC_KYC_forgeiner\"");
+                System.out.println("TEST CASE: Fail \"regTC19_logout_NPC_KYC_forgeiner\"");
             }
             //logout of account
             subProc.procLogout();
             //reset active test account
             testAccountData = null;
-            System.out.println("TEST CASE: Finish \"regTC18_logout_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Finish \"regTC19_logout_NPC_KYC_forgeiner\"");
         } catch (Exception e) {
-            System.out.println("TEST CASE: Fail \"regTC18_logout_NPC_KYC_forgeiner\"");
+            System.out.println("TEST CASE: Fail \"regTC19_logout_NPC_KYC_forgeiner\"");
             testAccountData = null;
             e.printStackTrace();
             fail();
@@ -590,8 +643,8 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
     }
 
     @Test
-    public void regTC19_login_existing_user_OTP() {
-        System.out.println("TEST CASE: Start \"regTC19_login_existing_user_OTP\"");
+    public void regTC20_login_existing_user_OTP() {
+        System.out.println("TEST CASE: Start \"regTC20_login_existing_user_OTP\"");
         AndroidElement el;
         try {
             //using SIT Profile account for testing
@@ -610,49 +663,15 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             el = (AndroidElement) UIElementKeyDict.getElement(PageKey.HomePageElementDict, "logoYouTrip", driver);
             assertTrue(el.isDisplayed());
             System.out.println("TEST STEP: Home Page - on page");
-            System.out.println("TEST CASE: Finish \"regTC19_login_existing_user_OTP\"");
+            System.out.println("TEST CASE: Finish \"regTC20_login_existing_user_OTP\"");
 
         } catch (Exception e) {
-            System.out.println("TEST CASE: Fail \"regTC19_login_existing_user_OTP\"");
+            System.out.println("TEST CASE: Fail \"regTC20_login_existing_user_OTP\"");
             testAccountData = null;
             e.printStackTrace();
             fail();
         }
     }
 
-    /*@Test
-    public void regTC20_topup_addcard_3DS_notsupported() {
-
-    }
-
-    @Test
-    public void regTC21_topup_addcard_3DS_supported_cancel() {
-
-    }
-
-    @Test
-    public void regTC22_topup_addcard_3DS_supported_verify_cancelled() {
-
-    }
-
-    @Test
-    public void regTC23_topup_addcard_3DS_supported_verify_failed() {
-
-    }
-
-    @Test
-    public void regTC24_topup_addcard_3DS_supported_verify_success() {
-
-    }
-
-    @Test
-    public void regTC25_topup_updatecard() {
-
-    }
-
-    @Test
-    public void regTC26_topup() {
-
-    }*/
 
 }

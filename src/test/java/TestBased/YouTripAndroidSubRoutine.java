@@ -673,7 +673,41 @@ public class YouTripAndroidSubRoutine {
 
             //handle y-number entry for PC
             if (isPC) {
-                //TODO write method for PC flow
+                System.out.println("TEST STEP: Enter Y-Number Page - on page");
+                System.out.println("TEST DATA: Y-Number is " +ynumber);
+                String ynum_digit1 = ynumber.substring(2);
+                String ynum_digit2 = ynumber.substring(3);
+                String ynum_digit3 = ynumber.substring(4);
+                String ynum_digit4 = ynumber.substring(5);
+                String ynum_digit5 = ynumber.substring(6);
+                String ynum_digit6 = ynumber.substring(7);
+                String ynum_digit7 = ynumber.substring(8);
+                String ynum_digit8 = ynumber.substring(9);
+                String ynum_digit9 = ynumber.substring(10);
+                String ynum_digit10 = ynumber.substring(11);
+                //enter y-number - note: need to enter each digit separately
+                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.YnumberPageElementDict, "yNumDigit1", driver);
+                el.sendKeys(ynum_digit1);
+                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.YnumberPageElementDict, "yNumDigit2", driver);
+                el.sendKeys(ynum_digit2);
+                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.YnumberPageElementDict, "yNumDigit3", driver);
+                el.sendKeys(ynum_digit3);
+                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.YnumberPageElementDict, "yNumDigit4", driver);
+                el.sendKeys(ynum_digit4);
+                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.YnumberPageElementDict, "yNumDigit5", driver);
+                el.sendKeys(ynum_digit5);
+                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.YnumberPageElementDict, "yNumDigit6", driver);
+                el.sendKeys(ynum_digit6);
+                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.YnumberPageElementDict, "yNumDigit7", driver);
+                el.sendKeys(ynum_digit7);
+                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.YnumberPageElementDict, "yNumDigit8", driver);
+                el.sendKeys(ynum_digit8);
+                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.YnumberPageElementDict, "yNumDigit9", driver);
+                el.sendKeys(ynum_digit9);
+                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.YnumberPageElementDict, "yNumDigit10", driver);
+                el.sendKeys(ynum_digit10);
+                System.out.println("TEST STEP: Enter Y-Number Page - entered Y-number");
+                Thread.sleep(2000);
             }
 
             //wait till on confirm email page and continue
@@ -741,6 +775,18 @@ public class YouTripAndroidSubRoutine {
             }
 
         }catch(Exception e) {
+            throw e;
+        }
+    }
+
+    public void procVerifyInHomePage() throws Exception {
+        AndroidElement el;
+        try {
+            //find YouTrip logo from top of home page
+            el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.HomePageElementDict, "logoYouTrip", driver);
+            assertTrue(el.isDisplayed());
+            System.out.println("TEST STEP: Home Page - on page");
+        }catch(Exception e){
             throw e;
         }
     }

@@ -148,7 +148,7 @@
         </profile>
 
         <profile>
-            <id>android_sg_sit_local</id>
+            <id>android_local</id>
             <build>
                 <plugins>
                     <plugin>
