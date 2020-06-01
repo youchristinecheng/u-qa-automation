@@ -28,11 +28,6 @@
                     <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>
                     <include name="regTC23_NPC_Activate_Card"/>
-                    <include name="regTC07_Logout"/>
-                    <include name="regTC25_UpdateCardFromTopUpPage"/>
-                    <include name="regTC25_UpdateCardFromOrderCardReplacePage"/>
-                    <include name="regTC26_TopUpSuccess"/>
-                    <include name="regTC33_ChangePINFromSetting"/>
                 </methods>
             </class>
         </classes>
