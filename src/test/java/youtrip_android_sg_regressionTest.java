@@ -599,9 +599,12 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             //activate card
             subProc.procActivateCard(false, testAccountData.Id, null, "1111");
             Thread.sleep(10000);
-            el = (AndroidElement) UIElementKeyDict.getElement(PageKey.HomePageElementDict, "logoYouTrip", driver);
-            assertTrue(el.isDisplayed());
-            System.out.println("TEST STEP: Home Page - on page");
+
+            //below check removed due to Flutter home page
+            //el = (AndroidElement) UIElementKeyDict.getElement(PageKey.HomePageElementDict, "logoYouTrip", driver);
+            //assertTrue(el.isDisplayed());
+            //System.out.println("TEST STEP: Home Page - on page");
+
             //update test user
             testAccountData.Card.Status = TestAccountData.CardStatus.NewActive;
             testAccountData.UnderUse = false;
@@ -659,10 +662,10 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
             subProc.procOTPLogin(testAccountData.MCC, testAccountData.PhoneNumber, false);
             //enter PIN
             subProc.procEnterPIN(pin);
-            //check if on home page
-            el = (AndroidElement) UIElementKeyDict.getElement(PageKey.HomePageElementDict, "logoYouTrip", driver);
-            assertTrue(el.isDisplayed());
-            System.out.println("TEST STEP: Home Page - on page");
+            //below check removed due to Flutter home page
+            //el = (AndroidElement) UIElementKeyDict.getElement(PageKey.HomePageElementDict, "logoYouTrip", driver);
+            //assertTrue(el.isDisplayed());
+            //System.out.println("TEST STEP: Home Page - on page");
             System.out.println("TEST CASE: Finish \"regTC20_login_existing_user_OTP\"");
 
         } catch (Exception e) {
