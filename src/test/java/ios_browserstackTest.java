@@ -7,6 +7,8 @@ import org.testng.ITestResult;
 import org.testng.annotations.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import java.io.File;
 import java.net.URL;
 import java.io.FileReader;
 import java.util.Map;
@@ -79,7 +81,10 @@ public class ios_browserstackTest {
         }
 
         if(username.equals("") && accessKey.equals("")){
-            capabilities.setCapability("app", commonCapabilities.get("app"));
+            File classpathRoot = new File(System.getProperty("user.dir"));
+            File appDir = new File(classpathRoot, "apps/");
+            File app = new File(appDir, commonCapabilities.get("app"));
+            capabilities.setCapability("app",app.getAbsolutePath());
             driver = new IOSDriver<>(new URL("http://"+ config.get("server") + "/wd/hub"), capabilities);
         }else{
             capabilities.setCapability("app", appUrl);
