@@ -27,15 +27,22 @@ public class ios_flutterTest {
         //set capabilities
         capabilities.setCapability("automationName", "Flutter");
         capabilities.setCapability("platformName", "iOS");
-        capabilities.setCapability("deviceName", "YouTech iPhone");
-        capabilities.setCapability("platformVersion", "13.1.2");
-        capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
         capabilities.setCapability("xcodeOrgId", "2HWNYH89R4");
         capabilities.setCapability("xcodeSigningId", "iPhone Developer");
         //capabilities.setCapability("autoGrantPermissions", "true");
 
-        //get app
+        //for real device
+        //capabilities.setCapability("deviceName", "YouTech iPhone");
+        //capabilities.setCapability("platformVersion", "13.1.2");
+        //capabilities.setCapability("udid", "cbfc3c66708111e5a48ad06f8917b951007bcb9e");
+        //capabilities.setCapability("app", "/Users/danielchan/IdeaProjects/u-qa-automation/apps/Payload.ipa");
+
+        //for emulator
+        capabilities.setCapability("deviceName", "iPhone 11");
+        capabilities.setCapability("platformVersion", "13.2");
+        capabilities.setCapability("udid", "E4DC51F2-F053-49E0-ABA4-59BE5A253EBF");
         capabilities.setCapability("app", "/Users/danielchan/IdeaProjects/u-qa-automation/apps/Payload.ipa");
+
 
         //connect to appium server
         driver = new IOSDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
