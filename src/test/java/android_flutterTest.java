@@ -40,7 +40,10 @@ public class android_flutterTest {
         capabilities.setCapability("autoGrantPermissions", "true");
 
         //get app
-        capabilities.setCapability("app", "/Users/danielchan/IdeaProjects/u-qa-automation/apps/app-debug.apk");
+        File classpathRoot = new File(System.getProperty("user.dir"));
+        File appDir = new File(classpathRoot, "apps/");
+        File app = new File(appDir, "app-debug.apk");
+        capabilities.setCapability("app",app.getAbsolutePath());
 
         //connect to appium server
         driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);

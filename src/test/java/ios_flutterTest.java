@@ -10,6 +10,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pro.truongsinh.appium_flutter.FlutterFinder;
 
+import java.io.File;
 import java.net.URL;
 
 public class ios_flutterTest {
@@ -41,8 +42,12 @@ public class ios_flutterTest {
         capabilities.setCapability("deviceName", "iPhone 11");
         capabilities.setCapability("platformVersion", "13.2");
         capabilities.setCapability("udid", "E4DC51F2-F053-49E0-ABA4-59BE5A253EBF");
-        capabilities.setCapability("app", "/Users/danielchan/IdeaProjects/u-qa-automation/apps/Payload.ipa");
 
+        //get app
+        File classpathRoot = new File(System.getProperty("user.dir"));
+        File appDir = new File(classpathRoot, "apps/");
+        File app = new File(appDir, "Runner.app");
+        capabilities.setCapability("app",app.getAbsolutePath());
 
         //connect to appium server
         driver = new IOSDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
