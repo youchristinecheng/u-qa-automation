@@ -7,6 +7,8 @@ import org.testng.ITestResult;
 import org.testng.annotations.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import java.io.File;
 import java.net.URL;
 import java.io.FileReader;
 import java.util.Map;
@@ -73,7 +75,10 @@ public class android_browserstackTest {
         //set dynamic capabilities for app hash value and build name
         //if local config then use those in config file
         if (config_file.equals("android_conf_debug_local.json")) {
-            capabilities.setCapability("app", commonCapabilities.get("app"));
+            File classpathRoot = new File(System.getProperty("user.dir"));
+            File appDir = new File(classpathRoot, "apps/");
+            File app = new File(appDir, commonCapabilities.get("app"));
+            capabilities.setCapability("app",app.getAbsolutePath());
         } else {
             capabilities.setCapability("app", appUrl);
             capabilities.setCapability("build", buildName);

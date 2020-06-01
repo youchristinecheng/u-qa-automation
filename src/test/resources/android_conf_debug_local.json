@@ -6,13 +6,13 @@
   "capabilities": {
     "automationName": "UiAutomator2",
     "platformName": "Android",
-    "app": "/Users/danielchan/IdeaProjects/u-qa-automation/apps/app-stub-release-HEAD-3.6.1.1198.apk"
+    "app": "app-sit-release-HEAD-3.6.0.1189.apk"
   },
 
   "device": {
     "note9_wireless": {
       "deviceName": "Galaxy Note 9",
-      "deviceId" : "192.168.1.25:5555",
+      "deviceId" : "192.168.1.55:5555",
       "version": "9.0.0"
     },
     "note9_wired": {
