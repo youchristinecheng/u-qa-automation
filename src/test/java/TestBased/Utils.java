@@ -1,6 +1,7 @@
 package TestBased;
 
 import TestBased.TestAccountData.*;
+import io.appium.java_client.AppiumDriver;
 import kong.unirest.json.JSONObject;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -161,5 +162,15 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    private static ThreadLocal<AppiumDriver> sharedDriver = new ThreadLocal<>();
+
+    public synchronized static void setDriver(AppiumDriver driver) {
+        sharedDriver.set(driver);
+    }
+
+    public synchronized static AppiumDriver getDriver() {
+        return sharedDriver.get();
     }
 }

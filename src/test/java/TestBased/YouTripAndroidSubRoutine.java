@@ -40,6 +40,18 @@ public class YouTripAndroidSubRoutine {
         return this.wait;
     }
 
+    public void procOnCountryScreen() throws InterruptedException {
+        AndroidElement el;
+        try {
+            Thread.sleep(2000);
+            //wait till on country page and click country select
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CountryPageElementDict, "lblTitle", driver)));
+            System.out.println("TEST STEP: Country Page - on page");
+        }catch(Exception e){
+            throw e;
+        }
+    }
+
     public void procSelectCountry(Market country) throws Exception {
         String expectedResult;
         AndroidElement el;
