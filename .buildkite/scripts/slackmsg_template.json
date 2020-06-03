@@ -4,16 +4,15 @@
         {
             "mrkdwn_in": ["text"],
             "color": "<COLOR>",
-            "title": "Test <PLATFORM> Automation",
-            "text": "[ <ENV> ] APP Version <BUILDVER> ",
+            "title": "<STATUS> : <JOBTYPE> Test <PLATFORM> Automation",
+            "text": "[ <ENV> ] APP Version = <BUILDVER> ",
             "fields": [
                 {
                     "title": "URL",
-                    "value": "https://buildkite.com/you-technologies-group/manual-test-application/builds/<BUILDNUM>",
+                    "value": "https://buildkite.com/you-technologies-group/<JOBNAME>/builds/<BUILDNUM>",
                     "short": false
                 }
             ],
-            "ts": 123456789
         }
     ]
 }

@@ -1,41 +1,17 @@
 env:
-  BUILDKITE_JOBTYPE: "Manual"
+  ENV: "sgsit"
+  PLATFORM: "ios_sg_regression_single"
+  BUILDVER: "latest"
+  BUILDKITE_JOBTYPE: "Schedule"
 steps:
-  - block: "Testing Parameters"
-    fields:
-      - select: "test profile"
-        key: "PLATFORM"
-        options:
-          - label: "iOS - SG - Regression"
-            value: "ios_sg_regression_single"
-          - label: "iOS - SG - Regression(Multi-Devices)"
-            value: "ios_sg_regression_parallel"
-          - label: "iOS - TH - Regression"
-            value: "ios_th_regression_single"
-          - label: "ANDROID - SG Regression"
-            value: "android_sg_regression_single"
-          - label: "ANDROID - SG Regression(Multi-Devices)"
-            value: "android_sg_regression_parallel"
-      - select: "env"
-        key: "ENV"
-        options:
-          - label: "SG - SIT"
-            value: "sgsit"
-          - label: "SG - DEV"
-            value: "sgdev"
-          - label: "TH - DEV"
-            value: "thdev"
-      - text: "build version"
-        key: "BUILDVER"
-        default: "latest"
   - label: "Run Test"
     key: "test"
     commands:
       - "buildkite-agent meta-data set TEST_RESULT true"
       - "./Script/auto_test_browserstack_appcenter_integrate.bash \
-      $(buildkite-agent meta-data get PLATFORM) \
-      $(buildkite-agent meta-data get BUILDVER) \
-      $(buildkite-agent meta-data get ENV) || buildkite-agent meta-data set TEST_RESULT false"
+      $PLATFORM \
+      $BUILDVER \
+      $ENV || buildkite-agent meta-data set TEST_RESULT false"
     agents:
       queue: "${BUILDKITE_AGENT_META_DATA_QUEUE}"
     plugins:
@@ -54,9 +30,9 @@ steps:
       - "cd .buildkite/scripts/"
       - "buildkite-agent artifact download target/surefire-reports/emailable-report.html . --step 'Run Test'"
       - "./send-slack-notification.sh target/surefire-reports/emailable-report.html \
-      $(buildkite-agent meta-data get ENV) \
-      $(buildkite-agent meta-data get PLATFORM) \
-      $(buildkite-agent meta-data get BUILDVER) \
+      $ENV \
+      $PLATFORM \
+      $BUILDVER \
       $(buildkite-agent meta-data get TEST_RESULT)"
     depends_on:
       - step: "test"
