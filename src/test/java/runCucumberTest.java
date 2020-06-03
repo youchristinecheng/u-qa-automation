@@ -8,7 +8,7 @@ import org.testng.annotations.*;
 
 @CucumberOptions(
         strict = true,
-        features = "src/test/resources/Features/",
+        features = "src/test/Features/",
         glue = {"Steps"},
         //tags = {"@RunScenario"},
         tags = {"not @broken"},

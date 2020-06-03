@@ -9,7 +9,7 @@ import static org.testng.Assert.assertEquals;
 
 public class LoginRegSteps extends BaseSteps {
 
-    @Given("^user has launched the app and is on country selection page$")
+    @Given("^user is on country selection page$")
     public void user_on_country_selection() {
         try {
             subProc.procOnCountryScreen();
