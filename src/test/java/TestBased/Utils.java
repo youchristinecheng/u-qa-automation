@@ -40,6 +40,9 @@ import static org.testng.Assert.fail;
 
 public class Utils {
 
+    public static final String S3ACCESSKEY = "AKIA5Q7BAXIXWLQHFK5L";
+    public static final String S3SECRETKEY = "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";
+
     Random rand = new Random();
     String decimalAmtFormat = "#,###.00";
 
@@ -201,8 +204,6 @@ public class Utils {
 
 
     public File getAndValidCRIFile(String userId, boolean isDevEnv, Market market) throws Exception{
-        String s3AccessKey = "AKIA5Q7BAXIXWLQHFK5L";
-        String s3SecretKey = "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";
         CriReqCardObj targetCardObj = null;
         File fp = null;
 
@@ -221,7 +222,7 @@ public class Utils {
             }
 
             if (targetCardObj == null) {
-                AWSCredentials myCredentials = new BasicAWSCredentials(s3AccessKey, s3SecretKey);
+                AWSCredentials myCredentials = new BasicAWSCredentials(Utils.S3ACCESSKEY, Utils.S3SECRETKEY);
                 AmazonS3 s3client = AmazonS3ClientBuilder.standard().withRegion("ap-southeast-1").withCredentials(new AWSStaticCredentialsProvider(myCredentials)).build();
 
                 System.out.println("Downloading an object...");
