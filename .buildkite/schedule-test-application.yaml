@@ -1,7 +1,4 @@
 env:
-  ENV: "sgsit"
-  PLATFORM: "ios_sg_regression_single"
-  BUILDVER: "latest"
   BUILDKITE_JOBTYPE: "Schedule"
 steps:
   - label: "Run Test"
