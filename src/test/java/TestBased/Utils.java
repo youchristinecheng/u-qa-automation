@@ -1,14 +1,25 @@
 package TestBased;
 
 import TestBased.TestAccountData.*;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import kong.unirest.json.JSONObject;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.ITestAnnotation;
+import org.testng.Assert;
 
 import javax.xml.bind.DatatypeConverter;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -20,6 +31,11 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+
+import static org.testng.Assert.fail;
 
 
 public class Utils {
@@ -161,5 +177,114 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    private CriReqCardObj foundTargetCardObject(File fp, String yNumber){
+        try {
+            CriReqCardObj targetCardObj = null;
+            JAXBContext jaxbContext = JAXBContext.newInstance(CRDREQ.class);
+
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            CRDREQ crdreq = (CRDREQ) jaxbUnmarshaller.unmarshal(fp);
+
+            for (CriReqCardObj cardObj : crdreq.CARD) {
+                if (cardObj.RECID.equals(yNumber)) {
+                    targetCardObj = cardObj;
+                    break;
+                }
+            }
+            return targetCardObj;
+        }catch(Exception ex){
+            return null;
+        }
+    }
+
+
+    public File getAndValidCRIFile(String userId, boolean isDevEnv, Market market) throws Exception{
+        String s3AccessKey = "AKIA5Q7BAXIXWLQHFK5L";
+        String s3SecretKey = "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";
+        CriReqCardObj targetCardObj = null;
+        File fp = null;
+
+        try {
+            DBInfoRetriever dbInfo = new DBInfoRetriever(DBConnectionHandler.getInstance(isDevEnv, market));
+            HashMap<String, String> criObj = dbInfo.getCriInfoByUserId(userId);
+            String youId = criObj.get("youId");
+            String criFileId = criObj.get("criFileId");
+            String criFileName = criFileId.substring(criFileId.lastIndexOf("/") + 1);
+
+            fp = new File("src/test/resources/" + criFileName);
+            // Check if Y-number is exist in the last download CRI File
+            if (fp.exists()){
+//                targetCardObj = foundTargetCardObject(fp, youId);
+                Files.deleteIfExists(fp.toPath());
+            }
+
+            if (targetCardObj == null) {
+                AWSCredentials myCredentials = new BasicAWSCredentials(s3AccessKey, s3SecretKey);
+                AmazonS3 s3client = AmazonS3ClientBuilder.standard().withRegion("ap-southeast-1").withCredentials(new AWSStaticCredentialsProvider(myCredentials)).build();
+
+                System.out.println("Downloading an object...");
+                S3Object s3object = s3client.getObject(new GetObjectRequest("u-backend-store-sit", criFileId));
+                System.out.println("Content-Type: " + s3object.getObjectMetadata().getContentType());
+                InputStream s3input = s3object.getObjectContent();
+
+
+                FileOutputStream fileOutputStream = new FileOutputStream(fp);
+                byte[] dataBuffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = s3input.read(dataBuffer, 0, 1024)) != -1) {
+                    fileOutputStream.write(dataBuffer, 0, bytesRead);
+                }
+                fileOutputStream.close();
+
+                targetCardObj = foundTargetCardObject(fp, youId);
+                if (targetCardObj == null) {
+                    fail("No Card entry is found by Y-Number: [" + youId + "] with CRI file:" + criFileId);
+                }
+            }
+
+            Assert.assertEquals(targetCardObj.ACCPROFILE, criObj.get("accProfile"));
+            Assert.assertEquals(targetCardObj.ACTION, criObj.get("action"));
+
+            Assert.assertEquals(targetCardObj.ADDRL1, criObj.get("ref_code_addr1"));
+            Assert.assertEquals(targetCardObj.ADDRL2, criObj.get("ref_code_addr2"));
+            Assert.assertEquals(targetCardObj.CARDNAME, criObj.get("cardName"));
+            Assert.assertEquals(targetCardObj.CARRIERCODE, criObj.get("carrierCode"));
+            Assert.assertEquals(targetCardObj.CITY, criObj.get("city"));
+            Assert.assertEquals(targetCardObj.COUNTRY, criObj.get("country"));
+            Assert.assertEquals(targetCardObj.CRDPRODUCT, criObj.get("cardProduct"));
+            Assert.assertEquals(targetCardObj.CRDPROFILE, criObj.get("cardProfile"));
+            Assert.assertEquals(targetCardObj.CRDUSRDATA, youId);
+            Assert.assertEquals(targetCardObj.CURRCODE, criObj.get("curCode"));
+            Assert.assertEquals(targetCardObj.DESIGNREF, criObj.get("designRef"));
+            Assert.assertEquals(targetCardObj.DOB, criObj.get("dateOfBirth"));
+
+            Assert.assertEquals(targetCardObj.FIRSTNAME, criObj.get("firstName"));
+            Assert.assertEquals(targetCardObj.INSTCODE, criObj.get("instCode"));
+            Assert.assertEquals(targetCardObj.LANG, criObj.get("language"));
+            Assert.assertEquals(targetCardObj.LASTNAME, criObj.get("lastName"));
+
+            Assert.assertEquals(targetCardObj.NEWACC, criObj.get("newAcc"));
+            Assert.assertEquals(targetCardObj.NEWCUST, criObj.get("newCust"));
+            Assert.assertNotNull(targetCardObj.PINBLK);
+            Assert.assertEquals(targetCardObj.POSTCODE, criObj.get("postCode"));
+
+            Assert.assertNotNull(targetCardObj.PRODUCEPIN);
+            Assert.assertEquals(targetCardObj.PROGRAMID, criObj.get("programId"));
+            Assert.assertEquals(targetCardObj.STATCODE, criObj.get("statusCode"));
+
+            return fp;
+        } catch (AmazonServiceException ase) {
+            ase.printStackTrace();
+            fail();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            fail();
+        } catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+
     }
 }
