@@ -2,6 +2,7 @@ import TestBased.TestAccountData;
 import TestBased.TestAccountData.CardStatus;
 import TestBased.TestAccountData.CardType;
 import TestBased.TestAccountData.KYCStatus;
+import TestBased.TestAccountData.KYCDocType;
 import TestBased.TestAccountData.Market;
 import TestBased.TestCardData;
 import TestBased.YouTripIosUIElementKey.PageKey;
@@ -135,7 +136,12 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "btnPCRegister", driver);
             el.click();
 
-            subProc.procSubmitSGPCNRICKYC(osMainVerInt, false, false, testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
+//            subProc.procSubmitSGPCNRICKYC(osMainVerInt, false, false, testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
+//                    testAccountData.Birthdate, testAccountData.NricNumber,
+//                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
+//                    null, null, null, null, null, null);
+            subProc.procSubmitNonMyInfoKYC(osMainVerInt, true, false, false, KYCDocType.MANUALNRIC, null,
+                    testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
                     testAccountData.Birthdate, testAccountData.NricNumber,
                     testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
                     null, null, null, null, null, null);
@@ -210,7 +216,12 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             el.click();
             Thread.sleep(2000);
 
-            subProc.procSubmitSGPCNRICKYC(osMainVerInt, true, false, testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
+//            subProc.procSubmitSGPCNRICKYC(osMainVerInt, true, false, testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
+//                    testAccountData.Birthdate, testAccountData.NricNumber,
+//                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
+//                    newSurname, newGivenName, newNameOnCard, newDateOfBirth, newAddressLine1, newAddressLine2);
+            subProc.procSubmitNonMyInfoKYC(osMainVerInt, true, true, false, KYCDocType.MANUALNRIC, null,
+                    testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
                     testAccountData.Birthdate, testAccountData.NricNumber,
                     testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
                     newSurname, newGivenName, newNameOnCard, newDateOfBirth, newAddressLine1, newAddressLine2);
@@ -300,7 +311,12 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             el.click();
             Thread.sleep(2000);
 
-            subProc.procSubmitSGPCNRICKYC(osMainVerInt, false, true, testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
+//            subProc.procSubmitSGPCNRICKYC(osMainVerInt, false, true, testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
+//                    testAccountData.Birthdate, testAccountData.NricNumber,
+//                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
+//                    null, null, null, null, null, null);
+            subProc.procSubmitNonMyInfoKYC(osMainVerInt, true, false, true, KYCDocType.MANUALNRIC, null,
+                    testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
                     testAccountData.Birthdate, testAccountData.NricNumber,
                     testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
                     null, null, null, null, null, null);
@@ -535,10 +551,15 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             el.click();
             Thread.sleep(2000);
 
-            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, false, false, testAccountData.Card.YouId, testAccountData.LastName, testAccountData.FirstName,
+//            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, false, false, testAccountData.Card.YouId, testAccountData.LastName, testAccountData.FirstName,
+//                    testAccountData.Birthdate, testAccountData.NricNumber,
+//                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
+//                    null, null, null, null, null);
+            subProc.procSubmitNonMyInfoKYC(osMainVerInt, false, false, false, KYCDocType.EMPLOYMENTPASS, testAccountData.Card.YouId,
+                    testAccountData.LastName, testAccountData.FirstName, null,
                     testAccountData.Birthdate, testAccountData.NricNumber,
                     testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
-                    null, null, null, null, null);
+                    null, null, null, null, null, null);
 
             Thread.sleep(20000);
             System.out.println("TEST STEP: Verify Back to Limited Home Page");
@@ -618,11 +639,15 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             el.click();
             Thread.sleep(2000);
 
-            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, true, false, testAccountData.Card.YouId, testAccountData.LastName, testAccountData.FirstName,
+//            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, true, false, testAccountData.Card.YouId, testAccountData.LastName, testAccountData.FirstName,
+//                    testAccountData.Birthdate, testAccountData.NricNumber,
+//                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
+//                    newSurname, newGivenName, newDateOfBirth, newAddressLine1, newAddressLine2);
+            subProc.procSubmitNonMyInfoKYC(osMainVerInt, false, true, false, KYCDocType.EMPLOYMENTPASS, testAccountData.Card.YouId,
+                    testAccountData.LastName, testAccountData.FirstName, null,
                     testAccountData.Birthdate, testAccountData.NricNumber,
                     testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
-                    newSurname, newGivenName, newDateOfBirth, newAddressLine1, newAddressLine2);
-
+                    newSurname, newGivenName, null, newDateOfBirth, newAddressLine1, newAddressLine2);
 
             testAccountData.LastName = newSurname;
             testAccountData.FirstName = newGivenName;
@@ -710,10 +735,15 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             el.click();
             Thread.sleep(2000);
 
-            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, false, true, testAccountData.Card.YouId, testAccountData.LastName, testAccountData.FirstName,
+//            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, false, true, testAccountData.Card.YouId, testAccountData.LastName, testAccountData.FirstName,
+//                    testAccountData.Birthdate, testAccountData.NricNumber,
+//                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
+//                    null, null, null, null, null);
+            subProc.procSubmitNonMyInfoKYC(osMainVerInt, false, false, true, KYCDocType.EMPLOYMENTPASS, testAccountData.Card.YouId,
+                    testAccountData.LastName, testAccountData.FirstName, null,
                     testAccountData.Birthdate, testAccountData.NricNumber,
                     testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
-                    null, null, null, null, null);
+                    null, null, null, null, null, null);
 
             Thread.sleep(20000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);

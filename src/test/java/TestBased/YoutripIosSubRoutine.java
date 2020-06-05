@@ -7,7 +7,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import TestBased.TestAccountData.Market;
+import TestBased.TestAccountData.KYCDocType;
 import org.testng.Assert;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -180,21 +182,70 @@ public class YoutripIosSubRoutine {
         }
     }
 
-    public void procSubmitSGPCNRICKYC(int deviceOSVersion, boolean isFullRejectFlow, boolean isPartialRejectFlow, String surname, String givenName,
-                                      String nameOnCard, String dateOfBirth, String nricNumber,
-                                      String addressLine1, String addressLine2, String postoalCode,
-                                      String newSurname, String newGivenName, String newNameOnCard, String newDateOfBirth, String newAddressLine1, String newAddressLine2) throws Exception {
+    private void procSelectKYCDocType(String CardTypeDisplay, KYCDocType docType) throws Exception{
         IOSElement el;
-
-        if(!isPartialRejectFlow) {
-            System.out.println("TEST STEP: PC Registration - NRIC");
+        if(docType.equals(KYCDocType.MANUALNRIC)){
+            System.out.println("TEST STEP: " + CardTypeDisplay + " Registration - NRIC");
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.IdentityVerificationElementDict, "singaporeanPRRegister", driver);
             el.click();
             // Select on Manual NRIC
-            System.out.println("TEST STEP: PC Registration - Select Manual NRIC");
+            System.out.println("TEST STEP: " + CardTypeDisplay + " Registration - Select Manual NRIC");
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PRRegistrationElementDict, "btnSubmit", driver);
             el.click();
             Thread.sleep(2000);
+        }else{
+            System.out.println("TEST STEP: " + CardTypeDisplay + " Registration - Foreigner " + docType);
+            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.IdentityVerificationElementDict, "foreignerRegister", driver);
+            el.click();
+            Thread.sleep(2000);
+
+            if(docType.equals(KYCDocType.EMPLOYMENTPASS)
+                    || docType.equals(KYCDocType.SPASS)
+                    || docType.equals(KYCDocType.WORKPERMIT)
+                    || docType.equals(KYCDocType.STUNDETSPASS)) {
+                System.out.println("TEST STEP: " + CardTypeDisplay + " Registration - Select" + docType);
+                String eleKeyName = "";
+                if (docType.equals("Employment Pass")){
+                    eleKeyName = "btnEmploymentPass";
+                }else if (docType.equals("S Pass")){
+                    eleKeyName = "btnSPass";
+                }else if (docType.equals("Work Permit")){
+                    eleKeyName = "btnWorkPermit";
+                }else {
+                    eleKeyName = "btnStudentPass";
+                }
+                el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.DocumentTypeRegistrationElementDict, eleKeyName, driver);
+                el.click();
+                Thread.sleep(2000);
+            }else{
+                System.out.println("TEST STEP: " + CardTypeDisplay + " Registration - Select Other");
+                el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.IdentityVerificationElementDict, "btnOthers", driver);
+                el.click();
+                Thread.sleep(2000);
+
+                throw new Exception("Selection of other is not yet handle");
+            }
+        }
+    }
+
+    public void procSubmitNonMyInfoKYC(int deviceOSVersion, boolean isPC, boolean isFullRejectFlow, boolean isPartialRejectFlow, KYCDocType docType,
+                              String youId, String surname, String givenName,
+                              String nameOnCard, String dateOfBirth, String nricNumber,
+                              String addressLine1, String addressLine2, String postoalCode,
+                              String newSurname, String newGivenName, String newNameOnCard, String newDateOfBirth, String newAddressLine1, String newAddressLine2) throws Exception{
+        IOSElement el;
+        String CardTypeDisplay = isPC ? "PC" : "NPC";
+
+        if(!isPartialRejectFlow) {
+            if(!isFullRejectFlow && !isPC) {
+                System.out.println("TEST STEP: " + CardTypeDisplay + " Registration - Enter Y-Number");
+                wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EnterYNumberPageElementDict, "lblTitle", driver), "Enter Y-Number"));
+                el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EnterYNumberPageElementDict, "txtYouIdDigit1", driver);
+                el.sendKeys(youId.substring(2));
+                Thread.sleep(2000);
+            }
+
+            this.procSelectKYCDocType(CardTypeDisplay, docType);
 
             System.out.println("TEST STEP: KYC Start Page - on page");
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.StepsPageElementDict, "lblTitle", driver), "Just a Few Steps"));
@@ -234,10 +285,39 @@ public class YoutripIosSubRoutine {
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PhotoConfirmPageElementDict, "btnAllDataIsReadable", driver);
             el.click();
             Thread.sleep(2000);
+
+            if(!docType.equals(KYCDocType.MANUALNRIC)) {
+                System.out.println("TEST STEP: KYC Process - Start Proof of Address Capture dialog");
+                wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblTitle", driver), "Proof of Address"));
+                Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDesc", driver).getText(), "Please take a photo of one of the followings:");
+                Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt1", driver).getText(), "•      Phone Bill within 6 months");
+                Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt2", driver).getText(), "•      Utilities Bill within 6 months");
+                Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt3", driver).getText(), "•      Bank Statement within 6 months");
+                Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt4", driver).getText(), "•      Other accepted documents");
+                el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "btnOK", driver);
+                el.click();
+                Thread.sleep(1000);
+
+                System.out.println("TEST STEP: KYC Process - Proof of Address Capture");
+                el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CameraPageElementDict, "btnShutter", driver);
+                el.click();
+                Thread.sleep(1000);
+
+                System.out.println("TEST STEP: KYC Process - Confirm Proof of Address capture");
+                el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PhotoConfirmPageElementDict, "btnAllDataIsReadable", driver);
+                el.click();
+                Thread.sleep(2000);
+            }
         }
 
         System.out.println("TEST STEP: KYC Process - Enter User Name");
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "lblTitle", driver), "Full Name (as per NRIC)"));
+        String fullNameTitle = "";
+        if(!docType.equals(KYCDocType.MANUALNRIC)){
+            fullNameTitle = "Full Name (as per NRIC)";
+        }else{
+            fullNameTitle = "Full Name (as per Pass / Permit)";
+        }
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "lblTitle", driver), fullNameTitle));
         if(isFullRejectFlow || isPartialRejectFlow) {
             if(deviceOSVersion >= 13) {
                 wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtSurname", driver), surname));
@@ -252,8 +332,10 @@ public class YoutripIosSubRoutine {
                 el.click();
                 this.clearTextFieldValueForiOS12(el, givenName.length());
                 el.sendKeys(newGivenName);
-                // by default app will update the NameOnCard as it has been updated
-                nameOnCard = newSurname + " " + newGivenName;
+                if(isPC) {
+                    // by default app will update the NameOnCard as it has been updated
+                    nameOnCard = newSurname + " " + newGivenName;
+                }
             }
         }else {
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtSurname", driver);
@@ -270,22 +352,24 @@ public class YoutripIosSubRoutine {
         el.click();
         Thread.sleep(2000);
 
-        System.out.println("TEST STEP: KYC Process - Enter NameOnCard");
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NameOnCardElementDict, "lblTitle", driver), "Preferred Name"));
-        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NameOnCardElementDict, "txtCardName", driver);
-        if(deviceOSVersion >= 13) {
-            Assert.assertEquals(el.getText(), nameOnCard);
-        }
-        if(isFullRejectFlow) {
+        if(isPC){
+            System.out.println("TEST STEP: KYC Process - Enter NameOnCard");
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NameOnCardElementDict, "lblTitle", driver), "Preferred Name"));
+            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NameOnCardElementDict, "txtCardName", driver);
+            if(deviceOSVersion >= 13) {
+                Assert.assertEquals(el.getText(), nameOnCard);
+            }
+            if(isFullRejectFlow) {
+                el.click();
+                this.clearTextFieldValueForiOS12(el, newSurname.length() + newGivenName.length() + 1);
+                el.sendKeys(newNameOnCard);
+                //Dismiss keyboard from UI
+                driver.hideKeyboard();
+            }
+            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "btnNext", driver);
             el.click();
-            this.clearTextFieldValueForiOS12(el, newSurname.length() + newGivenName.length() + 1);
-            el.sendKeys(newNameOnCard);
-            //Dismiss keyboard from UI
-            driver.hideKeyboard();
+            Thread.sleep(2000);
         }
-        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "btnNext", driver);
-        el.click();
-        Thread.sleep(2000);
 
         System.out.println("TEST STEP: KYC Process - Enter Personal Information");
         wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "lblTitle", driver), "Personal Information"));
@@ -334,199 +418,6 @@ public class YoutripIosSubRoutine {
                 el.sendKeys(newAddressLine1);
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ResidentialAddressElementDict, "txtAddressLine2", driver);
                 this.clearTextFieldValueForiOS12(el, addressLine2.length());
-                el.sendKeys(newAddressLine2);
-            }
-        } else {
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ResidentialAddressElementDict, "txtAddressLine1", driver);
-            el.sendKeys(addressLine1);
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ResidentialAddressElementDict, "txtAddressLine2", driver);
-            el.sendKeys(addressLine2);
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ResidentialAddressElementDict, "txtAddressPostalCode", driver);
-            el.sendKeys(postoalCode);
-        }
-        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ResidentialAddressElementDict, "btnNext", driver);
-        el.click();
-        Thread.sleep(2000);
-
-        System.out.println("TEST STEP: KYC Process - Submit KYC");
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCFinalStepElementDict, "lblTitle", driver), "Final Step"));
-        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCFinalStepElementDict, "btnAgree", driver);
-        el.click();
-        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCFinalStepElementDict, "btnSubmit", driver);
-        el.click();
-        Thread.sleep(2000);
-        // Accept Keep On Notification
-        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCKeepUpdatePopUpElementDict, "btnAccept", driver, true);
-        if (el != null)
-            el.click();
-    }
-
-    public void procSubmitSGNPCEmploymentPassKYC(int deviceOSVersion, boolean isFullRejectFlow, boolean isPartialRejectFlow, String youId, String surname, String givenName,
-                                                 String dateOfBirth, String nricNumber,
-                                                 String addressLine1, String addressLine2, String postoalCode,
-                                                 String newSurname, String newGivenName, String newDateOfBirth, String newAddressLine1, String newAddressLine2) throws Exception {
-        IOSElement el;
-
-        if(!isPartialRejectFlow) {
-            if(!isFullRejectFlow) {
-                System.out.println("TEST STEP: NPC Registration - Enter Y-Number");
-                wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EnterYNumberPageElementDict, "lblTitle", driver), "Enter Y-Number"));
-                el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EnterYNumberPageElementDict, "txtYouIdDigit1", driver);
-                el.sendKeys(youId.substring(2));
-                Thread.sleep(2000);
-            }
-            System.out.println("TEST STEP: NPC Registration - Foreigner Employment Pass");
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.IdentityVerificationElementDict, "foreignerRegister", driver);
-            el.click();
-            // Select on Manual NRIC
-            System.out.println("TEST STEP: NPC Registration - Select Employment Pass");
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.DocumentTypeRegistrationElementDict, "btnEmploymentPass", driver);
-            el.click();
-            Thread.sleep(2000);
-
-            System.out.println("TEST STEP: KYC Start Page - on page");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.StepsPageElementDict, "lblTitle", driver), "Just a Few Steps"));
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.StepsPageElementDict, "btnStart", driver);
-            el.click();
-
-            Thread.sleep(2000);
-            System.out.println("TEST STEP: KYC Process - Allow Camera access alert");
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CameraAccessAlertElementDict, "btnOK", driver, true);
-            if (el != null)
-                el.click();
-
-            System.out.println("TEST STEP: KYC Process - Front of NRIC capture");
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CameraPageElementDict, "btnShutter", driver);
-            el.click();
-            Thread.sleep(2000);
-
-            System.out.println("TEST STEP: KYC Process - Confirm Front of NRIC capture");
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PhotoConfirmPageElementDict, "btnAllDataIsReadable", driver);
-            el.click();
-            Thread.sleep(2000);
-
-            System.out.println("TEST STEP: KYC Process - Start Back of NRIC Capture dialog");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.TurnBackPopUpPageElementDict, "lblDesc", driver), "Now turn to the back of your Pass / Permit and take a photo again."));
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.TurnBackPopUpPageElementDict, "btnOK", driver);
-            el.click();
-            Thread.sleep(500);
-
-            System.out.println("TEST STEP: KYC Process - Back of NRIC Capture");
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CameraPageElementDict, "btnShutter", driver);
-            el.click();
-            Thread.sleep(500);
-
-            System.out.println("TEST STEP: KYC Process - Confirm Back of NRIC capture");
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PhotoConfirmPageElementDict, "btnAllDataIsReadable", driver);
-            el.click();
-            Thread.sleep(500);
-
-            System.out.println("TEST STEP: KYC Process - Start Proof of Address Capture dialog");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblTitle", driver), "Proof of Address"));
-            Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDesc", driver).getText(), "Please take a photo of one of the followings:");
-            Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt1", driver).getText(), "•      Phone Bill within 6 months");
-            Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt2", driver).getText(), "•      Utilities Bill within 6 months");
-            Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt3", driver).getText(), "•      Bank Statement within 6 months");
-            Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt4", driver).getText(), "•      Other accepted documents");
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "btnOK", driver);
-            el.click();
-            Thread.sleep(500);
-
-            System.out.println("TEST STEP: KYC Process - Proof of Address Capture");
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CameraPageElementDict, "btnShutter", driver);
-            el.click();
-            Thread.sleep(500);
-
-            System.out.println("TEST STEP: KYC Process - Confirm Proof of Address capture");
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PhotoConfirmPageElementDict, "btnAllDataIsReadable", driver);
-            el.click();
-            Thread.sleep(2000);
-        }
-
-        System.out.println("TEST STEP: KYC Process - Enter User Name");
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "lblTitle", driver), "Full Name (as per Pass / Permit)"));
-        if(isFullRejectFlow || isPartialRejectFlow) {
-            if(deviceOSVersion >= 13) {
-                wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtSurname", driver), surname));
-                wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtGivenName", driver), givenName));
-            }
-            if(isFullRejectFlow) {
-                el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtSurname", driver);
-                el.click();
-                this.clearTextFieldValueForiOS12(el, surname.length());
-                el.sendKeys(newSurname);
-                el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtGivenName", driver);
-                el.click();
-                this.clearTextFieldValueForiOS12(el, givenName.length());
-                el.sendKeys(newGivenName);
-            }
-        }else {
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtSurname", driver);
-            el.sendKeys(surname);
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtGivenName", driver);
-            el.sendKeys(givenName);
-        }
-        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "btnNext", driver);
-        el.click();
-        Thread.sleep(500);
-
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "lblCheckAndConfirmTitle", driver), "Check and Confirm"));
-        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "btnCheckAndConfirmConfirm", driver);
-        el.click();
-        Thread.sleep(2000);
-
-        System.out.println("TEST STEP: KYC Process - Enter Personal Information");
-        if(isFullRejectFlow || isPartialRejectFlow) {
-            if(deviceOSVersion >= 13) {
-                String formattedDateOfBirth = dateOfBirth.substring(0, 2) + " - " + dateOfBirth.substring(2, 4) + " - " + dateOfBirth.substring(4);
-                wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "txtIdCardNumber", driver), nricNumber));
-                wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "txtDateOfBirth", driver), formattedDateOfBirth));
-            }
-            if(isFullRejectFlow) {
-                el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "txtDateOfBirth", driver);
-                el.click();
-                el.clear();
-                this.clearTextFieldValueForiOS12(el, dateOfBirth.length());
-                el.sendKeys(newDateOfBirth);
-            }
-        } else {
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "lblTitle", driver), "Personal Information"));
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "txtIdCardNumber", driver);
-            el.sendKeys(nricNumber);
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "txtDateOfBirth", driver);
-            el.sendKeys(dateOfBirth);
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "btnNationality", driver);
-            el.click();
-            Thread.sleep(500);
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCNationalityElementDict, "Singaporean", driver);
-            el.click();
-            Thread.sleep(500);
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "lblTitle", driver), "Personal Information"));
-            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "btnMale", driver);
-            el.click();
-        }
-        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "btnNext", driver);
-        el.click();
-        Thread.sleep(2000);
-
-        System.out.println("TEST STEP: KYC Process - Enter Residential Address");
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ResidentialAddressElementDict, "lblTitle", driver), "Residential Address"));
-        if(isFullRejectFlow || isPartialRejectFlow) {
-            if(deviceOSVersion >= 13) {
-                wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ResidentialAddressElementDict, "txtAddressLine1", driver), addressLine1));
-                wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ResidentialAddressElementDict, "txtAddressLine2", driver), addressLine2));
-                wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ResidentialAddressElementDict, "txtAddressPostalCode", driver), postoalCode));
-            }
-            if (isFullRejectFlow) {
-                el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ResidentialAddressElementDict, "txtAddressLine1", driver);
-                el.click();
-                //el.clear();
-                this.clearTextFieldValueForiOS12(el, addressLine1.length());
-                el.sendKeys(newAddressLine1);
-                el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ResidentialAddressElementDict, "txtAddressLine2", driver);
-                el.click();
-                //el.clear();
-                this.clearTextFieldValueForiOS12(el, addressLine1.length());
                 el.sendKeys(newAddressLine2);
             }
         } else {

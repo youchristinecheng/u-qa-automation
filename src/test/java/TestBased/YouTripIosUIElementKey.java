@@ -201,6 +201,7 @@ public class YouTripIosUIElementKey {
         this.IdentityVerificationElementDict.put("lblTitle", new UIElementData("lblTitle", FindMethod.ACCESSIBILITYID));
         this.IdentityVerificationElementDict.put("singaporeanPRRegister", new UIElementData("//XCUIElementTypeStaticText[@name=\"For Singaporean / PR\"]", FindMethod.XPATH));
         this.IdentityVerificationElementDict.put("foreignerRegister", new UIElementData("//XCUIElementTypeStaticText[@name=\"For Foreigner\"]", FindMethod.XPATH));
+
         this.Container.put(PageKey.IdentityVerificationElementDict.ordinal(), this.IdentityVerificationElementDict);
 
         this.PRRegistrationElementDict.put("btnBack", new UIElementData("btnBack", FindMethod.ACCESSIBILITYID));

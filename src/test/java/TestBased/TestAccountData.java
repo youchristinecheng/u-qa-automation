@@ -115,6 +115,19 @@ public class TestAccountData {
         }
     }
 
+    public enum KYCDocType{
+        MANUALNRIC,
+        EMPLOYMENTPASS,
+        SPASS,
+        WORKPERMIT,
+        STUNDETSPASS,
+        LONGTERMVISITPASS,
+        DEPENDANTSPASS,
+        ENTREPASS,
+        WORKHOLIDAYPASS,
+        TRAININGWORKPERMIT
+    }
+
 
     public String Id;
     public String MCC;
