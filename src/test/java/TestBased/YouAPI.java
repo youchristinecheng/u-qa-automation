@@ -25,6 +25,10 @@ public class YouAPI {
     private String kbankMockPoint;
     private Market currenMarkettValue;
     private String productId;
+    private String bstackAuthUserName;
+    private String bstackAuthPwd;
+    private String bstackBuildName;
+    private String bstackAppHashId;
     private boolean isDevEnv;
 
     public Utils util = new Utils();
@@ -51,6 +55,13 @@ public class YouAPI {
     }
     public void setMarket(Market value){ this.currenMarkettValue = value; }
     public void setIsDevEnv(boolean value) {this.isDevEnv = value; }
+    public void setBstackInfo(String authUserName, String authPwd, String buildName, String appHashId){
+        this.bstackAuthUserName = authUserName;
+        this.bstackAuthPwd = authPwd;
+        this.bstackBuildName = buildName;
+        this.bstackAppHashId = appHashId;
+
+    }
 
     public YouAPI(){
         this.apiEndPoint = "";
@@ -59,6 +70,7 @@ public class YouAPI {
         backDoorAuthPwd = "youtrip1@3";
         Unirest.config().verifySsl(false);
         isDevEnv = false;
+        this.setBstackInfo("", "", "", "");
     }
 
     /*
@@ -722,5 +734,70 @@ public class YouAPI {
         if(!_isFound)
             throw new NoSuchFieldException("Device Id with given UserID: \"" + userID + "\" is not found.");
         return result;
+    }
+
+    private String browserStack_getBuildHashID(String buildName) {
+        String url_browserstackBuilds = ("https://api-cloud.browserstack.com/app-automate/builds.json");
+        String buildId = null;
+        System.out.println("API CALL: " +url_browserstackBuilds);
+        HttpResponse<JsonNode> buildjsonResponse = Unirest.get(url_browserstackBuilds)
+                .basicAuth(this.bstackAuthUserName, this.bstackAuthPwd)
+                .asJson();
+        //get full JSON Array response body
+        JSONArray jArr = buildjsonResponse.getBody().getArray();
+        JSONObject jObj = null;
+        for(int i =0; i <jArr.length();i++){
+            // Iterate the Array to find the correct build with matched build name
+            System.out.println("Finding build with build name: " + buildName);
+            jObj = jArr.getJSONObject(i).getJSONObject("automation_build");
+            System.out.println("Matching build name: " + buildName + " with item: " + jObj.getString("name"));
+            if(jObj.getString("name").equals(buildName)){
+                break;
+            }
+            System.out.println("Build name mismatch - Next item");
+        }
+
+        assert jObj != null;
+        buildId = jObj.getString("hashed_id");
+        return buildId;
+    }
+
+    public String browserStack_getSessionInfo() {
+        String buildHashId = this.browserStack_getBuildHashID(this.bstackBuildName);
+        String url_browserstackSessions = ("https://api-cloud.browserstack.com/app-automate/builds/" + buildHashId + "/sessions.json");
+        String buildId = null;
+        System.out.println("API CALL: " +url_browserstackSessions);
+
+        HttpResponse<JsonNode> buildjsonResponse = Unirest.get(url_browserstackSessions)
+                .basicAuth(this.bstackAuthUserName, this.bstackAuthPwd)
+                .asJson();
+        //get full JSON Array response body
+        JSONArray jArr = buildjsonResponse.getBody().getArray();
+        JSONObject jObj = null;
+        for(int i =0; i <jArr.length();i++){
+            // Iterate the Array to find the correct build with matched build name
+            System.out.println("Finding build with build name: " + this.bstackBuildName);
+            jObj = jArr.getJSONObject(i).getJSONObject("automation_session");
+            System.out.println("Matching build name: " + this.bstackBuildName + " with item: " + jObj.getString("build_name"));
+            if(jObj.getString("build_name").equals(this.bstackBuildName)){
+                JSONObject appInfoJObj = jObj.getJSONObject("app_details");
+                System.out.println("Matching app hash: " + this.bstackAppHashId + " with item: " + appInfoJObj.getString("app_url"));
+                if(appInfoJObj.getString("app_url").equals(this.bstackAppHashId)){
+                    break;
+                }else{
+                    System.out.println("App hash mismatch - Next item");
+                    continue;
+                }
+            }
+            System.out.println("Build name mismatch - Next item");
+        }
+
+        String public_url =  jObj.getString("public_url");
+
+        return public_url;
+    }
+
+    public boolean browserStack_isTestbrowserStackSession(){
+        return !this.bstackAuthPwd.equals("") && !this.bstackAuthUserName.equals("");
     }
 }
