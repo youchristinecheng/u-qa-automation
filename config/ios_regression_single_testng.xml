@@ -18,7 +18,7 @@
                 <methods>
                     <include name="regTC03_selectTH"/>
                     <include name="regTC04_selectSG"/>
-                    <include name="regTC05_login_new_user_OTP"/>
+                    <!--<include name="regTC05_login_new_user_OTP"/>
                     <include name="regTC08_submit_PC_KYC_NRIC"/>
                     <include name="regTC09_fullreject_and_resubmit_PC_KYC_NRIC"/>
                     <include name="regTC10_partialreject_and_resubmit_PC_KYC_NRIC"/>
@@ -27,7 +27,7 @@
                     <include name="regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC22_approved_NPC_KYC_EmploymentPass"/>
-                    <include name="regTC23_NPC_Activate_Card"/>
+                    <include name="regTC23_NPC_Activate_Card"/>-->
                 </methods>
             </class>
         </classes>
