@@ -106,6 +106,9 @@ public class android_browserstackTest {
         subProc.api.setBackDoorEndPoint(environment.get("backdoorEndPoint").toString(), environment.get("productId").toString(), null, null);
         subProc.api.setMockUpEndPoint(environment.get("api_endpoint").toString(), environment.get("kbankMockPoint").toString());
         subProc.api.setIsDevEnv(environemntType.equals("dev"));
+        if(!username.equals("") && !accessKey.equals("")){
+            subProc.api.setBstackInfo(username, accessKey, buildName, appUrl);
+        }
         fisapi = environemntType.equals("dev") ? null : new YouFISAPI();
 
         wait = subProc.getDriverWait();
@@ -124,6 +127,9 @@ public class android_browserstackTest {
     @AfterTest (alwaysRun = true)
     public void end() {
         System.out.println("TEARDOWN: Tests Completed - Driver Quitting");
+        if(subProc.api.browserStack_isTestbrowserStackSession()){
+            System.out.println("Browser Stack public URL: " + subProc.api.browserStack_getSessionInfo());
+        }
         driver.quit();
     }
 
