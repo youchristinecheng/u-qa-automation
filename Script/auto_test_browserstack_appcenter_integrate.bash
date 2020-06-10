@@ -51,10 +51,19 @@ else
 fi
 
 echo "get ${APPNAME} build ${BUILDVER}"
+if [ "$BUILDVER" = "latest" ]
+then
+  echo "Debug part"
+  RECENTRELEASES=$(curl -sX GET  "https://api.appcenter.ms/v0.1/apps/youco/${APPNAME}/recent_releases" \
+  -H "Content-Type: application/json" \
+  -H "X-Api-Token: ${APPCENTER_TOKEN}")
+  BUILDVER=$(jq .[].id <<< ${RECENTRELEASES})
+  echo "${BUILDVER}"
+fi
+
 DISTRIBUTE=$(curl -sX GET  "https://api.appcenter.ms/v0.1/apps/youco/${APPNAME}/releases/${BUILDVER}" \
 -H "Content-Type: application/json" \
 -H "X-Api-Token: ${APPCENTER_TOKEN}")
-
 
 jq . <<< ${DISTRIBUTE}
 
