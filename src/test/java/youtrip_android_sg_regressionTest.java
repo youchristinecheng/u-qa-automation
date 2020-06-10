@@ -296,7 +296,7 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
 
             Thread.sleep(5000);
             //activate card
-            subProc.procActivateCard(true, testAccountData.Id, testAccountData.Card.YouId, "1111");
+            subProc.procActivateCard(Market.Singapore,true, testAccountData.Id, testAccountData.Card.YouId, "1111");
             Thread.sleep(10000);
             subProc.procVerifyInHomePage();
             //update test user
@@ -597,7 +597,7 @@ public class youtrip_android_sg_regressionTest extends android_browserstackTest 
                 System.out.println("TEST CASE: Fail \"regTC18_activatecard_NPC_KYC_forgeiner\"");
             }
             //activate card
-            subProc.procActivateCard(false, testAccountData.Id, null, "1111");
+            subProc.procActivateCard(Market.Singapore,false, testAccountData.Id, null, "1111");
             Thread.sleep(10000);
 
             //below check removed due to Flutter home page

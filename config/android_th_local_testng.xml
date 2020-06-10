@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Android Regression - Single Run">
+    <test name="Android Local Test">
+        <parameter name="config" value="android_conf_debug_local.json"/>
+        <parameter name="device" value="note9_wired"/>
+        <classes>
+            <class name = "youtrip_android_th_regressionTest">
+                <methods>
+                    <include name="regTC01_selectTH"/>
+                    <include name="regTC02_login_new_user_OTP"/>
+                    <include name="regTC03_submit_and_approve_PC_KYC"/>
+                    <include name="regTC04_activatecard_PC_KYC"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

@@ -18,6 +18,8 @@ public class YouTripAndroidUIElementKey {
         EmailPageElementDict,
         WelcomePageElementDict,
         YnumberPageElementDict,
+        ThaiIdNumberElementDict,
+        KYCKPLUSAuthenticationPageElementDict,
         IdentityVerificationElementDict,
         PRRegistrationElementDict,
         ForeignerRegistrationElementDict,
@@ -39,6 +41,8 @@ public class YouTripAndroidUIElementKey {
         SettingPageElementDict,
         ConfirmEmailPageElementDict,
         CheckSentEmailPageElementDict,
+        SetAppPinCardPinElementDict,
+        SetCardPinElementDict,
         CreateConfirmPinPageElementDict,
         FingerPrintPageElementDict,
         UnlockAppPageElementDict,
@@ -53,6 +57,8 @@ public class YouTripAndroidUIElementKey {
     private HashMap<String, UIElementData> EmailPageElementDict;
     private HashMap<String, UIElementData> WelcomePageElementDict;
     private HashMap<String, UIElementData> YnumberPageElementDict;
+    private HashMap<String, UIElementData> ThaiIdNumberElementDict;
+    private HashMap<String, UIElementData> KYCKPLUSAuthenticationPageElementDict;
     private HashMap<String, UIElementData> IdentityVerificationElementDict;
     private HashMap<String, UIElementData> PRRegistrationElementDict;
     private HashMap<String, UIElementData> ForeignerRegistrationElementDict;
@@ -74,6 +80,8 @@ public class YouTripAndroidUIElementKey {
     private HashMap<String, UIElementData> SettingPageElementDict;
     private HashMap<String, UIElementData> ConfirmEmailPageElementDict;
     private HashMap<String, UIElementData> CheckSentEmailPageElementDict;
+    private HashMap<String, UIElementData> SetAppPinCardPinElementDict;
+    private HashMap<String, UIElementData> SetCardPinElementDict;
     private HashMap<String, UIElementData> CreateConfirmPinPageElementDict;
     private HashMap<String, UIElementData> FingerPrintPageElementDict;
     private HashMap<String, UIElementData> UnlockAppPageElementDict;
@@ -91,6 +99,8 @@ public class YouTripAndroidUIElementKey {
         this.EmailPageElementDict = new HashMap<>();
         this.WelcomePageElementDict = new HashMap<>();
         this.YnumberPageElementDict = new HashMap<>();
+        this.ThaiIdNumberElementDict = new HashMap<>();
+        this.KYCKPLUSAuthenticationPageElementDict = new HashMap<>();
         this.IdentityVerificationElementDict = new HashMap<>();
         this.PRRegistrationElementDict = new HashMap<>();
         this.ForeignerRegistrationElementDict = new HashMap<>();
@@ -112,6 +122,8 @@ public class YouTripAndroidUIElementKey {
         this.SettingPageElementDict = new HashMap<>();
         this.ConfirmEmailPageElementDict = new HashMap<>();
         this.CheckSentEmailPageElementDict = new HashMap<>();
+        this.SetAppPinCardPinElementDict = new HashMap<>();
+        this.SetCardPinElementDict = new HashMap<>();
         this.CreateConfirmPinPageElementDict = new HashMap<>();
         this.FingerPrintPageElementDict = new HashMap<>();
         this.UnlockAppPageElementDict = new HashMap<>();
@@ -181,6 +193,18 @@ public class YouTripAndroidUIElementKey {
         this.YnumberPageElementDict.put("yNumDigit9", new UIElementData("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[9]/android.widget.EditText", FindMethod.XPATH));
         this.YnumberPageElementDict.put("yNumDigit10", new UIElementData("//android.widget.LinearLayout[contains(@resource-id,'layoutPIN')]/android.widget.LinearLayout[10]/android.widget.EditText", FindMethod.XPATH));
         this.Container.put(PageKey.YnumberPageElementDict.ordinal(), this.YnumberPageElementDict);
+
+        //Enter Thai ID Page
+        this.ThaiIdNumberElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
+        this.ThaiIdNumberElementDict.put("txtIDNumber", new UIElementData("co.you.youapp.dev:id/inputIDNumber", FindMethod.ID));
+        this.ThaiIdNumberElementDict.put("btnNext", new UIElementData("co.you.youapp.dev:id/buttonNext", FindMethod.ID));
+        this.Container.put(PageKey.ThaiIdNumberElementDict.ordinal(), this.ThaiIdNumberElementDict);
+
+        //Kbank Authenticate Page
+        this.KYCKPLUSAuthenticationPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
+        this.KYCKPLUSAuthenticationPageElementDict.put("btnRegisterKPlus", new UIElementData("co.you.youapp.dev:id/buttonActivate", FindMethod.ID));
+        this.KYCKPLUSAuthenticationPageElementDict.put("noKPlusLink", new UIElementData("co.you.youapp.dev:id/textNoKPlus", FindMethod.ID));
+        this.Container.put(PageKey.KYCKPLUSAuthenticationPageElementDict.ordinal(), this.KYCKPLUSAuthenticationPageElementDict);
 
         //Identity Verification Page
         this.IdentityVerificationElementDict.put("lblTitle", new UIElementData("//androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[@index='0']/android.widget.TextView", FindMethod.XPATH));
@@ -304,6 +328,17 @@ public class YouTripAndroidUIElementKey {
         this.CheckSentEmailPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
         this.Container.put(PageKey.CheckSentEmailPageElementDict.ordinal(), this.CheckSentEmailPageElementDict);
 
+        //Thailand Only - App Pin and Card PIN Page
+        this.SetAppPinCardPinElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
+        this.SetAppPinCardPinElementDict.put("btnSetAppPin", new UIElementData("co.you.youapp.dev:id/buttonNext", FindMethod.ID));
+        this.Container.put(PageKey.SetAppPinCardPinElementDict.ordinal(), this.SetAppPinCardPinElementDict);
+
+        //Thailand Only - Set a Card PIN page
+        this.SetCardPinElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
+        this.SetCardPinElementDict.put("btnSameCode", new UIElementData("co.you.youapp.dev:id/buttonConfirm", FindMethod.ID));
+        this.SetCardPinElementDict.put("btnDifferentCode", new UIElementData("co.you.youapp.dev:id/buttonNext", FindMethod.ID));
+        this.Container.put(PageKey.SetCardPinElementDict.ordinal(), this.SetCardPinElementDict);
+
         //CreatePINPage/ Confirm Page
         this.CreateConfirmPinPageElementDict.put("lblTitle", new UIElementData("co.you.youapp.dev:id/textTitle", FindMethod.ID));
         this.CreateConfirmPinPageElementDict.put("lblSummary", new UIElementData("co.you.youapp.dev:id/textInputHint", FindMethod.ID));
@@ -361,7 +396,7 @@ public class YouTripAndroidUIElementKey {
         //Camera Alert Access
         this.AndroidSystemAlertElementDict.put("cameraAccept", new UIElementData("com.android.packageinstaller:id/permission_allow_button", FindMethod.ID));
         //Deep link to Browser alert
-        this.AndroidSystemAlertElementDict.put("browserAccept", new UIElementData("android:id/button_once", FindMethod.ID));
+        this.AndroidSystemAlertElementDict.put("justOnceOption", new UIElementData("android:id/button_once", FindMethod.ID));
         this.Container.put(PageKey.AndroidSystemAlertElementDict.ordinal(), this.AndroidSystemAlertElementDict);
 
 
