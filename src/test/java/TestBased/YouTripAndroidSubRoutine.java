@@ -56,7 +56,7 @@ public class YouTripAndroidSubRoutine {
             el.click();
             System.out.println("TEST STEP: Country Selection Page - click " + country.toString() + " button");
             //assert correct country is selected
-            expectedResult = country.equals(Market.Singapore) ? "You must have a NRIC or FIN to apply for a Singapore YouTrip account." : "You must have a Thailand ID to apply for a Thailand YouTrip account (powered by KBank).";
+            expectedResult = country.equals(Market.Singapore) ? "You’ll need an NRIC or a FIN to apply for a YouTrip Singapore account." : "You must have a Thailand ID to apply for a Thailand YouTrip account (powered by KBank).";
             assertEquals((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CountryPageElementDict, "countryDesc", driver)).getText(), expectedResult);
             System.out.println("TEST STEP: Country Page - verified country description");
 
@@ -93,7 +93,7 @@ public class YouTripAndroidSubRoutine {
             System.out.println("TEST STEP: Get Started Page - click Get Started Button");
             Thread.sleep(2000);
             //wait till on enter mobile number page
-            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.MobileNumberPageElementDict, "lblTitle", driver)), "Enter Mobile Number"));
+            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.MobileNumberPageElementDict, "lblTitle", driver)), "Login / Sign Up"));
             System.out.println("TEST STEP: Mobile Number Page - on page");
             System.out.println("TEST DATA: Using Mobile Number " + mprefix + " " + mnumber);
             //clear mobile prefix field and enter mobile prefix
@@ -114,7 +114,7 @@ public class YouTripAndroidSubRoutine {
             System.out.println("TEST STEP: Mobile Number Page - clicked Next button");
             Thread.sleep(2000);
             //wait till on enter SMS page
-            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.OTPPageElementDict, "lblTitle", driver)), "Enter Code from SMS"));
+            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.OTPPageElementDict, "lblTitle", driver)), "Mobile Verification"));
             System.out.println("TEST STEP: OTP Page - on page");
             //get OTP from backdoor and input otp
             String otpCode = api.getOTP(mprefix, mnumber);
@@ -144,7 +144,7 @@ public class YouTripAndroidSubRoutine {
 
             if(isFirstTimeLogin) {
                 //wait till on enter email page
-                assertEquals((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.EmailPageElementDict, "lblTitle", driver)).getText(), "Enter Email Address");
+                assertEquals((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.EmailPageElementDict, "lblTitle", driver)).getText(), "Enter Your Email Address");
                 System.out.println("TEST STEP: Enter Email Page - on page");
             }
 
@@ -161,7 +161,7 @@ public class YouTripAndroidSubRoutine {
         AndroidElement el;
         try {
             //wait till on enter email page
-            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.EmailPageElementDict, "lblTitle", driver)), "Enter Email Address"));
+            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.EmailPageElementDict, "lblTitle", driver)), "Enter Your Email Address"));
             System.out.println("TEST STEP: Enter Email Page - on page");
             System.out.println("TEST DATA: Email address " +email);
             //input email
@@ -350,7 +350,7 @@ public class YouTripAndroidSubRoutine {
             } else {
                 //TODO handle other type with drop down box of others
             }
-            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.StepsPageElementDict, "lblTitle", driver)), "Just a Few Steps"));
+            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.StepsPageElementDict, "lblTitle", driver)), "Follow These Steps"));
             System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - on page");
             }catch(Exception e){
                 throw e;
@@ -369,7 +369,7 @@ public class YouTripAndroidSubRoutine {
                 //--------------//
 
                 //wait till on start of KYC page (just a few steps page)
-                wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.StepsPageElementDict, "lblTitle", driver)), "Just a Few Steps"));
+                wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.StepsPageElementDict, "lblTitle", driver)), "Follow These Steps"));
                 System.out.println("TEST STEP: KYC start/ Just a Few Steps Page - on page");
                 //click start KYC
                 el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.StepsPageElementDict, "btnStart", driver);

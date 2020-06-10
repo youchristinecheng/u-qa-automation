@@ -1,6 +1,7 @@
 package TestBased;
 
 import com.google.common.collect.ImmutableMap;
+import com.sun.codemodel.internal.JCase;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.WebElement;
@@ -112,7 +113,7 @@ public class YoutripIosSubRoutine {
             Thread.sleep(1000);
 
             System.out.println("TEST STEP: Verified Country Description - on page");
-            expectedResult = country.equals(Market.Singapore) ? "You must have a NRIC or FIN to apply for a Singapore YouTrip account." : "You must have a Thailand ID to apply for a Thailand YouTrip account (powered by KBank).";
+            expectedResult = country.equals(Market.Singapore) ? "You’ll need an NRIC or a FIN to apply for a YouTrip Singapore account." : "You must have a Thailand ID to apply for a Thailand YouTrip account (powered by KBank).";
             wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.CountryPageElementDict, "lblDesc", driver), expectedResult));
 
             System.out.println("TEST STEP: Country Page - continue as " + country);
@@ -136,7 +137,7 @@ public class YoutripIosSubRoutine {
         el.click();
 
         System.out.println("TEST STEP: Mobile Number Page - on page");
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.MobileNumberPageElementDict, "lblTitle", driver), "Enter Mobile Number"));
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.MobileNumberPageElementDict, "lblTitle", driver), "Login / Sign Up"));
 
         System.out.println("TEST DATA: Mobile Number is " + mprefix + " " + mnumber);
         System.out.println("TEST STEP: Mobile Number Page - inputted mobile number prefix");
@@ -156,7 +157,7 @@ public class YoutripIosSubRoutine {
         Thread.sleep(2000);
 
         System.out.println("TEST STEP: OTP Page - on page");
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.OTPPageElementDict, "lblTitle", driver), "Enter Code from SMS"));
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.OTPPageElementDict, "lblTitle", driver), "Mobile Verification"));
         // Get OTP from backdoor and input otp
         String otpCode = api.getOTP(mprefix, mnumber);
         Thread.sleep(10000);
@@ -170,7 +171,7 @@ public class YoutripIosSubRoutine {
         Thread.sleep(2000);
         if(isFirstTimeLogin) {
             System.out.println("TEST STEP: Enter Email Page - on page");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EmailPageElementDict, "lblTitle", driver), "Enter Email Address"));
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EmailPageElementDict, "lblTitle", driver), "Enter Your Email Address"));
             System.out.println("TEST DATA: Email address is " + email);
             System.out.println("TEST STEP: Enter Email Page - entered email");
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EmailPageElementDict, "UserEmail", driver);
@@ -203,16 +204,22 @@ public class YoutripIosSubRoutine {
                     || docType.equals(KYCDocType.SPASS)
                     || docType.equals(KYCDocType.WORKPERMIT)
                     || docType.equals(KYCDocType.STUNDETSPASS)) {
-                System.out.println("TEST STEP: " + CardTypeDisplay + " Registration - Select" + docType);
+                System.out.println("TEST STEP: " + CardTypeDisplay + " Registration - Select " + docType);
                 String eleKeyName = "";
-                if (docType.equals("Employment Pass")){
-                    eleKeyName = "btnEmploymentPass";
-                }else if (docType.equals("S Pass")){
-                    eleKeyName = "btnSPass";
-                }else if (docType.equals("Work Permit")){
-                    eleKeyName = "btnWorkPermit";
-                }else {
-                    eleKeyName = "btnStudentPass";
+                switch (docType) {
+                    case EMPLOYMENTPASS:
+                        eleKeyName = "btnEmploymentPass";
+                        break;
+                    case SPASS:
+                        eleKeyName = "btnSPass";
+                        break;
+                    case WORKPERMIT:
+                        eleKeyName = "btnWorkPermit";
+                        break;
+                    default:
+                        eleKeyName = "btnStudentPass";
+                        break;
+
                 }
                 el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.DocumentTypeRegistrationElementDict, eleKeyName, driver);
                 el.click();
@@ -234,6 +241,7 @@ public class YoutripIosSubRoutine {
                               String addressLine1, String addressLine2, String postoalCode,
                               String newSurname, String newGivenName, String newNameOnCard, String newDateOfBirth, String newAddressLine1, String newAddressLine2) throws Exception{
         IOSElement el;
+        String expectedResult = "";
         String CardTypeDisplay = isPC ? "PC" : "NPC";
 
         if(!isPartialRejectFlow) {
@@ -248,7 +256,7 @@ public class YoutripIosSubRoutine {
             this.procSelectKYCDocType(CardTypeDisplay, docType);
 
             System.out.println("TEST STEP: KYC Start Page - on page");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.StepsPageElementDict, "lblTitle", driver), "Just a Few Steps"));
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.StepsPageElementDict, "lblTitle", driver), "Follow These Steps"));
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.StepsPageElementDict, "btnStart", driver);
             el.click();
             Thread.sleep(2000);
@@ -271,7 +279,9 @@ public class YoutripIosSubRoutine {
             Thread.sleep(2000);
 
             System.out.println("TEST STEP: KYC Process - Start Back of NRIC Capture dialog");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.TurnBackPopUpPageElementDict, "lblDesc", driver), "Now turn to the back of your NRIC and take a photo again."));
+            expectedResult = docType.equals(KYCDocType.MANUALNRIC) ? "Now capture the back of your NRIC." : "Now capture the back of Pass / Permit.";
+            wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.TurnBackPopUpPageElementDict, "lblDesc", driver)));
+            assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.TurnBackPopUpPageElementDict, "lblDesc", driver).getText(), expectedResult);
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.TurnBackPopUpPageElementDict, "btnOK", driver);
             el.click();
             Thread.sleep(1000);
@@ -289,7 +299,7 @@ public class YoutripIosSubRoutine {
             if(!docType.equals(KYCDocType.MANUALNRIC)) {
                 System.out.println("TEST STEP: KYC Process - Start Proof of Address Capture dialog");
                 wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblTitle", driver), "Proof of Address"));
-                Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDesc", driver).getText(), "Please take a photo of one of the followings:");
+                Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDesc", driver).getText(), "Take a photo of one of the following documents:");
                 Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt1", driver).getText(), "•      Phone Bill within 6 months");
                 Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt2", driver).getText(), "•      Utilities Bill within 6 months");
                 Assert.assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ProofOfAddressPopUpPageElementDict, "lblDescPt3", driver).getText(), "•      Bank Statement within 6 months");
@@ -311,13 +321,12 @@ public class YoutripIosSubRoutine {
         }
 
         System.out.println("TEST STEP: KYC Process - Enter User Name");
-        String fullNameTitle = "";
-        if(!docType.equals(KYCDocType.MANUALNRIC)){
-            fullNameTitle = "Full Name (as per NRIC)";
+        if(docType.equals(KYCDocType.MANUALNRIC)){
+            expectedResult = "Full Name (as per NRIC)";
         }else{
-            fullNameTitle = "Full Name (as per Pass / Permit)";
+            expectedResult = "Full Name (as per Pass / Permit)";
         }
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "lblTitle", driver), fullNameTitle));
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "lblTitle", driver), expectedResult));
         if(isFullRejectFlow || isPartialRejectFlow) {
             if(deviceOSVersion >= 13) {
                 wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NamePageElementDict, "txtSurname", driver), surname));
