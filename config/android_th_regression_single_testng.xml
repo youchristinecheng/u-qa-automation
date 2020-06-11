@@ -1,0 +1,14 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Android Regression - Single Run">
+    <test name="Android Regression">
+        <parameter name="config" value="android_conf.json"/>
+        <parameter name="device" value="galaxy_note10_os9"/>
+        <classes>
+            <class name = "youtrip_android_th_regressionTest">
+                <methods>
+                    <include name="regTC01_selectTH"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

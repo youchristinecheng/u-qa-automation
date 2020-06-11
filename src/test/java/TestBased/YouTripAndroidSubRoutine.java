@@ -146,7 +146,6 @@ public class YouTripAndroidSubRoutine {
                 assertEquals((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.EmailPageElementDict, "lblTitle", driver)).getText(), OnScreenExpectedStringValue.EnterEmailPageTitle);
                 System.out.println("TEST STEP: Enter Email Page - on page");
             }
-
             Thread.sleep(3000);
 
         }catch(Exception e){
@@ -613,6 +612,33 @@ public class YouTripAndroidSubRoutine {
 
     }
 
+    public void procSubmitTHKYC(boolean isPC, String thaiID) throws InterruptedException {
+        AndroidElement el;
+        try {
+            //wait till on Enter Thai ID page
+            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.ThaiIdNumberElementDict, "lblTitle", driver)), "Enter ID Number"));
+            System.out.println("TEST STEP: Enter ID Number page - on page");
+            //enter Thai ID and confirm
+            el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.ThaiIdNumberElementDict, "txtIDNumber", driver);
+            el.sendKeys(thaiID);
+            System.out.println("TEST STEP: Enter ID Number page - entered thai ID number");
+            el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.ThaiIdNumberElementDict, "btnNext", driver);
+            el.click();
+            System.out.println("TEST STEP: Enter ID Number page - clicked next button");
+            Thread.sleep(2000);
+            //wait till on Authenticate with KBank page
+            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.KYCKPLUSAuthenticationPageElementDict, "lblTitle", driver)), "Register with K PLUS"));
+            System.out.println("TEST STEP: Register with K Plus page - on page");
+            //click register with kplus
+            el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.KYCKPLUSAuthenticationPageElementDict, "btnRegisterKPlus", driver);
+            el.click();
+            System.out.println("TEST STEP: Register with K Plus page - clicked Register with KPLUS button");
+            Thread.sleep(2000);
+        }catch(Exception e){
+            throw e;
+        }
+    }
+
     public void procRejectKYC(boolean isFullReject) throws Exception {
         AndroidElement el;
         try {
@@ -662,7 +688,7 @@ public class YouTripAndroidSubRoutine {
         }
     }
 
-    public void procActivateCard(boolean isPC, String userID, String ynumber, String pin) throws Exception {
+    public void procActivateCard(Market country, boolean isPC, String userID, String ynumber, String pin) throws Exception {
         AndroidElement el;
         boolean pinConfirmed = false;
         try {
@@ -711,13 +737,16 @@ public class YouTripAndroidSubRoutine {
                 Thread.sleep(2000);
             }
 
-            //wait till on confirm email page and continue
-            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.ConfirmEmailPageElementDict, "lblTitle", driver)), OnScreenExpectedStringValue.ActiveCardSGConfirmEmailPageTitle));
-            System.out.println("TEST STEP: Confirm Email Page - on page");
-            el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.EmailPageElementDict, "btnNext", driver);
-            el.click();
-            System.out.println("TEST STEP: Confirm Email Page - click Next button");
-            Thread.sleep(2000);
+
+            //SG only: wait till on confirm email page and continue
+            if (country.equals(Market.Singapore)) {
+              wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.ConfirmEmailPageElementDict, "lblTitle", driver)), OnScreenExpectedStringValue.ActiveCardSGConfirmEmailPageTitle));
+              System.out.println("TEST STEP: Confirm Email Page - on page");
+              el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.EmailPageElementDict, "btnNext", driver);
+              el.click();
+              System.out.println("TEST STEP: Confirm Email Page - click Next button");
+              Thread.sleep(2000);
+            }
 
             //wait till on check email page
             wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CheckSentEmailPageElementDict, "lblTitle", driver)), OnScreenExpectedStringValue.ActiveCardSGCheckEmailPageTitle));
@@ -736,35 +765,61 @@ public class YouTripAndroidSubRoutine {
             Thread.sleep(3000);
 
             //handle Android system dialog on browser entry
-            el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.AndroidSystemAlertElementDict, "browserAccept", driver, true);
+            el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.AndroidSystemAlertElementDict, "justOnceOption", driver, true);
             if (el != null) {
                 el.click();
                 System.out.println("TEST STEP: Android Browser - confirm Android dialog");
             }
             Thread.sleep(3000);
 
-            //set PIN
-            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblTitle", driver)), OnScreenExpectedStringValue.ActiveCardSGCreatePINPageTitle));
-            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblSummary", driver)), OnScreenExpectedStringValue.ActiveCardSGCreatePINPageSummary));
-            //for each PIN click corresponding number on keypad
-            for (char i : pin.toCharArray()) {
-                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, ("btn"+Character.toString(i)), driver);
+            //TH only - need to set app and card pin
+            if (country.equals(Market.Thailand)) {
+                wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.SetAppPinCardPinElementDict, "lblTitle", driver)), "Set App PIN and Card PIN"));
+                System.out.println("TEST STEP: Set App PIN and Card PIN page - on page");
+                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.SetAppPinCardPinElementDict, "btnSetAppPin", driver);
                 el.click();
-                System.out.println("TEST STEP: Create App PIN Page - click digit " +Character.toString(i));
+                System.out.println("TEST STEP: Set App PIN and Card PIN page - click set APP PIN button");
+                //Set PIN
+                wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblTitle", driver)), "Create an App PIN"));
+                for (char i : pin.toCharArray()) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, ("btn" + Character.toString(i)), driver);
+                    el.click();
+                    System.out.println("TEST STEP: Create App PIN Page - click digit " + Character.toString(i));
+                }
+                System.out.println("TEST STEP: Create App PIN Page - PIN entered");
+                Thread.sleep(3000);
+                //Confirm PIN
+                wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblTitle", driver)), "Tyoe Again to Confirm"));
+                for (char i : pin.toCharArray()) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, ("btn" + Character.toString(i)), driver);
+                    el.click();
+                    System.out.println("TEST STEP: Confirm App PIN Page - click digit " + Character.toString(i));
+                }
             }
-            System.out.println("TEST STEP: Create App PIN Page - PIN entered");
-            Thread.sleep(3000);
+            else if (country.equals(Market.Singapore)) {
+                //set PIN
+                wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblTitle", driver)), OnScreenExpectedStringValue.ActiveCardSGCreatePINPageTitle));
+                wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblSummary", driver)), OnScreenExpectedStringValue.ActiveCardSGCreatePINPageSummary));
+                //for each PIN click corresponding number on keypad
+                for (char i : pin.toCharArray()) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, ("btn" + Character.toString(i)), driver);
+                    el.click();
+                    System.out.println("TEST STEP: Create App PIN Page - click digit " + Character.toString(i));
+                }
+                System.out.println("TEST STEP: Create App PIN Page - PIN entered");
+                Thread.sleep(3000);
 
-            //Confirm PIN
-            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblTitle", driver)), OnScreenExpectedStringValue.ActiveCardSGConfirmPINPageTitle));
-            for (char i : pin.toCharArray()) {
-                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, ("btn"+Character.toString(i)), driver);
-                el.click();
-                System.out.println("TEST STEP: Confirm App PIN Page - click digit " +Character.toString(i));
+                //Confirm PIN
+                wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.CreateConfirmPinPageElementDict, "lblTitle", driver)), OnScreenExpectedStringValue.ActiveCardSGConfirmPINPageTitle));
+                for (char i : pin.toCharArray()) {
+                    el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, ("btn" + Character.toString(i)), driver);
+                    el.click();
+                    System.out.println("TEST STEP: Confirm App PIN Page - click digit " + Character.toString(i));
+                }
+
+                System.out.println("TEST STEP: Confirm App PIN Page - PIN entered");
+                Thread.sleep(3000);
             }
-
-            System.out.println("TEST STEP: Confirm App PIN Page - PIN entered");
-            Thread.sleep(3000);
 
             //need to handle finger print module
             el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.FingerPrintPageElementDict, "skipLink", driver, true);
@@ -773,6 +828,15 @@ public class YouTripAndroidSubRoutine {
                 el.click();
                 System.out.println("TEST STEP: Fingerprint Authentication Page - Skip Now clicked");
                 Thread.sleep(3000);
+            }
+
+            //TH only - set card PIN
+            if (country.equals(Market.Thailand)) {
+                wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.SetCardPinElementDict, "lblTitle", driver)), "Step 2: Set a Card PIN"));
+                System.out.println("TEST STEP: Set a Card PIN page - on page");
+                el = (AndroidElement) UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.UnlockAppPageElementDict, "btnSameCode", driver);
+                el.click();
+                System.out.println("TEST STEP: Set a Card PIN page - click Use the same code button");
             }
 
         }catch(Exception e) {
@@ -817,7 +881,17 @@ public class YouTripAndroidSubRoutine {
         }catch(Exception e){
             throw e;
         }
+    }
 
+    public void procSwitchBackToYouTripApp() throws InterruptedException {
+        AndroidElement el;
+        try {
+            driver.activateApp("co.you.youapp.dev");
+            System.out.println("TEST STEP: Switch back to YouTrip App");
+            Thread.sleep(5000);
+        }catch(Exception e){
+            throw e;
+        }
     }
 
 }
