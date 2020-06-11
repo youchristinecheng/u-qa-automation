@@ -23,6 +23,7 @@
                     <include name="regTC09_fullreject_and_resubmit_PC_KYC_NRIC"/>
                     <include name="regTC10_partialreject_and_resubmit_PC_KYC_NRIC"/>
                     <include name="regTC11_approved_PC_KYC_NRIC"/>
+                    <include name="regTC23_PC_Activate_Card"/>
                     <include name="regTC19_submit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass"/>
                     <include name="regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass"/>

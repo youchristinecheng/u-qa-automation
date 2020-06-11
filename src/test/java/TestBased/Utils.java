@@ -65,10 +65,10 @@ public class Utils {
             md.update(password.getBytes());
             byte[] digest = md.digest();
             String myHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
-            System.out.println("myHash: " + myHash);
+            System.out.println("TEST DATA - Thai ID Generation - Random Hash: " + myHash);
 
             String thaiIdNum = myHash.substring(0, 12).toUpperCase();
-            System.out.println("Candidate: " + thaiIdNum);
+            System.out.println("TEST DATA - Thai ID Generation - Candidate: " + thaiIdNum);
             Matcher m = r.matcher(thaiIdNum);
             while (m.find()) {
                 String found = m.group();
@@ -87,6 +87,7 @@ public class Utils {
             }
             thaiIdNum += (11 - checksum % 11) % 10;
 
+            System.out.println("TEST DATA - NRIC Generation - OUTPUT: " + thaiIdNum);
             return thaiIdNum;
         }catch(NoSuchAlgorithmException nsae){
             return null;
@@ -104,10 +105,10 @@ public class Utils {
             md.update(password.getBytes());
             byte[] digest = md.digest();
             String myHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
-            System.out.println("myHash: " + myHash);
+            System.out.println("TEST DATA - NRIC Generation - Random Hash: " + myHash);
 
             String nric = myHash.substring(0, 7).toUpperCase();
-            System.out.println("Candidate: " + nric);
+            System.out.println("TEST DATA - NRIC Generation - Candidate: " + nric);
             Matcher m = r.matcher(nric);
             while (m.find()) {
                 String found = m.group();
@@ -119,7 +120,7 @@ public class Utils {
                 } else {
                     nric = nric.substring(0, m.start()) + Integer.toString(modDigit) + nric.substring(m.end());
                 }
-                System.out.println("WIP: " + nric);
+                System.out.println("TEST DATA - NRIC Generation - WIP: " + nric);
             }
             m = r.matcher(myHash.substring(7, 9));
             if (!m.find()) {
@@ -130,6 +131,7 @@ public class Utils {
                 String found = m.group();
                 nric = "S" + nric + found;
             }
+            System.out.println("TEST DATA - NRIC Generation - OUTPUT: " + nric);
             return nric;
         }catch(NoSuchAlgorithmException nsae){
             return null;

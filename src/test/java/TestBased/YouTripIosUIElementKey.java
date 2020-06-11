@@ -8,7 +8,6 @@ import org.openqa.selenium.WebElement;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import TestBased.UIElementData.*;
 import TestBased.TestAccountData.Market;
@@ -233,6 +232,7 @@ public class YouTripIosUIElementKey {
         this.PhotoConfirmPageElementDict.put("btnAllDataIsReadable", new UIElementData("btnOK", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.PhotoConfirmPageElementDict.ordinal(), this.PhotoConfirmPageElementDict);
 
+        this.TurnBackPopUpPageElementDict.put("lblTitle", new UIElementData("lblTurnBackPopUpTitle", FindMethod.ACCESSIBILITYID));
         this.TurnBackPopUpPageElementDict.put("lblDesc", new UIElementData("lblTurnBackPopUpDesc", FindMethod.ACCESSIBILITYID));
         this.TurnBackPopUpPageElementDict.put("btnOK", new UIElementData("btnOK", FindMethod.ACCESSIBILITYID));
         this.Container.put(PageKey.TurnBackPopUpPageElementDict.ordinal(), this.TurnBackPopUpPageElementDict);

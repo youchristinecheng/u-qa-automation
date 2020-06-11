@@ -1,3 +1,4 @@
+import TestBased.OnScreenExpectedStringValue;
 import TestBased.TestAccountData;
 import TestBased.TestAccountData.CardStatus;
 import TestBased.TestAccountData.CardType;
@@ -6,7 +7,6 @@ import TestBased.TestAccountData.KYCDocType;
 import TestBased.TestAccountData.Market;
 import TestBased.TestCardData;
 import TestBased.YouTripIosUIElementKey.PageKey;
-import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Rectangle;
@@ -16,7 +16,6 @@ import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
-import javax.smartcardio.Card;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -132,14 +131,10 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             System.out.println("TEST STEP: Welcome Page - on page");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver), "Welcome"));
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver), OnScreenExpectedStringValue.LimitedHomePageSGTitle));
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "btnPCRegister", driver);
             el.click();
 
-//            subProc.procSubmitSGPCNRICKYC(osMainVerInt, false, false, testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
-//                    testAccountData.Birthdate, testAccountData.NricNumber,
-//                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
-//                    null, null, null, null, null, null);
             subProc.procSubmitNonMyInfoKYC(osMainVerInt, true, false, false, KYCDocType.MANUALNRIC, null,
                     testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
                     testAccountData.Birthdate, testAccountData.NricNumber,
@@ -149,7 +144,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             Thread.sleep(20000);
             System.out.println("TEST STEP: Verify Back to Limited Home Page");
             el = (IOSElement)UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
-            Assert.assertEquals(el.getText(), "Thank You for Your Application");
+            Assert.assertEquals(el.getText(), OnScreenExpectedStringValue.LimitedHomePageSGKYCSubmittedTitle);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             String kycRefNo = el.getText();
             testAccountData.Id = subProc.api.yp_getKYCdetails(kycRefNo).get("userId");
@@ -190,36 +185,13 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
                 fail("fail to load test account from previous test case in succeed");
             }
 
-            // Limited Home Page
-            el= (IOSElement)UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
-            Assert.assertEquals(el.getText(), "Thank You for Your Application");
-            Thread.sleep(2000);
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
-            kycRefNo = el.getText();
-            System.out.println("TEST DATA: KYC Reference from Limited Home Page " +kycRefNo);
-
-            System.out.println("TEST STEP: KYC rejection Send");
             isForebackEnable = false;
-            subProc.api.yp_fullReject(kycRefNo);
-            Thread.sleep(20000);
-            System.out.println("TEST STEP: KYC rejection received");
-
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
-            actualText = el.getText();
-            assertEquals("Attention", actualText);
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblKycResultDesc", driver);
-            assertTrue(el.isDisplayed());
-            actualText = el.getText();
-            assertEquals("Sorry, we were unable to process your application due to the following reasons: \n\n" + subProc.api.getKycRejectReason() + "\n\nYou’ll also be required to take photos of your ID again to verify your identity.", actualText);
+            kycRefNo = subProc.procRejectKYC(true);
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver);
             el.click();
             Thread.sleep(2000);
 
-//            subProc.procSubmitSGPCNRICKYC(osMainVerInt, true, false, testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
-//                    testAccountData.Birthdate, testAccountData.NricNumber,
-//                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
-//                    newSurname, newGivenName, newNameOnCard, newDateOfBirth, newAddressLine1, newAddressLine2);
             subProc.procSubmitNonMyInfoKYC(osMainVerInt, true, true, false, KYCDocType.MANUALNRIC, null,
                     testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
                     testAccountData.Birthdate, testAccountData.NricNumber,
@@ -242,9 +214,9 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
 
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("Test STEP: Finish \"regTC09_fullreject_and_resubmit_PC_KYC_NRIC\"");
-        }catch (Exception e){
+        }catch (Exception e) {
             System.out.println("Test STEP: Fail \"regTC09_fullreject_and_resubmit_PC_KYC_NRIC\"");
-            if(!isForebackEnable) {
+            if (!isForebackEnable && (testAccountData != null)) {
                 testAccountData.UnderUse = false;
                 testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
                 subProc.api.data_updateTestUser(testAccountData);
@@ -282,39 +254,15 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
                 }
             }
 
-            // Limited Home Page
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
-            Assert.assertEquals(el.getText(), "Thank You for Your Application");
-            Thread.sleep(2000);
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
-            kycRefNo = el.getText();
-            System.out.println("TEST DATA: KYC Reference from Limited Home Page " +kycRefNo);
-
-            System.out.println("TEST STEP: KYC Partial rejection Send");
             isForebackEnable = false;
-            subProc.api.yp_partialReject(kycRefNo);
-            Thread.sleep(25000);
-            System.out.println("TEST STEP: KYC Partial rejection received");
-
+            kycRefNo = subProc.procRejectKYC(false);
             testAccountData.FirstName = "Auto YP Edit";
             testAccountData.AddressLineTwo = "PARTIAL EDIT TEST";
-
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
-            actualText = el.getText();
-            assertEquals("Attention", actualText);
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblKycResultDesc", driver);
-            assertTrue(el.isDisplayed());
-            actualText = el.getText();
-            assertEquals("We have noticed errors in your application and have edited it for you. These are the following errors:\n\n" + subProc.api.getKycRejectReason() + "\n\nPlease check all the data to make sure they are accurate and submit again.", actualText);
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver);
             el.click();
             Thread.sleep(2000);
 
-//            subProc.procSubmitSGPCNRICKYC(osMainVerInt, false, true, testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
-//                    testAccountData.Birthdate, testAccountData.NricNumber,
-//                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
-//                    null, null, null, null, null, null);
             subProc.procSubmitNonMyInfoKYC(osMainVerInt, true, false, true, KYCDocType.MANUALNRIC, null,
                     testAccountData.LastName, testAccountData.FirstName, testAccountData.NameOnCard,
                     testAccountData.Birthdate, testAccountData.NricNumber,
@@ -329,9 +277,10 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             testAccountData.UnderUse = true;
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("Test STEP: Finish \"regTC10_partialreject_and_resubmit_PC_KYC_NRIC\"");
-        }catch (Exception e){
+        }catch (Exception e) {
             System.out.println("Test STEP: Fail \"regTC10_partialreject_and_resubmit_PC_KYC_NRIC\"");
-            if(!isForebackEnable) {
+
+            if (!isForebackEnable && (testAccountData != null)) {
                 testAccountData.UnderUse = false;
                 testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
                 subProc.api.data_updateTestUser(testAccountData);
@@ -346,7 +295,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
     public void regTC11_approved_PC_KYC_NRIC() throws InterruptedException {
         System.out.println("Test STEP: Start \"regTC11_approved_PC_KYC_NRIC\"");
         isForebackEnable = false;
-        isRequriedReset = true;
+        isRequriedReset = false;
         IOSElement el;
         try {
             if (testAccountData == null) {
@@ -365,37 +314,30 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
                     Thread.sleep(2000);
                 }
             }
-            Thread.sleep(2000);
             //get and store the KYC reference number
-            String kycRefNo = (UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
-            System.out.println("TEST DATA: KYC submission reference number is " + kycRefNo);
-
-            //call YP full reject with Ref Number
-            subProc.api.yp_approve(kycRefNo);
-
-            //back to the app - wait for reject to be updated
-            Thread.sleep(25000);
-            //wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
-            System.out.println("TEST STEP: KYC approval received");
-            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Your Card is On Its Way");
-            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver).getText(), "My Card Arrived");
+            Thread.sleep(2000);
+            subProc.procApproveKYC(true);
 
             testAccountData.KycStatus = KYCStatus.Clear;
-            testAccountData.UnderUse = false;
-
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("Test STEP: Finish \"regTC11_approved_PC_KYC_NRIC\"");
+
+            // Extra handling for non-Dev environment which is disable to perform regTC23_PC_Activate_Card as next test case
             if(!subProc.api.getIsDevEnv()) {
+                subProc.unlockTestAccountData(testAccountData);
                 testAccountData = null;
+                isRequriedReset = true;
             }else{
                 isRequriedReset = false;
             }
         }catch(Exception e){
             System.out.println("Test STEP: Fail \"regTC11_approved_PC_KYC_NRIC\"");
-            testAccountData.UnderUse = false;
-            testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
-            subProc.api.data_updateTestUser(testAccountData);
-            testAccountData = null;
+            if(testAccountData != null) {
+                testAccountData.UnderUse = false;
+                testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
+                subProc.api.data_updateTestUser(testAccountData);
+                testAccountData = null;
+            }
             e.printStackTrace();
             fail();
         }
@@ -436,40 +378,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
                 }
             }
 
-            System.out.println("TEST STEP: Limited Home Page - KYC already approved");
-            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Your Card is On Its Way");
-            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver).getText(), "My Card Arrived");
-
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver);
-            el.click();
-            Thread.sleep(2000);
-
-            System.out.println("TEST STEP: PC Registration - Enter Y-Number");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.EnterYNumberPageElementDict, "lblTitle", driver), "Enter Y-Number"));
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.EnterYNumberPageElementDict, "txtYouIdDigit1", driver);
-            el.sendKeys(testAccountData.Card.YouId.substring(2));
-            Thread.sleep(3000);
-
-            System.out.println("TEST STEP: Confirm Email Address Page - On Page");
-            assertEquals(UIElementKeyDict.getElement(PageKey.ActivateCardConfirmEmailPageElementDict, "lblTitle", driver).getText(), "Confirm Email Address");
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver);
-            el.click();
-            Thread.sleep(2000);
-
-            String deepLinkURL = subProc.api.getActivateCardEmailLink(testAccountData.Id);
-
-            // Hacking code for switch to safari and opend deeplink
-            subProc.procActivateDeepLinkFromSafari(deepLinkURL);
-
-            // Create a Pin
-            assertEquals(UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "lblActiveCardCreatePinTitle", driver).getText(), "Create a PIN");
-            subProc.procEnterAPPPinCode(this.defaultAPPPinCode);
-            Thread.sleep(2000);
-
-            // Confirm Your Pin
-            assertEquals(UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "lblActiveCardConfirmPinTitle", driver).getText(), "Confirm Your PIN");
-            subProc.procEnterAPPPinCode(this.defaultAPPPinCode);
-            Thread.sleep(5000);
+            subProc.procActiveCardRegistration(true, testAccountData.Id, testAccountData.Card.YouId, this.defaultAPPPinCode);
 
             //TODO: Verification of Home Page redirection is skipped due to homepage replacement
             //subProc.procVerifyInHomePage(Market.Singapore);
@@ -481,11 +390,13 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             System.out.println("Test STEP: Finish \"regTC23_PC_Activate_Card\"");
         }catch(Exception e){
             System.out.println("Test STEP: Fail \"regTC23_PC_Activate_Card\"");
-            testAccountData.UnderUse = false;
-            testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
-            testAccountData.Card.UnderUse = false;
-            subProc.api.data_updateTestUser(testAccountData);
-            testAccountData = null;
+            if(testAccountData != null) {
+                testAccountData.UnderUse = false;
+                testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
+                testAccountData.Card.UnderUse = false;
+                subProc.api.data_updateTestUser(testAccountData);
+                testAccountData = null;
+            }
             e.printStackTrace();
             fail();
         }
@@ -546,15 +457,11 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             Thread.sleep(2000);
 
             System.out.println("TEST STEP: Welcome Page - on page");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver), "Welcome"));
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver), OnScreenExpectedStringValue.LimitedHomePageSGTitle));
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "btnNPCRegister", driver);
             el.click();
             Thread.sleep(2000);
 
-//            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, false, false, testAccountData.Card.YouId, testAccountData.LastName, testAccountData.FirstName,
-//                    testAccountData.Birthdate, testAccountData.NricNumber,
-//                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
-//                    null, null, null, null, null);
             subProc.procSubmitNonMyInfoKYC(osMainVerInt, false, false, false, KYCDocType.EMPLOYMENTPASS, testAccountData.Card.YouId,
                     testAccountData.LastName, testAccountData.FirstName, null,
                     testAccountData.Birthdate, testAccountData.NricNumber,
@@ -564,7 +471,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             Thread.sleep(20000);
             System.out.println("TEST STEP: Verify Back to Limited Home Page");
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
-            Assert.assertEquals(el.getText(), "Thank You for Your Application");
+            Assert.assertEquals(el.getText(), OnScreenExpectedStringValue.LimitedHomePageSGKYCSubmittedTitle);
             Thread.sleep(2000);
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
             String kycRefNo = el.getText();
@@ -614,35 +521,13 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
                 fail("fail to load test account from previous test case in succeed");
             }
 
-            // Limited Home Page
-            el = (IOSElement)UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
-            Assert.assertEquals(el.getText(), "Thank You for Your Application");
-            Thread.sleep(2000);
-            kycRefNo = ((IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
-            System.out.println("TEST DATA: KYC Reference from Limited Home Page " +kycRefNo);
-
-            System.out.println("TEST STEP: KYC rejection Send");
             isForebackEnable = false;
-            subProc.api.yp_fullReject(kycRefNo);
-            Thread.sleep(25000);
-            System.out.println("TEST STEP: KYC rejection received");
-
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
-            actualText = el.getText();
-            assertEquals("Attention", actualText);
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblKycResultDesc", driver);
-            assertTrue(el.isDisplayed());
-            actualText = el.getText();
-            assertEquals("Sorry, we were unable to process your application due to the following reasons: \n\n" + subProc.api.getKycRejectReason() + "\n\nYou’ll also be required to take photos of your ID again to verify your identity.", actualText);
+            kycRefNo = subProc.procRejectKYC(true);
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver);
             el.click();
             Thread.sleep(2000);
 
-//            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, true, false, testAccountData.Card.YouId, testAccountData.LastName, testAccountData.FirstName,
-//                    testAccountData.Birthdate, testAccountData.NricNumber,
-//                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
-//                    newSurname, newGivenName, newDateOfBirth, newAddressLine1, newAddressLine2);
             subProc.procSubmitNonMyInfoKYC(osMainVerInt, false, true, false, KYCDocType.EMPLOYMENTPASS, testAccountData.Card.YouId,
                     testAccountData.LastName, testAccountData.FirstName, null,
                     testAccountData.Birthdate, testAccountData.NricNumber,
@@ -666,7 +551,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             System.out.println("Test STEP: Finish \"regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass\"");
         }catch (Exception e){
             System.out.println("Test STEP: Fail \"regTC20_fullreject_and_resubmit_NPC_KYC_EmploymentPass\"");
-            if(!isForebackEnable) {
+            if(!isForebackEnable && (testAccountData != null)) {
                 testAccountData.UnderUse = false;
                 testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
                 testAccountData.Card.UnderUse = false;
@@ -706,39 +591,16 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
                 }
             }
 
-            // Limited Home Page
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
-            Assert.assertEquals(el.getText(), "Thank You for Your Application");
-            Thread.sleep(2000);
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver);
-            kycRefNo = el.getText();
-            System.out.println("TEST DATA: KYC Reference from Limited Home Page " +kycRefNo);
 
-            System.out.println("TEST STEP: KYC Partial rejection Send");
             isForebackEnable = false;
-            subProc.api.yp_partialReject(kycRefNo);
-            Thread.sleep(25000);
-            System.out.println("TEST STEP: KYC Partial rejection received");
-
+            kycRefNo = subProc.procRejectKYC(false);
             testAccountData.FirstName = "Auto YP Edit";
             testAccountData.AddressLineTwo = "PARTIAL EDIT TEST";
-
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver);
-            actualText = el.getText();
-            assertEquals("Attention", actualText);
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblKycResultDesc", driver);
-            assertTrue(el.isDisplayed());
-            actualText = el.getText();
-            assertEquals("We have noticed errors in your application and have edited it for you. These are the following errors:\n\n" + subProc.api.getKycRejectReason() + "\n\nPlease check all the data to make sure they are accurate and submit again.", actualText);
 
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver);
             el.click();
             Thread.sleep(2000);
 
-//            subProc.procSubmitSGNPCEmploymentPassKYC(osMainVerInt, false, true, testAccountData.Card.YouId, testAccountData.LastName, testAccountData.FirstName,
-//                    testAccountData.Birthdate, testAccountData.NricNumber,
-//                    testAccountData.AddressLineOne, testAccountData.AddressLineTwo, testAccountData.PostalCode,
-//                    null, null, null, null, null);
             subProc.procSubmitNonMyInfoKYC(osMainVerInt, false, false, true, KYCDocType.EMPLOYMENTPASS, testAccountData.Card.YouId,
                     testAccountData.LastName, testAccountData.FirstName, null,
                     testAccountData.Birthdate, testAccountData.NricNumber,
@@ -754,9 +616,9 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             testAccountData.Card.UnderUse = isRequriedReset;
             subProc.api.data_updateTestUser(testAccountData);
             System.out.println("Test STEP: Finish \"regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass\"");
-        }catch (Exception e){
+        }catch (Exception e) {
             System.out.println("Test STEP: Fail \"regTC21_partialreject_and_resubmit_NPC_KYC_EmploymentPass\"");
-            if(!isForebackEnable) {
+            if (!isForebackEnable && (testAccountData != null)) {
                 testAccountData.UnderUse = false;
                 testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
                 testAccountData.Card.UnderUse = false;
@@ -795,18 +657,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
 
             //get and store the KYC reference number
             Thread.sleep(2000);
-            String kycRefNo = (UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblReferenceNumVal", driver)).getText();
-            System.out.println("TEST DATA: KYC submission reference number is " + kycRefNo);
-
-            //call YP full reject with Ref Number
-            subProc.api.yp_approve(kycRefNo);
-
-            //back to the app - wait for reject to be updated
-            Thread.sleep(20000);
-            //wait.until(ExpectedConditions.visibilityOf(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver)));
-            System.out.println("TEST STEP: KYC approval received");
-            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Verification Complete");
-            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver).getText(), "Activate Card");
+            subProc.procApproveKYC(false);
 
             testAccountData.KycStatus = KYCStatus.Clear;
             subProc.api.data_updateTestUser(testAccountData);
@@ -814,11 +665,13 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
 //            testAccountData = null;
         }catch(Exception e){
             System.out.println("Test STEP: Fail \"regTC22_approved_NPC_KYC_EmploymentPass\"");
-            testAccountData.UnderUse = false;
-            testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
-            testAccountData.Card.UnderUse = false;
-            subProc.api.data_updateTestUser(testAccountData);
-            testAccountData = null;
+            if(testAccountData != null) {
+                testAccountData.UnderUse = false;
+                testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
+                testAccountData.Card.UnderUse = false;
+                subProc.api.data_updateTestUser(testAccountData);
+                testAccountData = null;
+            }
             e.printStackTrace();
             fail();
         }
@@ -850,35 +703,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
                 }
             }
 
-            System.out.println("TEST STEP: Limited Home Page - KYC already approved");
-            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), "Verification Complete");
-            assertEquals(UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver).getText(), "Activate Card");
-
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver);
-            el.click();
-            Thread.sleep(2000);
-
-            System.out.println("TEST STEP: Confirm Email Address Page - On Page");
-            assertEquals(UIElementKeyDict.getElement(PageKey.ActivateCardConfirmEmailPageElementDict, "lblTitle", driver).getText(), "Confirm Email Address");
-            el = (IOSElement) UIElementKeyDict.getElement(PageKey.LimitedHomePageElementDict, "btnNext", driver);
-            el.click();
-            Thread.sleep(2000);
-
-            String deepLinkURL = subProc.api.getActivateCardEmailLink(testAccountData.Id);
-            System.out.println(deepLinkURL);
-
-            // Hacking code for switch to safari and opend deeplink
-            subProc.procActivateDeepLinkFromSafari(deepLinkURL);
-
-            // Create a Pin
-            assertEquals(UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "lblActiveCardCreatePinTitle", driver).getText(), "Create a PIN");
-            subProc.procEnterAPPPinCode(this.defaultAPPPinCode);
-            Thread.sleep(2000);
-
-            // Confirm Your Pin
-            assertEquals(UIElementKeyDict.getElement(PageKey.APPPinCodePageElementDict, "lblActiveCardConfirmPinTitle", driver).getText(), "Confirm Your PIN");
-            subProc.procEnterAPPPinCode(this.defaultAPPPinCode);
-            Thread.sleep(5000);
+            subProc.procActiveCardRegistration(false, testAccountData.Id, testAccountData.Card.YouId, this.defaultAPPPinCode);
 
             //TODO: Verification of Home Page redirection is skipped due to homepage replacement
             //subProc.procVerifyInHomePage(Market.Singapore);
@@ -890,11 +715,13 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             System.out.println("Test STEP: Finish \"regTC23_NPC_Activate_Card\"");
         }catch(Exception e){
             System.out.println("Test STEP: Fail \"regTC23_NPC_Activate_Card\"");
-            testAccountData.UnderUse = false;
-            testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
-            testAccountData.Card.UnderUse = false;
-            subProc.api.data_updateTestUser(testAccountData);
-            testAccountData = null;
+            if(testAccountData != null) {
+                testAccountData.UnderUse = false;
+                testAccountData.KycStatus = KYCStatus.UnknownKycStatus;
+                testAccountData.Card.UnderUse = false;
+                subProc.api.data_updateTestUser(testAccountData);
+                testAccountData = null;
+            }
             e.printStackTrace();
             fail();
         }

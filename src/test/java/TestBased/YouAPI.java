@@ -80,6 +80,7 @@ public class YouAPI {
 
         String url_backdoorOTP = (backDoorEndPoint + "/onboarding/otp/" + mprefix + "/" + mnumber);
         String otpCode = null;
+        System.out.println("API CALL: " + url_backdoorOTP);
 
         otpCode = Unirest.get(url_backdoorOTP)
                 .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
@@ -88,7 +89,6 @@ public class YouAPI {
                 .getObject()
                 .getString("password");
 
-        System.out.println("API CALL: " + url_backdoorOTP);
         return otpCode;
     }
 
@@ -99,6 +99,7 @@ public class YouAPI {
         Thread.sleep(5000);
         //magic link API call
         String url_activateCardMagicLink = (backDoorEndPoint + "/onboarding/magicLink/YouTrip/"+deviceID+"/activateCard");
+        System.out.println("API CALL: " +url_activateCardMagicLink);
 
         String token = Unirest.get(url_activateCardMagicLink)
                 .basicAuth(backDoorAuthUserName, backDoorAuthPwd)
@@ -107,7 +108,6 @@ public class YouAPI {
                 .getObject()
                 .getString("token");
 
-        System.out.println("API CALL: " +url_activateCardMagicLink);
 
         //setup email url for activate card and return it
         String domainEndPoint = this.apiEndPoint.substring(7);
