@@ -8,14 +8,12 @@ steps:
         options:
           - label: "iOS - SG - Regression"
             value: "ios_sg_regression_single"
-          - label: "iOS - SG - Regression(Multi-Devices)"
-            value: "ios_sg_regression_parallel"
           - label: "iOS - TH - Regression"
             value: "ios_th_regression_single"
-          - label: "ANDROID - SG Regression"
+          - label: "Android - SG Regression"
             value: "android_sg_regression_single"
-          - label: "ANDROID - SG Regression(Multi-Devices)"
-            value: "android_sg_regression_parallel"
+          - label: "Android - TH Regression"
+            value: "android_th_regression_single"
       - select: "env"
         key: "ENV"
         options:
