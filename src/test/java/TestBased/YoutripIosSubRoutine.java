@@ -1,7 +1,6 @@
 package TestBased;
 
 import com.google.common.collect.ImmutableMap;
-import com.sun.codemodel.internal.JCase;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.WebElement;
@@ -10,11 +9,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import TestBased.TestAccountData.Market;
 import TestBased.TestAccountData.KYCDocType;
 import org.testng.Assert;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
