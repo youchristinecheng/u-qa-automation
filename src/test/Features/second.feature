@@ -1,6 +1,6 @@
 
 Feature: A 2nd testing feature
-
+  @broken
   Scenario: user wants to access app under SG market
     Given user is on country selection page
     When user select "Singapore" country
