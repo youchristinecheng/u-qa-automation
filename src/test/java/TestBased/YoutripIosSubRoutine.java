@@ -178,6 +178,9 @@ public class YoutripIosSubRoutine {
             el.click();
             Thread.sleep(2000);
         }
+
+        System.out.println("TEST STEP: Welcome Page - on page");
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.WelcomePageElementDict, "lblWelcome", driver), OnScreenExpectedStringValue.LimitedHomePageTitle));
     }
 
     private void procSelectKYCDocType(String CardTypeDisplay, KYCDocType docType) throws Exception{
@@ -517,6 +520,7 @@ public class YoutripIosSubRoutine {
 
     public void procActiveCardRegistration(boolean isPC, String userId, String youId, String defaultAPPPinCode) throws Exception {
         IOSElement el;
+        String deepLinkURL = "";
         if(isPC){
             System.out.println("TEST STEP: Limited Home Page - KYC already approved");
             assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver).getText(), OnScreenExpectedStringValue.LimitedHomePageSGPCKYCApprovedTitle);
@@ -542,26 +546,48 @@ public class YoutripIosSubRoutine {
         }
 
         System.out.println("TEST STEP: Confirm Email Address Page - On Page");
-        assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ActivateCardConfirmEmailPageElementDict, "lblTitle", driver).getText(), OnScreenExpectedStringValue.ActiveCardSGConfirmEmailPageTitle);
-        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.LimitedHomePageElementDict, "btnNext", driver);
-        el.click();
-        Thread.sleep(2000);
+        assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.ActivateCardConfirmEmailPageElementDict, "lblTitle", driver).getText(), OnScreenExpectedStringValue.ActiveCardCheckEmailPageTitle);
 
-        String deepLinkURL = this.api.getActivateCardEmailLink(userId);
+        deepLinkURL = this.api.getActivateCardEmailLink(userId);
         System.out.println(deepLinkURL);
 
         // Hacking code for switch to safari and opend deeplink
         this.procActivateDeepLinkFromSafari(deepLinkURL);
 
-        // Create a Pin
-        assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "lblActiveCardCreatePinTitle", driver).getText(), OnScreenExpectedStringValue.ActiveCardSGCreatePINPageTitle);
-        this.procEnterAPPPinCode(defaultAPPPinCode);
-        Thread.sleep(2000);
+        if(this.getCurrentMarket().equals(Market.Singapore)){
+            // SG flow
+            // Create a Pin
+            assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "lblActiveCardCreatePinTitle", driver).getText(), OnScreenExpectedStringValue.ActiveCardCreatePINPageSGTitle);
+            this.procEnterAPPPinCode(defaultAPPPinCode);
+            Thread.sleep(2000);
 
-        // Confirm Your Pin
-        assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "lblActiveCardConfirmPinTitle", driver).getText(), OnScreenExpectedStringValue.ActiveCardSGConfirmPINPageTitle);
-        this.procEnterAPPPinCode(defaultAPPPinCode);
-        Thread.sleep(5000);
+            // Confirm Your Pin
+            assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "lblActiveCardConfirmPinTitle", driver).getText(), OnScreenExpectedStringValue.ActiveCardConfirmPINPageSGTitle);
+            this.procEnterAPPPinCode(defaultAPPPinCode);
+            Thread.sleep(5000);
+        }else {
+
+            // Thailand Flow
+            assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "lblTHStepsTitle", driver).getText(), OnScreenExpectedStringValue.ActiveCardStepsPageTHTitle);
+            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "btnTHSteps1", driver);
+            el.click();
+            Thread.sleep(2000);
+
+            // Create a Pin
+            assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "lblTHCreateAppPIN", driver).getText(), OnScreenExpectedStringValue.ActiveCardCreateAPPPINPageTHTitle);
+            this.procEnterAPPPinCode(defaultAPPPinCode);
+            Thread.sleep(2000);
+
+            // Confirm Your Pin
+            assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "lblTHConfirmAppPIN", driver).getText(), OnScreenExpectedStringValue.ActiveCardConfirmAPPPINPageTHTitle);
+            this.procEnterAPPPinCode(defaultAPPPinCode);
+            Thread.sleep(2000);
+
+            assertEquals(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "lblTHSteps2", driver).getText(), OnScreenExpectedStringValue.ActiveCardSetCardPINPageTHTitle);
+            el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.APPPinCodePageElementDict, "btnTHSameCardPin", driver);
+            el.click();
+            Thread.sleep(5000);
+        }
     }
 
     public void procLoginToHomePage(Market market, String mprefix, String phoneNumber, String appPinCode) throws Exception {
@@ -680,7 +706,7 @@ public class YoutripIosSubRoutine {
         el.click();
 
         System.out.println("TEST STEP: Mobile Number Page - on page");
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.MobileNumberPageElementDict, "lblTitle", driver), "Enter Mobile Number"));
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.MobileNumberPageElementDict, "lblTitle", driver), OnScreenExpectedStringValue.EnterMobileNumberPageTHTitle));
 
         System.out.println("TEST DATA: Mobile Number is " + mprefix + " " + mnumber);
         System.out.println("TEST STEP: Mobile Number Page - inputted mobile number prefix");
@@ -700,7 +726,7 @@ public class YoutripIosSubRoutine {
         Thread.sleep(2000);
 
         System.out.println("TEST STEP: OTP Page - on page");
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.OTPPageElementDict, "lblTitle", driver), "Enter Code from SMS"));
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.OTPPageElementDict, "lblTitle", driver), OnScreenExpectedStringValue.OTPPageTHTitle));
         // Get OTP from backdoor and input otp
         String otpCode = api.getOTP(mprefix, mnumber);
         Thread.sleep(10000);
@@ -712,20 +738,22 @@ public class YoutripIosSubRoutine {
         System.out.println("TEST STEP: OTP Page - Send OTP");
 
         Thread.sleep(2000);
+        System.out.println("TEST STEP: Welcome Page - on page");
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.WelcomePageElementDict, "lblWelcome", driver), OnScreenExpectedStringValue.LimitedHomePageTitle));
     }
 
-    public void procTH_SubmitKYC(int deviceOSVersion, boolean isPCCardFlow, String thaiIdNumber, String youId) throws Exception {
+    public void procTH_SubmitKYC(int deviceOSVersion, boolean isPC, String mprefix, String mnumber, String email, String thaiIdNumber, String youId) throws Exception {
         IOSElement el;
-        if(!isPCCardFlow) {
+        if(!isPC) {
             System.out.println("TEST STEP: NPC Registration - Enter Y-Number");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EnterYNumberPageElementDict, "lblTitle", driver), "Enter Y-Number"));
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EnterYNumberPageElementDict, "lblTitle", driver), OnScreenExpectedStringValue.KYCEnterYNumberPageTitle));
             el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.EnterYNumberPageElementDict, "txtYouIdDigit1", driver);
             el.sendKeys(youId.substring(2));
             Thread.sleep(2000);
         }
 
         System.out.println("TEST STEP: KYC Process - Enter Thai ID");
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "lblTitle", driver), "Enter ID Number"));
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "lblTitle", driver), OnScreenExpectedStringValue.KYCEnterThaiIDPageTHTitle));
         el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "txtIdNumber", driver);
         el.sendKeys(thaiIdNumber);
         el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.PersonalInformationElementDict, "btnNext", driver);
@@ -733,12 +761,53 @@ public class YoutripIosSubRoutine {
         Thread.sleep(3000);
 
         System.out.println("TEST STEP: KYC Process - Authentication From KPlus");
-        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCKPLUSAuthenticationPageElementDict, "lblTitle", driver), "Register with K PLUS"));
+        wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCKPLUSAuthenticationPageElementDict, "lblTitle", driver), OnScreenExpectedStringValue.KYCKPlusRegistrationPageTHTitle));
         el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCKPLUSAuthenticationPageElementDict, "btnNoKPlus", driver);
-        assertEquals(el.getText(), "Do not have K PLUS?");
+        assertEquals(el.getText(), OnScreenExpectedStringValue.KYCKPlusRegistrationPageTHNoKPlusButton);
         el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCKPLUSAuthenticationPageElementDict, "btnOpenKPlus", driver);
-        assertEquals(el.getText(), "Register with K PLUS");
+        assertEquals(el.getText(), OnScreenExpectedStringValue.KYCKPlusRegistrationPageTHKPlusRegisterButton);
         el.click();
         Thread.sleep(2000);
+
+        System.out.println("TEST STEP: Dismiss Location Pop Up from APP Store if need");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+        if(el != null){
+            el.click();
+            Thread.sleep(1000);
+        }
+
+        this.api.hack_thRequestAndPassKYC(isPC, thaiIdNumber, youId, mprefix, mnumber,  email);
+
+
+        // Switch back to YouTrip App
+        System.out.println("TEST STEP: Switch back to YouTrip App from DeepLink");
+        driver.executeScript("mobile: terminateApp", ImmutableMap.of("bundleId", "com.apple.AppStore"));
+        Map<String, Object> params = new HashMap<>();
+        params.put("bundleId", "co.you.youapp");
+        driver.executeScript("mobile: launchApp", params);
+        Thread.sleep(5000);
+
+
+
+        System.out.println("TEST STEP: Close Page to reverse cached KPlus Registering Page");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCKPLUSAuthenticationPageElementDict, "icClose", driver);
+        el.click();
+        Thread.sleep(2000);
+        System.out.println("TEST STEP: Close Page to reverse cached Enter Thai ID Number page");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.KYCKPLUSAuthenticationPageElementDict, "icClose", driver);
+        el.click();
+        Thread.sleep(10000);
+
+        // Check for notification pop up is shown or not
+        System.out.println("TEST STEP: Allow notification Pop Up from YouTrip App if need");
+        el = (IOSElement) UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.NotificationAlertElementDict, "btnAllow", driver, true);
+        if(el != null){
+            el.click();
+            Thread.sleep(1000);
+        }
+
+        System.out.println("TEST STEP: Verify updated to Limited Home Page");
+        el = (IOSElement)UIElementKeyDict.getElement(YouTripIosUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver);
+        Assert.assertEquals(el.getText(), OnScreenExpectedStringValue.LimitedHomePageSGPCKYCApprovedTitle);
     }
 }

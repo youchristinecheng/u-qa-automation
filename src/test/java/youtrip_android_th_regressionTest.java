@@ -1,3 +1,4 @@
+import TestBased.OnScreenExpectedStringValue;
 import TestBased.TestAccountData;
 import TestBased.TestAccountData.Market;
 import TestBased.Utils;
@@ -94,7 +95,7 @@ public class youtrip_android_th_regressionTest extends android_browserstackTest 
 
             //Verify back to YouTrip App on Limited Home page
             //back to the app - wait for approval
-            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver)), "Your Card is On Its Way"));
+            wait.until(ExpectedConditions.textToBePresentInElement((UIElementKeyDict.getElement(YouTripAndroidUIElementKey.PageKey.LimitedHomePageElementDict, "lblTitle", driver)), OnScreenExpectedStringValue.LimitedHomePageSGPCKYCApprovedTitle));
             System.out.println("TEST STEP: Limited HomePage - on page");
             //get ID number for storage
             testAccountData.Id = subProc.api.data_getTestUserIdByPhoneNumber(testAccountData.MCC, testAccountData.PhoneNumber);

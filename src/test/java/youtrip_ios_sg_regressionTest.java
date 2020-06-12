@@ -72,8 +72,6 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             subProc.procSelectCountry();
             subProc.procOTPLogin(mprefix, mnumber, email, true);
 
-            System.out.println("TEST STEP: Welcome Page - on page");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver), "Welcome"));
             System.out.println("Test STEP: Finish \"regTC05_login_new_user_OTP\"");
         }catch (Exception e){
             System.out.println("Test STEP: Fail \"regTC05_login_new_user_OTP\"");
@@ -131,7 +129,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             }
 
             System.out.println("TEST STEP: Welcome Page - on page");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver), OnScreenExpectedStringValue.LimitedHomePageSGTitle));
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver), OnScreenExpectedStringValue.LimitedHomePageTitle));
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "btnPCRegister", driver);
             el.click();
 
@@ -457,7 +455,7 @@ public class youtrip_ios_sg_regressionTest extends ios_browserstackTest {
             Thread.sleep(2000);
 
             System.out.println("TEST STEP: Welcome Page - on page");
-            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver), OnScreenExpectedStringValue.LimitedHomePageSGTitle));
+            wait.until(ExpectedConditions.textToBePresentInElement(UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "lblWelcome", driver), OnScreenExpectedStringValue.LimitedHomePageTitle));
             el = (IOSElement) UIElementKeyDict.getElement(PageKey.WelcomePageElementDict, "btnNPCRegister", driver);
             el.click();
             Thread.sleep(2000);
